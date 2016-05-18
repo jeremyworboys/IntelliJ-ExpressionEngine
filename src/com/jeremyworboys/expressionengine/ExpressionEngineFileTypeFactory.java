@@ -7,6 +7,6 @@ import org.jetbrains.annotations.NotNull;
 public class ExpressionEngineFileTypeFactory extends FileTypeFactory {
     @Override
     public void createFileTypes(@NotNull FileTypeConsumer fileTypeConsumer) {
-        fileTypeConsumer.consume(ExpressionEngineFileType.INSTANCE, "html");
+        fileTypeConsumer.consume(ExpressionEngineFileType.INSTANCE, ExpressionEngineFileType.DEFAULT_EXTENSION);
     }
 }

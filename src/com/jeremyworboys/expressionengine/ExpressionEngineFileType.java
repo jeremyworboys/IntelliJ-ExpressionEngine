@@ -1,6 +1,7 @@
 package com.jeremyworboys.expressionengine;
 
 import com.intellij.openapi.fileTypes.LanguageFileType;
+import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -8,6 +9,7 @@ import javax.swing.*;
 
 public class ExpressionEngineFileType extends LanguageFileType {
     public static final ExpressionEngineFileType INSTANCE = new ExpressionEngineFileType();
+    @NonNls public static final String DEFAULT_EXTENSION = "html";
 
     private ExpressionEngineFileType() {
         super(ExpressionEngineLanguage.INSTANCE);
@@ -28,7 +30,7 @@ public class ExpressionEngineFileType extends LanguageFileType {
     @NotNull
     @Override
     public String getDefaultExtension() {
-        return "html";
+        return DEFAULT_EXTENSION;
     }
 
     @Nullable
