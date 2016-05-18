@@ -14,5 +14,7 @@
 }
 
 expressionengineFile ::= statement*
+private statement ::= (tag|HTML|COMMENT|CRLF)
 
-private statement ::= (COMMENT|HTML|CRLF)
+tag ::= LD tag_name RD
+tag_name ::= IDENTIFIER

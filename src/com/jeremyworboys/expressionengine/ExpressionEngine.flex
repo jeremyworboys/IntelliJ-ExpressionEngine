@@ -37,21 +37,30 @@ import java.util.Stack;
 %}
 
 // Generic macros
-CRLF= \n|\r|\r\n
-WHITE_SPACE= {CRLF} | [\ \t\f]
+CRLF=\n|\r|\r\n
+WS=[\ \t\f]
 
-// ExpressionEngine delimiters
+IDENTIFIER=[a-zA-Z][a-zA-Z0-9:_-]*[a-zA-Z]+
+
+// ExpressionEngine tag delimiters
 LD=\{
 RD=\}
 
-%state EE_TAG
+%state IN_EE_TAG
 
 %%
 
-{LD}                        { pushState(EE_TAG); return ExpressionEngineTypes.LD; }
+<YYINITIAL> {
+  {LD}                                 { pushState(IN_EE_TAG); return ExpressionEngineTypes.LD; }
 
-<EE_TAG> {
-  {RD}                      { popState(); return ExpressionEngineTypes.RD; }
+  {CRLF}                               { return ExpressionEngineTypes.CRLF; }
+  {WS}+                                { return TokenType.WHITE_SPACE; }
 }
 
-.                           { return ExpressionEngineTypes.HTML; }
+<IN_EE_TAG> {
+  {RD}                                 { popState(); return ExpressionEngineTypes.RD; }
+
+  {IDENTIFIER}                         { return ExpressionEngineTypes.IDENTIFIER; }
+}
+
+.                                      { return ExpressionEngineTypes.HTML; }
