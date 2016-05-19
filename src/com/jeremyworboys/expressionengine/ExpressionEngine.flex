@@ -62,6 +62,9 @@ TAG_ADDON=(\/?exp:[a-zA-Z0-9_:]+\b)
 TAG_CONSTANT=(DATE_ATOM|DATE_COOKIE|DATE_ISO8601|DATE_RFC822|DATE_RFC850|DATE_RFC1036|DATE_RFC1123|DATE_RFC2822|DATE_RSS|DATE_W3C|XID_HASH)
 TAG_DEPRECATED=(\/?exp:weblog:[^\s\}]*|exp:channel:entry_form|exp:trackback:[^\s\}]*|exp:gallery:[^\s\}]*|display_custom_fields|saef_javascript)\b
 
+// ExpressionEngine comment delimiters
+COMMENT="{!--" ~"--}"
+
 %state IN_EE_TAG
 %state IN_SINGLE_STRING
 %state IN_DOUBLE_STRING
@@ -70,6 +73,7 @@ TAG_DEPRECATED=(\/?exp:weblog:[^\s\}]*|exp:channel:entry_form|exp:trackback:[^\s
 
 <YYINITIAL> {
   {LD}                                 { pushState(IN_EE_TAG); return ExpressionEngineTypes.LD; }
+  {COMMENT}                            { return ExpressionEngineTypes.COMMENT; }
 
   {CRLF}                               { return ExpressionEngineTypes.CRLF; }
   {WS}+                                { return TokenType.WHITE_SPACE; }
@@ -77,6 +81,8 @@ TAG_DEPRECATED=(\/?exp:weblog:[^\s\}]*|exp:channel:entry_form|exp:trackback:[^\s
 
 <IN_EE_TAG> {
   {RD}                                 { popState(); return ExpressionEngineTypes.RD; }
+
+  {COMMENT}                            { return ExpressionEngineTypes.COMMENT; }
 
   {TAG_BUILTIN}                        { return ExpressionEngineTypes.TAG_BUILTIN; }
   {TAG_ADDON}                          { return ExpressionEngineTypes.TAG_ADDON; }
