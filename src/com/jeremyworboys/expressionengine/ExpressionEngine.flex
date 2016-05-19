@@ -79,7 +79,6 @@ COMMENT="{!--" ~"--}"
 
 %%
 
-{WS}+                                  { return TokenType.WHITE_SPACE; }
 {LD}{WS}+                              { return ExpressionEngineTypes.HTML; }
 {LD}{CRLF}+                            { return ExpressionEngineTypes.HTML; }
 {COMMENT}                              { return ExpressionEngineTypes.COMMENT; }
@@ -87,7 +86,6 @@ COMMENT="{!--" ~"--}"
 <YYINITIAL> {
   {LD}                                 { pushState(IN_EE_TAG); return ExpressionEngineTypes.LD; }
 
-  {CRLF}                               { return ExpressionEngineTypes.CRLF; }
   !([^]*"{"[^]*)                       { return ExpressionEngineTypes.HTML; }
 }
 
@@ -117,8 +115,6 @@ COMMENT="{!--" ~"--}"
   {NUMBER}                             { return ExpressionEngineTypes.NUMBER; }
   {SINGLE_QUOTE}                       { pushState(IN_SINGLE_STRING); return ExpressionEngineTypes.STRING_START; }
   {DOUBLE_QUOTE}                       { pushState(IN_DOUBLE_STRING); return ExpressionEngineTypes.STRING_START; }
-
-  {CRLF}                               { return ExpressionEngineTypes.CRLF; }
 }
 
 <IN_SINGLE_STRING> {
@@ -133,4 +129,6 @@ COMMENT="{!--" ~"--}"
   {DOUBLE_QUOTE}                       { popState(); return ExpressionEngineTypes.STRING_END; }
 }
 
+{CRLF}                                 { return ExpressionEngineTypes.CRLF; }
+{WS}+                                  { return TokenType.WHITE_SPACE; }
 .                                      { return TokenType.BAD_CHARACTER; }
