@@ -23,4 +23,3 @@ tag_content ::= attribute*
 
 attribute ::= CRLF? IDENTIFIER EQUAL (NUMBER|IDENTIFIER|attribute_string) CRLF?
 attribute_string ::= (STRING_START STRING+ STRING_END) | (STRING_START STRING_END)
-//attribute_string ::= (STRING_START ((tag_block|tag|i18nFormat) | STRING+)+ STRING_END) | (STRING_START STRING_END)
