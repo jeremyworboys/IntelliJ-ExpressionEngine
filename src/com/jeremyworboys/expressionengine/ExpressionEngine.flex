@@ -16,7 +16,6 @@ import java.util.Stack;
 %type IElementType
 %eof{  return;
 %eof}
-//%debug
 
 // Custom class methods
 %{
@@ -36,15 +35,22 @@ import java.util.Stack;
   }
 %}
 
-// Generic macros
+// Generics
 CRLF=\n|\r|\r\n
 WS=[\ \t\f]
 
+// Identifiers
 IDENTIFIER=[a-zA-Z][a-zA-Z0-9:_-]*[a-zA-Z]+
 
 // ExpressionEngine tag delimiters
 LD=\{
 RD=\}
+
+// ExpressionEngine tag types
+TAG_BUILTIN=(\/?exp:(channel:(entries|calendar|month_links|next_entry|prev_entry|categories|category_archive|category_heading|info)|comment:(ajax_edit_url|edit_comment_script|entries|notification_links|subscriber_list|form|preview)|cookie_consent:message|email:(contact_form|tell_a_friend)|emoticon|file:entries|ip_to_nation:world_flags|jquery:(script_tag|script_src|output_javascript)|mailinglist:form|member:(login_form|custom_profile_data|ignore_list)|moblog:check|pages:load_site_pages|query|referrer|rss:feed|rte:script_url|forum:forum_helper|forum:topic_titles|forum|xml_encode|safecracker|search:(advanced_form|simple_form|search_results|total_results|keywords)|magpie|updated_sites:pings|stats|simple_commerce:purchase|wiki)|wiki:(categories|category_subcategories|category_articles|files|recent_changes|search_results|title_list|associated_articles|associated_pages|custom_namespaces_list))\b
+TAG_ADDON=(\/?exp:[a-zA-Z0-9_:]+\b)
+TAG_CONSTANT=(DATE_ATOM|DATE_COOKIE|DATE_ISO8601|DATE_RFC822|DATE_RFC850|DATE_RFC1036|DATE_RFC1123|DATE_RFC2822|DATE_RSS|DATE_W3C|XID_HASH)
+TAG_DEPRECATED=(\/?exp:weblog:[^\s\}]*|exp:channel:entry_form|exp:trackback:[^\s\}]*|exp:gallery:[^\s\}]*|display_custom_fields|saef_javascript)\b
 
 %state IN_EE_TAG
 
@@ -60,6 +66,10 @@ RD=\}
 <IN_EE_TAG> {
   {RD}                                 { popState(); return ExpressionEngineTypes.RD; }
 
+  {TAG_BUILTIN}                        { return ExpressionEngineTypes.TAG_BUILTIN; }
+  {TAG_ADDON}                          { return ExpressionEngineTypes.TAG_ADDON; }
+  {TAG_CONSTANT}                       { return ExpressionEngineTypes.TAG_CONSTANT; }
+  {TAG_DEPRECATED}                     { return ExpressionEngineTypes.TAG_DEPRECATED; }
   {IDENTIFIER}                         { return ExpressionEngineTypes.IDENTIFIER; }
 }
 
