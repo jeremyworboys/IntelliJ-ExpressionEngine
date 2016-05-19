@@ -39,6 +39,16 @@ import java.util.Stack;
 CRLF=\n|\r|\r\n
 WS=[\ \t\f]
 
+EQUAL==
+SINGLE_QUOTE="\'"
+DOUBLE_QUOTE="\""
+
+// Numbers
+NUMBER={HEX_NUMBER}|{DEC_NUMBER}
+HEX_NUMBER=0(x|X)[0-9a-fA-F]*
+DEC_NUMBER=([0-9]+\.?[0-9]*)|(\.[0-9]+){EXP_NUMBER}?
+EXP_NUMBER=(e|E)(\+|-)?[0-9]+
+
 // Identifiers
 IDENTIFIER=[a-zA-Z][a-zA-Z0-9:_-]*[a-zA-Z]+
 
@@ -53,6 +63,8 @@ TAG_CONSTANT=(DATE_ATOM|DATE_COOKIE|DATE_ISO8601|DATE_RFC822|DATE_RFC850|DATE_RF
 TAG_DEPRECATED=(\/?exp:weblog:[^\s\}]*|exp:channel:entry_form|exp:trackback:[^\s\}]*|exp:gallery:[^\s\}]*|display_custom_fields|saef_javascript)\b
 
 %state IN_EE_TAG
+%state IN_SINGLE_STRING
+%state IN_DOUBLE_STRING
 
 %%
 
@@ -71,6 +83,24 @@ TAG_DEPRECATED=(\/?exp:weblog:[^\s\}]*|exp:channel:entry_form|exp:trackback:[^\s
   {TAG_CONSTANT}                       { return ExpressionEngineTypes.TAG_CONSTANT; }
   {TAG_DEPRECATED}                     { return ExpressionEngineTypes.TAG_DEPRECATED; }
   {IDENTIFIER}                         { return ExpressionEngineTypes.IDENTIFIER; }
+
+  {EQUAL}                              { return ExpressionEngineTypes.EQUAL; }
+  {NUMBER}                             { return ExpressionEngineTypes.NUMBER; }
+  {SINGLE_QUOTE}                       { pushState(IN_SINGLE_STRING); return ExpressionEngineTypes.STRING_START; }
+  {DOUBLE_QUOTE}                       { pushState(IN_DOUBLE_STRING); return ExpressionEngineTypes.STRING_START; }
+
+  {CRLF}                               { return ExpressionEngineTypes.CRLF; }
+  {WS}+                                { return TokenType.WHITE_SPACE; }
+}
+
+<IN_SINGLE_STRING> {
+  ((\\.)|[^'{}])+                      { return ExpressionEngineTypes.STRING; }
+  {SINGLE_QUOTE}                       { popState(); return ExpressionEngineTypes.STRING_END; }
+}
+
+<IN_DOUBLE_STRING> {
+  ((\\.)|[^\"{}])+                     { return ExpressionEngineTypes.STRING; }
+  {DOUBLE_QUOTE}                       { popState(); return ExpressionEngineTypes.STRING_END; }
 }
 
 .                                      { return ExpressionEngineTypes.HTML; }

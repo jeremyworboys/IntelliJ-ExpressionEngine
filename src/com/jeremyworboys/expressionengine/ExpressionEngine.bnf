@@ -16,5 +16,10 @@
 expressionengineFile ::= statement*
 private statement ::= (tag|HTML|COMMENT|CRLF)
 
-tag ::= LD tag_name RD
+tag ::= LD tag_name tag_content RD
 tag_name ::= (TAG_BUILTIN|TAG_ADDON|TAG_CONSTANT|TAG_DEPRECATED|IDENTIFIER)
+tag_content ::= attribute*
+
+attribute ::= CRLF? IDENTIFIER EQUAL (NUMBER|IDENTIFIER|attribute_string) CRLF?
+attribute_string ::= (STRING_START STRING+ STRING_END) | (STRING_START STRING_END)
+//attribute_string ::= (STRING_START ((tag_block|tag|i18nFormat) | STRING+)+ STRING_END) | (STRING_START STRING_END)
