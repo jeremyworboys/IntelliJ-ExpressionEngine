@@ -64,6 +64,12 @@ TAG_DEPRECATED=(\/?exp:weblog:[^\s\}]*|exp:channel:entry_form|exp:trackback:[^\s
 TAG_GLOBAL_VAR=(app_build|app_version|auto_log_in|build|captcha|charset|cp_url|current_id|current_page|current_path|current_request|current_time|current_url|debug_mode|doc_url|elapsed_time|email|error_message|form_declaration:wiki:edit|form_declaration:wiki:uploads|forum_build|forum_name|forum_url|group_description|group_id|group_title|gzip_mode|hits|homepage|include:body_extra|include:head_extra|include:spellcheck_js|include:theme_option_list|ip_address|ip_hostname|lang|lang:[a-zA-Z_]+|location|logged_in|logged_in_email|logged_in_group_description|logged_in_group_id|logged_in_ip_address|logged_in_location|logged_in_member_id|logged_in_private_messages|logged_in_screen_name|logged_in_total_comments|logged_in_total_entries|logged_in_total_forum_posts|logged_in_total_forum_topics|logged_in_username|logged_out|member_group|member_id|member_profile_link|module_version|page_title|path:advanced_search|path:atom|path:do_search|path:forgot|path:forum_home|path:image_url|path:login|path:logout|path:mark_all_read|path:memberlist|path:private_messages|path:recent_poster|path:register|path:rss|path:smileys|path:spellcheck_iframe|path:theme_css|path:view_active_topics|path:view_new_topics|path:view_pending_topics|path:wiki_base_url|path:wiki_home|path:your_control_panel|path:your_profile|private_messages|recent_poster|screen_name|site_id|site_index|site_label|site_name|site_short_name|site_url|theme_folder_url|total_comments|total_entries|total_forum_posts|total_forum_replies|total_forum_topics|total_queries|username|version|webmaster_email)
 TAG_GLOBAL_VAR_PARAM=(path|permalink|title_permalink|comment_path|day_path|entry_id_path|embed|encode|redirect|last_author_profile_path|member_path|member_search_path|multi_field|next_path|preload_replace:[a-zA-Z0-9_-]+|previous_path|profile_path|stylesheet|switch|thread_path|url_title_path)
 
+// ExpressionEngine conditionals
+ELSE_IF="if:elseif"
+ELSE="if:else"
+IF="if"
+END_IF="/if"
+
 // ExpressionEngine comment delimiters
 COMMENT="{!--" ~"--}"
 
@@ -85,6 +91,11 @@ COMMENT="{!--" ~"--}"
   {RD}                                 { popState(); return ExpressionEngineTypes.RD; }
 
   {COMMENT}                            { return ExpressionEngineTypes.COMMENT; }
+
+  {ELSE_IF}                            { return ExpressionEngineTypes.ELSE_IF; }
+  {ELSE}                               { return ExpressionEngineTypes.ELSE; }
+  {IF}                                 { return ExpressionEngineTypes.IF; }
+  {END_IF}                             { return ExpressionEngineTypes.END_IF; }
 
   {TAG_BUILTIN}                        { return ExpressionEngineTypes.TAG_BUILTIN; }
   {TAG_ADDON}                          { return ExpressionEngineTypes.TAG_ADDON; }
