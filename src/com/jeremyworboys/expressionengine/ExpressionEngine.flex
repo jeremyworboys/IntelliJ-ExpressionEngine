@@ -88,6 +88,7 @@ COMMENT="{!--" ~"--}"
   {LD}                                 { pushState(IN_EE_TAG); return ExpressionEngineTypes.LD; }
 
   {CRLF}                               { return ExpressionEngineTypes.CRLF; }
+  !([^]*"{"[^]*)                       { return ExpressionEngineTypes.HTML; }
 }
 
 <IN_EE_TAG> {
@@ -132,4 +133,4 @@ COMMENT="{!--" ~"--}"
   {DOUBLE_QUOTE}                       { popState(); return ExpressionEngineTypes.STRING_END; }
 }
 
-.                                      { return ExpressionEngineTypes.HTML; }
+.                                      { return TokenType.BAD_CHARACTER; }
