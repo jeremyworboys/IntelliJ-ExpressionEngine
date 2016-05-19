@@ -26,6 +26,7 @@
         <!-- Add your extensions here -->
         <fileTypeFactory implementation="com.jeremyworboys.expressionengine.ExpressionEngineFileTypeFactory"/>
         <lang.parserDefinition language="ExpressionEngine" implementationClass="com.jeremyworboys.expressionengine.ExpressionEngineParserDefinition"/>
+        <lang.syntaxHighlighterFactory language="ExpressionEngine" implementationClass="com.jeremyworboys.expressionengine.ExpressionEngineSyntaxHighlighterFactory"/>
     </extensions>
 
     <actions>
