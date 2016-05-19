@@ -90,6 +90,7 @@ COMMENT="{!--" ~"--}"
 
 <IN_EE_TAG> {
   {RD}                                 { popState(); return ExpressionEngineTypes.RD; }
+  {LD}                                 { pushState(IN_EE_TAG); return ExpressionEngineTypes.LD; }
 
   {ELSE_IF}                            { return ExpressionEngineTypes.ELSE_IF; }
   {ELSE}                               { return ExpressionEngineTypes.ELSE; }
