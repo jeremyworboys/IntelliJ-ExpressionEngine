@@ -79,9 +79,10 @@ COMMENT="{!--" ~"--}"
 
 %%
 
+{COMMENT}                              { return ExpressionEngineTypes.COMMENT; }
+
 <YYINITIAL> {
   {LD}                                 { pushState(IN_EE_TAG); return ExpressionEngineTypes.LD; }
-  {COMMENT}                            { return ExpressionEngineTypes.COMMENT; }
 
   {CRLF}                               { return ExpressionEngineTypes.CRLF; }
   {WS}+                                { return TokenType.WHITE_SPACE; }
@@ -89,8 +90,6 @@ COMMENT="{!--" ~"--}"
 
 <IN_EE_TAG> {
   {RD}                                 { popState(); return ExpressionEngineTypes.RD; }
-
-  {COMMENT}                            { return ExpressionEngineTypes.COMMENT; }
 
   {ELSE_IF}                            { return ExpressionEngineTypes.ELSE_IF; }
   {ELSE}                               { return ExpressionEngineTypes.ELSE; }
@@ -121,14 +120,12 @@ COMMENT="{!--" ~"--}"
 
 <IN_SINGLE_STRING> {
   {LD}                                 { pushState(IN_EE_TAG); return ExpressionEngineTypes.LD; }
-  {COMMENT}                            { return ExpressionEngineTypes.COMMENT; }
   ((\\.)|[^'{}])+                      { return ExpressionEngineTypes.STRING; }
   {SINGLE_QUOTE}                       { popState(); return ExpressionEngineTypes.STRING_END; }
 }
 
 <IN_DOUBLE_STRING> {
   {LD}                                 { pushState(IN_EE_TAG); return ExpressionEngineTypes.LD; }
-  {COMMENT}                            { return ExpressionEngineTypes.COMMENT; }
   ((\\.)|[^\"{}])+                     { return ExpressionEngineTypes.STRING; }
   {DOUBLE_QUOTE}                       { popState(); return ExpressionEngineTypes.STRING_END; }
 }
