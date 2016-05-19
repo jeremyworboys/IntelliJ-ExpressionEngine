@@ -79,6 +79,7 @@ COMMENT="{!--" ~"--}"
 
 %%
 
+{WS}+                                  { return TokenType.WHITE_SPACE; }
 {LD}{WS}+                              { return ExpressionEngineTypes.HTML; }
 {LD}{CRLF}+                            { return ExpressionEngineTypes.HTML; }
 {COMMENT}                              { return ExpressionEngineTypes.COMMENT; }
@@ -87,7 +88,6 @@ COMMENT="{!--" ~"--}"
   {LD}                                 { pushState(IN_EE_TAG); return ExpressionEngineTypes.LD; }
 
   {CRLF}                               { return ExpressionEngineTypes.CRLF; }
-  {WS}+                                { return TokenType.WHITE_SPACE; }
 }
 
 <IN_EE_TAG> {
@@ -118,7 +118,6 @@ COMMENT="{!--" ~"--}"
   {DOUBLE_QUOTE}                       { pushState(IN_DOUBLE_STRING); return ExpressionEngineTypes.STRING_START; }
 
   {CRLF}                               { return ExpressionEngineTypes.CRLF; }
-  {WS}+                                { return TokenType.WHITE_SPACE; }
 }
 
 <IN_SINGLE_STRING> {
