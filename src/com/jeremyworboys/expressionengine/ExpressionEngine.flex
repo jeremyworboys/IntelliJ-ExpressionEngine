@@ -79,6 +79,8 @@ COMMENT="{!--" ~"--}"
 
 %%
 
+{LD}{WS}+                              { return ExpressionEngineTypes.HTML; }
+{LD}{CRLF}+                            { return ExpressionEngineTypes.HTML; }
 {COMMENT}                              { return ExpressionEngineTypes.COMMENT; }
 
 <YYINITIAL> {
