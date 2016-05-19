@@ -17,7 +17,8 @@ expressionengineFile ::= statement*
 private statement ::= (tag|HTML|COMMENT|CRLF)
 
 tag ::= LD tag_name tag_content RD
-tag_name ::= (TAG_BUILTIN|TAG_ADDON|TAG_CONSTANT|TAG_DEPRECATED|TAG_GLOBAL_VAR|IDENTIFIER)
+tag_name ::= (TAG_BUILTIN|TAG_ADDON|TAG_CONSTANT|TAG_DEPRECATED|TAG_GLOBAL_VAR|tag_param|IDENTIFIER)
+tag_param ::= TAG_GLOBAL_VAR_PARAM EQUAL (NUMBER|IDENTIFIER|attribute_string)
 tag_content ::= attribute*
 
 attribute ::= CRLF? IDENTIFIER EQUAL (NUMBER|IDENTIFIER|attribute_string) CRLF?
