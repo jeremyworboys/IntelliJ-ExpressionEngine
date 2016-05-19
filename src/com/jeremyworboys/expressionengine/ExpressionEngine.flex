@@ -121,12 +121,14 @@ COMMENT="{!--" ~"--}"
 
 <IN_SINGLE_STRING> {
   {LD}                                 { pushState(IN_EE_TAG); return ExpressionEngineTypes.LD; }
+  {COMMENT}                            { return ExpressionEngineTypes.COMMENT; }
   ((\\.)|[^'{}])+                      { return ExpressionEngineTypes.STRING; }
   {SINGLE_QUOTE}                       { popState(); return ExpressionEngineTypes.STRING_END; }
 }
 
 <IN_DOUBLE_STRING> {
   {LD}                                 { pushState(IN_EE_TAG); return ExpressionEngineTypes.LD; }
+  {COMMENT}                            { return ExpressionEngineTypes.COMMENT; }
   ((\\.)|[^\"{}])+                     { return ExpressionEngineTypes.STRING; }
   {DOUBLE_QUOTE}                       { popState(); return ExpressionEngineTypes.STRING_END; }
 }

@@ -27,4 +27,4 @@ conditional_expression ::= CRLF? IDENTIFIER CRLF?
 
 attribute ::= CRLF? IDENTIFIER EQUAL attribute_value CRLF?
 attribute_value ::= (NUMBER|IDENTIFIER|attribute_string)
-attribute_string ::= (STRING_START (tag|STRING+) STRING_END) | (STRING_START STRING_END)
+attribute_string ::= (STRING_START (tag|COMMENT|STRING+) STRING_END) | (STRING_START STRING_END)
