@@ -16,10 +16,12 @@
 expressionengineFile ::= statement*
 private statement ::= (tag|conditional|HTML|COMMENT|CRLF)
 
-tag ::= LD tag_name tag_content* RD
-tag_name ::= (TAG_BUILTIN|TAG_BUILTIN_CLOSE|TAG_ADDON|TAG_ADDON_CLOSE|TAG_CONSTANT|TAG_DEPRECATED|TAG_DEPRECATED_CLOSE|TAG_GLOBAL_VAR|tag_param|TAG_LOCAL_VAR|IDENTIFIER)
+tag ::= LD tag_name tag_attribute* RD
+      | LD tag_param tag_attribute* RD
+
+tag_name ::= (TAG_BUILTIN|TAG_BUILTIN_CLOSE|TAG_ADDON|TAG_ADDON_CLOSE|TAG_CONSTANT|TAG_DEPRECATED|TAG_DEPRECATED_CLOSE|TAG_GLOBAL_VAR|TAG_LOCAL_VAR|IDENTIFIER)
 tag_param ::= TAG_GLOBAL_VAR_PARAM EQUAL attribute_value
-tag_content ::= (CRLF|attribute|conditional)
+tag_attribute ::= (CRLF|attribute|conditional)
 
 conditional ::= CRLF? LD (conditional_open|ELSE|END_IF) RD CRLF?
 conditional_open ::= (IF|ELSE_IF) conditional_expression
