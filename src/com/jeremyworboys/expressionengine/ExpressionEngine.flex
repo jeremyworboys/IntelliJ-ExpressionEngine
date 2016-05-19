@@ -2,9 +2,9 @@ package com.jeremyworboys.expressionengine;
 
 import com.intellij.lexer.FlexLexer;
 import com.intellij.psi.tree.IElementType;
-import com.jeremyworboys.expressionengine.psi.ExpressionEngineTypes;
 import com.intellij.psi.TokenType;
 import java.util.Stack;
+import static com.jeremyworboys.expressionengine.psi.ExpressionEngineTypes.*;
 
 %%
 
@@ -93,116 +93,116 @@ COMMENT="{!--" ~"--}"
 %%
 
 {WS}+ | {CRLF}                         { return TokenType.WHITE_SPACE; }
-//{CRLF}                                 { return ExpressionEngineTypes.T_CRLF; }
-{COMMENT}                              { return ExpressionEngineTypes.T_COMMENT; }
-{LD}{WS}+                              { return ExpressionEngineTypes.T_HTML; }
-{LD}{CRLF}+                            { return ExpressionEngineTypes.T_HTML; }
+//{CRLF}                                 { return T_CRLF; }
+{COMMENT}                              { return T_COMMENT; }
+{LD}{WS}+                              { return T_HTML; }
+{LD}{CRLF}+                            { return T_HTML; }
 
 <YYINITIAL> {
   // Conditionals
-  {LD} "if" ":elseif"? {WS}            { pushState(IN_EE_EXPRESSION); yypushback(yylength() - 1); return ExpressionEngineTypes.T_LD; }
-  {LD} ("/if"|"if:else") {RD}          { pushState(IN_EE_CONDITIONAL); yypushback(yylength() - 1); return ExpressionEngineTypes.T_LD; }
+  {LD} "if" ":elseif"? {WS}            { pushState(IN_EE_EXPRESSION); yypushback(yylength() - 1); return T_LD; }
+  {LD} ("/if"|"if:else") {RD}          { pushState(IN_EE_CONDITIONAL); yypushback(yylength() - 1); return T_LD; }
   // Variables
-  {LD} {GLOBAL_VAR} {RD}               { pushState(IN_EE_TAG); yypushback(yylength() - 1); return ExpressionEngineTypes.T_LD; }
-  {LD} {GLOBAL_CONST} {RD}             { pushState(IN_EE_TAG); yypushback(yylength() - 1); return ExpressionEngineTypes.T_LD; }
-  {LD} {EMBED_VAR} {RD}                { pushState(IN_EE_TAG); yypushback(yylength() - 1); return ExpressionEngineTypes.T_LD; }
-  {LD} {LAYOUT_VAR} {RD}               { pushState(IN_EE_TAG); yypushback(yylength() - 1); return ExpressionEngineTypes.T_LD; }
-//  {LD} {VARIABLE} {RD}                 { pushState(IN_EE_TAG); yypushback(yylength() - 1); return ExpressionEngineTypes.T_LD; }
+  {LD} {GLOBAL_VAR} {RD}               { pushState(IN_EE_TAG); yypushback(yylength() - 1); return T_LD; }
+  {LD} {GLOBAL_CONST} {RD}             { pushState(IN_EE_TAG); yypushback(yylength() - 1); return T_LD; }
+  {LD} {EMBED_VAR} {RD}                { pushState(IN_EE_TAG); yypushback(yylength() - 1); return T_LD; }
+  {LD} {LAYOUT_VAR} {RD}               { pushState(IN_EE_TAG); yypushback(yylength() - 1); return T_LD; }
+//  {LD} {VARIABLE} {RD}                 { pushState(IN_EE_TAG); yypushback(yylength() - 1); return T_LD; }
   // Anything else is html
-  [^]                                  { return ExpressionEngineTypes.T_HTML; }
+  [^]                                  { return T_HTML; }
 }
 
 <IN_EE_EXPRESSION> {
-  "if"                                 { return ExpressionEngineTypes.T_IF; }
-  "if:elseif"                          { return ExpressionEngineTypes.T_ELSEIF; }
-  {RD}                                 { popState(); return ExpressionEngineTypes.T_RD; }
+  "if"                                 { return T_IF; }
+  "if:elseif"                          { return T_ELSEIF; }
+  {RD}                                 { popState(); return T_RD; }
   // Parens
-  "("                                  { return ExpressionEngineTypes.T_LP; }
-  ")"                                  { return ExpressionEngineTypes.T_RP; }
+  "("                                  { return T_LP; }
+  ")"                                  { return T_RP; }
   // Operators
-  "=="                                 { return ExpressionEngineTypes.T_OP_EQ; }
-  "!="|"<>"                            { return ExpressionEngineTypes.T_OP_NEQ; }
-  "<"                                  { return ExpressionEngineTypes.T_OP_LT; }
-  "<="                                 { return ExpressionEngineTypes.T_OP_LTE; }
-  ">"                                  { return ExpressionEngineTypes.T_OP_GT; }
-  ">="                                 { return ExpressionEngineTypes.T_OP_GTE; }
-  "^="                                 { return ExpressionEngineTypes.T_OP_STARTS; }
-  "*="                                 { return ExpressionEngineTypes.T_OP_CONTAINS; }
-  "$="                                 { return ExpressionEngineTypes.T_OP_ENDS; }
-  "~"                                  { return ExpressionEngineTypes.T_OP_MATCH; }
-  "!"                                  { return ExpressionEngineTypes.T_OP_NOT; }
-  "&&"|"AND"                           { return ExpressionEngineTypes.T_OP_AND; }
-  "XOR"                                { return ExpressionEngineTypes.T_OP_XOR; }
-  "||"|"OR"                            { return ExpressionEngineTypes.T_OP_OR; }
-  "+"                                  { return ExpressionEngineTypes.T_OP_ADD; }
-  "-"                                  { return ExpressionEngineTypes.T_OP_SUB; }
-  "*"                                  { return ExpressionEngineTypes.T_OP_MUL; }
-  "/"                                  { return ExpressionEngineTypes.T_OP_DIV; }
-  "**"|"^"                             { return ExpressionEngineTypes.T_OP_POW; }
-  "%"                                  { return ExpressionEngineTypes.T_OP_MOD; }
-  "."                                  { return ExpressionEngineTypes.T_OP_CONCAT; }
+  "=="                                 { return T_OP_EQ; }
+  "!="|"<>"                            { return T_OP_NEQ; }
+  "<"                                  { return T_OP_LT; }
+  "<="                                 { return T_OP_LTE; }
+  ">"                                  { return T_OP_GT; }
+  ">="                                 { return T_OP_GTE; }
+  "^="                                 { return T_OP_STARTS; }
+  "*="                                 { return T_OP_CONTAINS; }
+  "$="                                 { return T_OP_ENDS; }
+  "~"                                  { return T_OP_MATCH; }
+  "!"                                  { return T_OP_NOT; }
+  "&&"|"AND"                           { return T_OP_AND; }
+  "XOR"                                { return T_OP_XOR; }
+  "||"|"OR"                            { return T_OP_OR; }
+  "+"                                  { return T_OP_ADD; }
+  "-"                                  { return T_OP_SUB; }
+  "*"                                  { return T_OP_MUL; }
+  "/"                                  { return T_OP_DIV; }
+  "**"|"^"                             { return T_OP_POW; }
+  "%"                                  { return T_OP_MOD; }
+  "."                                  { return T_OP_CONCAT; }
   // Literals
-  "true"|"false"                       { return ExpressionEngineTypes.T_BOOL; }
-  {NUMBER}                             { return ExpressionEngineTypes.T_NUMBER; }
+  "true"|"false"                       { return T_BOOL; }
+  {NUMBER}                             { return T_NUMBER; }
   // Variables
-  {GLOBAL_VAR}                         { return ExpressionEngineTypes.T_GLOBAL_VAR; }
-  {GLOBAL_CONST}                       { return ExpressionEngineTypes.T_GLOBAL_CONST; }
-  {EMBED_VAR}                          { return ExpressionEngineTypes.T_EMBED_VAR; }
-  {LAYOUT_VAR}                         { return ExpressionEngineTypes.T_LAYOUT_VAR; }
-  {VARIABLE}                           { return ExpressionEngineTypes.T_VARIABLE; }
+  {GLOBAL_VAR}                         { return T_GLOBAL_VAR; }
+  {GLOBAL_CONST}                       { return T_GLOBAL_CONST; }
+  {EMBED_VAR}                          { return T_EMBED_VAR; }
+  {LAYOUT_VAR}                         { return T_LAYOUT_VAR; }
+  {VARIABLE}                           { return T_VARIABLE; }
   // Strings
-  {SINGLE_QUOTE}                       { pushState(IN_SINGLE_STRING); return ExpressionEngineTypes.T_STRING_START; }
-  {DOUBLE_QUOTE}                       { pushState(IN_DOUBLE_STRING); return ExpressionEngineTypes.T_STRING_START; }
+  {SINGLE_QUOTE}                       { pushState(IN_SINGLE_STRING); return T_STRING_START; }
+  {DOUBLE_QUOTE}                       { pushState(IN_DOUBLE_STRING); return T_STRING_START; }
   // Nested tag
-//  {LD}                                 { pushState(IN_EE_TAG); return ExpressionEngineTypes.T_LD; }
+//  {LD}                                 { pushState(IN_EE_TAG); return T_LD; }
 }
 
 <IN_EE_CONDITIONAL> {
-  "/if"                                { return ExpressionEngineTypes.T_ENDIF; }
-  "if:else"                            { return ExpressionEngineTypes.T_ELSE; }
-  {RD}                                 { popState(); return ExpressionEngineTypes.T_RD; }
+  "/if"                                { return T_ENDIF; }
+  "if:else"                            { return T_ELSE; }
+  {RD}                                 { popState(); return T_RD; }
 }
 
 <IN_EE_TAG> {
-  {RD}                                 { popState(); return ExpressionEngineTypes.T_RD; }
+  {RD}                                 { popState(); return T_RD; }
 
-//  "layout="                            { pushState(IN_EE_LAYOUT_TAG); yypushback(1); return ExpressionEngineTypes.T_TAG; }
+//  "layout="                            { pushState(IN_EE_LAYOUT_TAG); yypushback(1); return T_TAG; }
 
-//  {TAG_BUILTIN}                        { return ExpressionEngineTypes.TAG_BUILTIN; }
-//  {TAG_ADDON}                          { return ExpressionEngineTypes.TAG_ADDON; }
-//  {TAG_CONSTANT}                       { return ExpressionEngineTypes.TAG_CONSTANT; }
-//  {TAG_DEPRECATED}                     { return ExpressionEngineTypes.TAG_DEPRECATED; }
-//  {TAG_GLOBAL_VAR}                     { return ExpressionEngineTypes.TAG_GLOBAL_VAR; }
-//  {TAG_GLOBAL_VAR_PARAM}               { return ExpressionEngineTypes.TAG_GLOBAL_VAR_PARAM; }
+//  {TAG_BUILTIN}                        { return TAG_BUILTIN; }
+//  {TAG_ADDON}                          { return TAG_ADDON; }
+//  {TAG_CONSTANT}                       { return TAG_CONSTANT; }
+//  {TAG_DEPRECATED}                     { return TAG_DEPRECATED; }
+//  {TAG_GLOBAL_VAR}                     { return TAG_GLOBAL_VAR; }
+//  {TAG_GLOBAL_VAR_PARAM}               { return TAG_GLOBAL_VAR_PARAM; }
 //
-//  "/" {TAG_BUILTIN}                    { return ExpressionEngineTypes.TAG_BUILTIN_CLOSE; }
-//  "/" {TAG_ADDON}                      { return ExpressionEngineTypes.TAG_ADDON_CLOSE; }
-//  "/" {TAG_DEPRECATED}                 { return ExpressionEngineTypes.TAG_DEPRECATED_CLOSE; }
+//  "/" {TAG_BUILTIN}                    { return TAG_BUILTIN_CLOSE; }
+//  "/" {TAG_ADDON}                      { return TAG_ADDON_CLOSE; }
+//  "/" {TAG_DEPRECATED}                 { return TAG_DEPRECATED_CLOSE; }
 //
 //  {IDENTIFIER}                         { return ExpressionEngineTypes.IDENTIFIER; }
 //
 //  {EQUAL}                              { return ExpressionEngineTypes.EQUAL; }
 //  {NUMBER}                             { return ExpressionEngineTypes.NUMBER; }
   // Variables
-  {GLOBAL_VAR}                         { return ExpressionEngineTypes.T_GLOBAL_VAR; }
-  {GLOBAL_CONST}                       { return ExpressionEngineTypes.T_GLOBAL_CONST; }
-  {EMBED_VAR}                          { return ExpressionEngineTypes.T_EMBED_VAR; }
-  {LAYOUT_VAR}                         { return ExpressionEngineTypes.T_LAYOUT_VAR; }
-//  {VARIABLE}                           { return ExpressionEngineTypes.T_VARIABLE; }
+  {GLOBAL_VAR}                         { return T_GLOBAL_VAR; }
+  {GLOBAL_CONST}                       { return T_GLOBAL_CONST; }
+  {EMBED_VAR}                          { return T_EMBED_VAR; }
+  {LAYOUT_VAR}                         { return T_LAYOUT_VAR; }
+//  {VARIABLE}                           { return T_VARIABLE; }
   // Nested tag
-//  {LD}                                 { pushState(IN_EE_TAG); return ExpressionEngineTypes.T_LD; }
+//  {LD}                                 { pushState(IN_EE_TAG); return T_LD; }
 }
 
 <IN_SINGLE_STRING> {
 //  {LD}                                 { pushState(IN_EE_TAG); return ExpressionEngineTypes.LD; }
-  ((\\.)|[^'{}])+                      { return ExpressionEngineTypes.T_STRING; }
-  {SINGLE_QUOTE}                       { popState(); return ExpressionEngineTypes.T_STRING_END; }
+  ((\\.)|[^'{}])+                      { return T_STRING; }
+  {SINGLE_QUOTE}                       { popState(); return T_STRING_END; }
 }
 
 <IN_DOUBLE_STRING> {
 //  {LD}                                 { pushState(IN_EE_TAG); return ExpressionEngineTypes.LD; }
-  ((\\.)|[^\"{}])+                     { return ExpressionEngineTypes.T_STRING; }
-  {DOUBLE_QUOTE}                       { popState(); return ExpressionEngineTypes.T_STRING_END; }
+  ((\\.)|[^\"{}])+                     { return T_STRING; }
+  {DOUBLE_QUOTE}                       { popState(); return T_STRING_END; }
 }
 
 .                                      { return TokenType.BAD_CHARACTER; }
