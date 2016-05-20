@@ -120,6 +120,7 @@ COMMENT="{!--" ~"--}"
   {LD} {EMBED_VAR} {RD}                { pushState(IN_EE_VAR); yypushback(yylength() - 1); return T_LD; }
   {LD} {LAYOUT_VAR} {RD}               { pushState(IN_EE_VAR); yypushback(yylength() - 1); return T_LD; }
   {LD} {VARIABLE} {RD}                 { pushState(IN_EE_VAR); yypushback(yylength() - 1); return T_LD; }
+  {LD} "/" {VARIABLE} {RD}             { pushState(IN_EE_VAR); yypushback(yylength() - 1); return T_LD; }
   // TODO: Specify the exact variables that have a primary param
   {LD} {VARIABLE} "=" .+ {RD}          { pushState(IN_EE_VAR_WITH_PARAM); yypushback(yylength() - 1); return T_LD; }
   // TODO: This is accidentally matching {if:elseif}
@@ -192,6 +193,7 @@ COMMENT="{!--" ~"--}"
   {EMBED_VAR}                          { return T_EMBED_VAR; }
   {LAYOUT_VAR}                         { return T_LAYOUT_VAR; }
   {VARIABLE}                           { return T_VARIABLE; }
+  "/" {VARIABLE} {RD}                  { yypushback(yylength() - 1); return T_SLASH; }
 }
 
 <IN_EE_VAR_WITH_PARAM> {
@@ -204,7 +206,7 @@ COMMENT="{!--" ~"--}"
   {RD}                                 { popState(); return T_RD; }
   // Match tag name
   {TAG_NAME}                           { pushState(IN_EE_TAG_PARAMS); return T_TAG_NAME; }
-  "/" {TAG_NAME} {RD}                  { yypushback(yylength() -1); return T_SLASH; }
+  "/" {TAG_NAME} {RD}                  { yypushback(yylength() - 1); return T_SLASH; }
 }
 
 <IN_EE_TAG_PARAMS> {

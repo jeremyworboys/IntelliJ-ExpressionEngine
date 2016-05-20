@@ -77,6 +77,7 @@ tag ::= tag_simple | tag_compound | tag_with_param | tag_module
 private tag_simple ::= T_LD group_vars T_RD
 
 private tag_compound ::= T_LD group_vars tag_param* T_RD
+                       | T_LD T_SLASH group_vars T_RD
 
 // TODO: Specify the exact variables that have a primary param
 private tag_with_param ::= T_LD T_VARIABLE T_EQUALS tag_param_value tag_param* T_RD
