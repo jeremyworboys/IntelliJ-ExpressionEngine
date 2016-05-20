@@ -47,7 +47,8 @@ DOUBLE_QUOTE="\""
 NUMBER=([0-9]*\.[0-9]+|[0-9]+\.[0-9]*|[0-9]+)
 
 // Identifiers
-VARIABLE=[a-zA-Z0-9\-_]+ (":" [a-zA-Z0-9\-_]+)*
+IDENTIFIER=[a-zA-Z0-9\-_]+ (":" [a-zA-Z0-9\-_]+)*
+VARIABLE={IDENTIFIER}
 // TODO: Double check allowed chars for paths
 PATH=[a-zA-Z0-9\-_]+([a-zA-Z0-9\-_/.]+)*
 
@@ -76,8 +77,8 @@ PARAM_VAR=path|permalink|title_permalink|comment_path|day_path|entry_id_path|emb
          |last_author_profile_path|member_path|member_search_path|multi_field|next_path|preload_replace:[a-zA-Z0-9_-]+
          |previous_path|profile_path|stylesheet|switch|thread_path|url_title_path
 
-TAG_NAME="exp:" [a-zA-Z0-9\-_]+ (":" [a-zA-Z0-9\-_]+)*
-TAG_PARAM=[a-zA-Z0-9\-_]+ (":" [a-zA-Z0-9\-_]+)* "="
+TAG_NAME="exp:" {IDENTIFIER}
+TAG_PARAM={IDENTIFIER} "="
 
 // ExpressionEngine tag delimiters
 LD="{"
