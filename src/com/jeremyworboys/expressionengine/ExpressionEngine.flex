@@ -208,6 +208,7 @@ COMMENT="{!--" ~"--}"
 }
 
 <IN_EE_TAG_PARAMS> {
+  // TODO: Conditionals in tag params
   {RD}                                 { popState(); popState(); return T_RD; }
   {TAG_PARAM}                          { yypushback(1); return T_TAG_PARAM; }
   "="                                  { return T_EQUALS; }
@@ -228,14 +229,16 @@ COMMENT="{!--" ~"--}"
 }
 
 <IN_SINGLE_STRING> {
-//  {LD}                                 { pushState(IN_EE_TAG); return ExpressionEngineTypes.LD; }
-  ((\\.)|[^'{}])+                      { return T_STRING; }
+  // TODO: Match comments in strings
+  // TODO: Match variables in strings
+  ((\\.)|[^'])+                        { return T_STRING; }
   {SINGLE_QUOTE}                       { popState(); return T_STRING_END; }
 }
 
 <IN_DOUBLE_STRING> {
-//  {LD}                                 { pushState(IN_EE_TAG); return ExpressionEngineTypes.LD; }
-  ((\\.)|[^\"{}])+                     { return T_STRING; }
+  // TODO: Match comments in strings
+  // TODO: Match variables in strings
+  ((\\.)|[^\"])+                       { return T_STRING; }
   {DOUBLE_QUOTE}                       { popState(); return T_STRING_END; }
 }
 
