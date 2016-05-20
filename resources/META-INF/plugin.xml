@@ -25,7 +25,7 @@
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
         <fileTypeFactory implementation="com.jeremyworboys.expressionengine.ExpressionEngineFileTypeFactory"/>
-        <lang.parserDefinition language="ExpressionEngine" implementationClass="com.jeremyworboys.expressionengine.ExpressionEngineParserDefinition"/>
+        <lang.parserDefinition language="ExpressionEngine" implementationClass="com.jeremyworboys.expressionengine.parser.ExpressionEngineParserDefinition"/>
         <lang.syntaxHighlighterFactory language="ExpressionEngine" implementationClass="com.jeremyworboys.expressionengine.highlighting.ExpressionEngineSyntaxHighlighterFactory"/>
     </extensions>
 

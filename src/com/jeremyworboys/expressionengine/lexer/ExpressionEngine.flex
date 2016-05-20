@@ -4,7 +4,7 @@ import com.intellij.lexer.FlexLexer;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.TokenType;
 import java.util.Stack;
-import static com.jeremyworboys.expressionengine.psi.ExpressionEngineTypes.*;
+import static com.jeremyworboys.expressionengine.parser.psi.ExpressionEngineTypes.*;
 
 %%
 
