@@ -43,6 +43,7 @@ private group_mul     ::= op_mul_expr | op_div_expr | op_mod_expr
 private group_add     ::= op_add_expr | op_sub_expr
 private group_unary   ::= unary_not_expr | unary_plus_expr | unary_minus_expr
 private group_primary ::= literal_expr | paren_expr
+private group_vars    ::= T_GLOBAL_VAR | T_GLOBAL_CONST | T_EMBED_VAR | T_LAYOUT_VAR | T_VARIABLE
 
 op_eq_expr       ::= expr T_OP_EQ expr
 op_neq_expr      ::= expr T_OP_NEQ expr
@@ -68,14 +69,18 @@ unary_not_expr   ::= T_OP_NOT expr
 unary_plus_expr  ::= T_OP_ADD expr
 unary_minus_expr ::= T_OP_SUB expr
 paren_expr       ::= T_LP expr T_RP
-literal_expr     ::= T_BOOL | T_NUMBER | group_vars | T_VARIABLE | string
+literal_expr     ::= T_BOOL | T_NUMBER | group_vars | string
 
 // Tags
-tag ::= tag_simple
+tag ::= tag_simple | tag_module
 
 private tag_simple ::= T_LD group_vars T_RD
+private tag_module ::= T_LD T_TAG_NAME tag_param* T_RD
+                     | T_LD T_SLASH T_TAG_NAME T_RD
 
-private group_vars ::= T_GLOBAL_VAR | T_GLOBAL_CONST | T_EMBED_VAR | T_LAYOUT_VAR
+private tag_param ::= T_TAG_PARAM T_EQUALS tag_param_value
+private tag_param_value ::= T_NUMBER | group_vars | string
+
 //private tag_local_var  ::= T_LD T_VARIABLE T_RD
 
 //tag ::= LD tag_name tag_attribute* RD

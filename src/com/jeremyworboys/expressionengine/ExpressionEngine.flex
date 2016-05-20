@@ -47,7 +47,8 @@ DOUBLE_QUOTE="\""
 NUMBER=([0-9]*\.[0-9]+|[0-9]+\.[0-9]*|[0-9]+)
 
 // Identifiers
-VARIABLE=\w*([a-zA-Z]+([\w:-]+\w)?|(\w[\w:-]+)?[a-zA-Z]+)\w*
+VARIABLE=[a-zA-Z\-_]+
+//VARIABLE=\w*([a-zA-Z]+([\w:-]+\w)?|(\w[\w:-]+)?[a-zA-Z]+)\w*
 //IDENTIFIER=[a-zA-Z][a-zA-Z0-9:_-]*[a-zA-Z]+
 
 EMBED_VAR="embed:" {VARIABLE}
@@ -71,6 +72,8 @@ GLOBAL_VAR=app_build|app_version|auto_log_in|build|captcha|charset|cp_url|curren
 GLOBAL_CONST=DATE_ATOM|DATE_COOKIE|DATE_ISO8601|DATE_RFC822|DATE_RFC850|DATE_RFC1036|DATE_RFC1123|DATE_RFC2822|DATE_RSS
             |DATE_W3C|XID_HASH
 
+TAG_NAME="exp:" [a-zA-Z\-_:]+
+
 // ExpressionEngine tag delimiters
 LD="{"
 RD="}"
@@ -84,7 +87,9 @@ RD="}"
 // ExpressionEngine comment delimiters
 COMMENT="{!--" ~"--}"
 
+%state IN_EE_VAR
 %state IN_EE_TAG
+%state IN_EE_TAG_PARAMS
 %state IN_EE_EXPRESSION
 %state IN_EE_CONDITIONAL
 %state IN_SINGLE_STRING
@@ -102,14 +107,18 @@ COMMENT="{!--" ~"--}"
   // Conditionals
   {LD} "if" ":elseif"? {WS}            { pushState(IN_EE_EXPRESSION); yypushback(yylength() - 1); return T_LD; }
   {LD} ("/if"|"if:else") {RD}          { pushState(IN_EE_CONDITIONAL); yypushback(yylength() - 1); return T_LD; }
+  // Tags
+  {LD} {TAG_NAME} .* {RD}              { pushState(IN_EE_TAG); yypushback(yylength() - 1); return T_LD; }
+  {LD} "/" {TAG_NAME} {RD}             { pushState(IN_EE_TAG); yypushback(yylength() - 1); return T_LD; }
   // Variables
-  {LD} {GLOBAL_VAR} {RD}               { pushState(IN_EE_TAG); yypushback(yylength() - 1); return T_LD; }
-  {LD} {GLOBAL_CONST} {RD}             { pushState(IN_EE_TAG); yypushback(yylength() - 1); return T_LD; }
-  {LD} {EMBED_VAR} {RD}                { pushState(IN_EE_TAG); yypushback(yylength() - 1); return T_LD; }
-  {LD} {LAYOUT_VAR} {RD}               { pushState(IN_EE_TAG); yypushback(yylength() - 1); return T_LD; }
-//  {LD} {VARIABLE} {RD}                 { pushState(IN_EE_TAG); yypushback(yylength() - 1); return T_LD; }
+  {LD} {GLOBAL_VAR} {RD}               { pushState(IN_EE_VAR); yypushback(yylength() - 1); return T_LD; }
+  {LD} {GLOBAL_CONST} {RD}             { pushState(IN_EE_VAR); yypushback(yylength() - 1); return T_LD; }
+  {LD} {EMBED_VAR} {RD}                { pushState(IN_EE_VAR); yypushback(yylength() - 1); return T_LD; }
+  {LD} {LAYOUT_VAR} {RD}               { pushState(IN_EE_VAR); yypushback(yylength() - 1); return T_LD; }
+  {LD} {VARIABLE} {RD}                 { pushState(IN_EE_VAR); yypushback(yylength() - 1); return T_LD; }
   // Anything else is html
   [^]                                  { return T_HTML; }
+//  !([^]*"{"[^]*)                       { return T_HTML; }
 }
 
 <IN_EE_EXPRESSION> {
@@ -163,34 +172,40 @@ COMMENT="{!--" ~"--}"
   {RD}                                 { popState(); return T_RD; }
 }
 
-<IN_EE_TAG> {
+<IN_EE_VAR> {
   {RD}                                 { popState(); return T_RD; }
-
-//  "layout="                            { pushState(IN_EE_LAYOUT_TAG); yypushback(1); return T_TAG; }
-
-//  {TAG_BUILTIN}                        { return TAG_BUILTIN; }
-//  {TAG_ADDON}                          { return TAG_ADDON; }
-//  {TAG_CONSTANT}                       { return TAG_CONSTANT; }
-//  {TAG_DEPRECATED}                     { return TAG_DEPRECATED; }
-//  {TAG_GLOBAL_VAR}                     { return TAG_GLOBAL_VAR; }
-//  {TAG_GLOBAL_VAR_PARAM}               { return TAG_GLOBAL_VAR_PARAM; }
-//
-//  "/" {TAG_BUILTIN}                    { return TAG_BUILTIN_CLOSE; }
-//  "/" {TAG_ADDON}                      { return TAG_ADDON_CLOSE; }
-//  "/" {TAG_DEPRECATED}                 { return TAG_DEPRECATED_CLOSE; }
-//
-//  {IDENTIFIER}                         { return ExpressionEngineTypes.IDENTIFIER; }
-//
-//  {EQUAL}                              { return ExpressionEngineTypes.EQUAL; }
-//  {NUMBER}                             { return ExpressionEngineTypes.NUMBER; }
   // Variables
   {GLOBAL_VAR}                         { return T_GLOBAL_VAR; }
   {GLOBAL_CONST}                       { return T_GLOBAL_CONST; }
   {EMBED_VAR}                          { return T_EMBED_VAR; }
   {LAYOUT_VAR}                         { return T_LAYOUT_VAR; }
-//  {VARIABLE}                           { return T_VARIABLE; }
-  // Nested tag
-//  {LD}                                 { pushState(IN_EE_TAG); return T_LD; }
+  {VARIABLE}                           { return T_VARIABLE; }
+}
+
+<IN_EE_TAG> {
+  {RD}                                 { popState(); return T_RD; }
+  // Match tag name
+  {TAG_NAME}                           { pushState(IN_EE_TAG_PARAMS); return T_TAG_NAME; }
+  "/" {TAG_NAME} {RD}                  { yypushback(yylength() -1); return T_SLASH; }
+}
+
+<IN_EE_TAG_PARAMS> {
+  {RD}                                 { popState(); popState(); return T_RD; }
+  [a-zA-Z\-_]+                         { return T_TAG_PARAM; }
+  "="                                  { return T_EQUALS; }
+  // Literals
+  {NUMBER}                             { return T_NUMBER; }
+  // Variables
+  {GLOBAL_VAR}                         { return T_GLOBAL_VAR; }
+  {GLOBAL_CONST}                       { return T_GLOBAL_CONST; }
+  {EMBED_VAR}                          { return T_EMBED_VAR; }
+  {LAYOUT_VAR}                         { return T_LAYOUT_VAR; }
+  {VARIABLE}                           { return T_VARIABLE; }
+  // Strings
+  {SINGLE_QUOTE}                       { pushState(IN_SINGLE_STRING); return T_STRING_START; }
+  {DOUBLE_QUOTE}                       { pushState(IN_DOUBLE_STRING); return T_STRING_START; }
+//  // Nested tag
+////  {LD}                                 { pushState(IN_EE_TAG); return T_LD; }
 }
 
 <IN_SINGLE_STRING> {
