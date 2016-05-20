@@ -98,6 +98,7 @@ COMMENT="{!--" ~"--}"
 
 %%
 
+// TODO: Match and highlight embedded PHP
 {COMMENT}                              { return T_COMMENT; }
 {LD}{WS}+                              { return T_HTML; }
 {LD}{CRLF}+                            { return T_HTML; }
