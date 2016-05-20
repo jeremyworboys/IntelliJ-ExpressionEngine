@@ -73,7 +73,7 @@ GLOBAL_CONST=DATE_ATOM|DATE_COOKIE|DATE_ISO8601|DATE_RFC822|DATE_RFC850|DATE_RFC
             |DATE_W3C|XID_HASH
 
 TAG_NAME="exp:" [a-zA-Z\-_:]+
-TAG_PARAM=[a-zA-Z\-_]+ "="
+TAG_PARAM="search:"? [a-zA-Z\-_]+ "="
 
 // ExpressionEngine tag delimiters
 LD="{"
