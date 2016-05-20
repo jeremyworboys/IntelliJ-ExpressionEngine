@@ -16,7 +16,6 @@
 
 expressionengineFile ::= statement*
 
-//private statement ::= (tag|conditional|HTML|COMMENT|CRLF)
 private statement ::= comment | tag | conditional | T_HTML | T_CRLF
 
 // Comments
