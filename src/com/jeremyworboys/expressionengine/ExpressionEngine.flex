@@ -47,7 +47,7 @@ DOUBLE_QUOTE="\""
 NUMBER=([0-9]*\.[0-9]+|[0-9]+\.[0-9]*|[0-9]+)
 
 // Identifiers
-VARIABLE=[a-zA-Z0-9\-_:]+
+VARIABLE=[a-zA-Z0-9\-_]+ (":" [a-zA-Z0-9\-_]+)*
 // TODO: Double check allowed chars for paths
 PATH=[a-zA-Z0-9\-_]+([a-zA-Z0-9\-_/.]+)*
 //VARIABLE=\w*([a-zA-Z]+([\w:-]+\w)?|(\w[\w:-]+)?[a-zA-Z]+)\w*
@@ -74,8 +74,8 @@ GLOBAL_VAR=app_build|app_version|auto_log_in|build|captcha|charset|cp_url|curren
 GLOBAL_CONST=DATE_ATOM|DATE_COOKIE|DATE_ISO8601|DATE_RFC822|DATE_RFC850|DATE_RFC1036|DATE_RFC1123|DATE_RFC2822|DATE_RSS
             |DATE_W3C|XID_HASH
 
-TAG_NAME="exp:" [a-zA-Z\-_:]+
-TAG_PARAM="search:"? [a-zA-Z0-9\-_]+ "="
+TAG_NAME="exp:" [a-zA-Z0-9\-_]+ (":" [a-zA-Z0-9\-_]+)*
+TAG_PARAM=[a-zA-Z0-9\-_]+ (":" [a-zA-Z0-9\-_]+)* "="
 
 // ExpressionEngine tag delimiters
 LD="{"
