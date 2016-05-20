@@ -106,7 +106,7 @@ COMMENT="{!--" ~"--}"
 
 <YYINITIAL> {
   // Conditionals
-  {LD} "if" ":elseif"? .* {RD}         { pushState(IN_EE_EXPRESSION); yypushback(yylength() - 1); return T_LD; }
+  {LD} "if" ":elseif"?                 { pushState(IN_EE_EXPRESSION); yypushback(yylength() - 1); return T_LD; }
   {LD} ("/if"|"if:else") {RD}          { pushState(IN_EE_CONDITIONAL); yypushback(yylength() - 1); return T_LD; }
   // Tags
   {LD} {TAG_NAME} .* {RD}              { pushState(IN_EE_TAG); yypushback(yylength() - 1); return T_LD; }
@@ -120,7 +120,7 @@ COMMENT="{!--" ~"--}"
   // TODO: Specify the exact variables that have a primary param
   {LD} {VARIABLE} "=" .* {RD}          { pushState(IN_EE_VAR_WITH_PARAM); yypushback(yylength() - 1); return T_LD; }
   // TODO: This matches variables with parameters but might be too greedy
-  {LD} {VARIABLE} .* {RD}              { pushState(IN_EE_VAR_WITH_PARAM); yypushback(yylength() - 1); return T_LD; }
+  {LD} {VARIABLE} {WS} [a-zA-Z\-_]+ "=" .* {RD} { pushState(IN_EE_VAR_WITH_PARAM); yypushback(yylength() - 1); return T_LD; }
   // Anything else is html
   !([^]*"{"[^]*)                       { return T_HTML; }
 }
@@ -189,7 +189,7 @@ COMMENT="{!--" ~"--}"
 <IN_EE_VAR_WITH_PARAM> {
   {RD}                                 { popState(); return T_RD; }
   // Variables
-  {VARIABLE}                           {  pushState(IN_EE_TAG_PARAMS); return T_VARIABLE; }
+  {VARIABLE}                           { pushState(IN_EE_TAG_PARAMS); return T_VARIABLE; }
 }
 
 <IN_EE_TAG> {
