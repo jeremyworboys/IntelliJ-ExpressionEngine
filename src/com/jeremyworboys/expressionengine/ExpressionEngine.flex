@@ -37,7 +37,7 @@ import static com.jeremyworboys.expressionengine.psi.ExpressionEngineTypes.*;
 %}
 
 // Generics
-WS=[\ \t\f]
+WS=[\ \t\f\s]
 CRLF=\n|\r|\r\n
 
 SINGLE_QUOTE="\'"
