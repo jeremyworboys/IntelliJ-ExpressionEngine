@@ -49,7 +49,7 @@ NUMBER=([0-9]*\.[0-9]+|[0-9]+\.[0-9]*|[0-9]+)
 // Identifiers
 VARIABLE=[a-zA-Z0-9\-_:]+
 // TODO: Double check allowed chars for paths
-PATH=[a-zA-Z0-9\-_]+([a-zA-Z0-9\-_/]+)*
+PATH=[a-zA-Z0-9\-_]+([a-zA-Z0-9\-_/.]+)*
 //VARIABLE=\w*([a-zA-Z]+([\w:-]+\w)?|(\w[\w:-]+)?[a-zA-Z]+)\w*
 //IDENTIFIER=[a-zA-Z][a-zA-Z0-9:_-]*[a-zA-Z]+
 
