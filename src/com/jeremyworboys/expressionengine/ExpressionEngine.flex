@@ -109,10 +109,10 @@ COMMENT="{!--" ~"--}"
 
 <YYINITIAL> {
   // Conditionals
-  {LD} "if" ":elseif"? {WS} .+ {RD}    { pushState(IN_EE_EXPRESSION); yypushback(yylength() - 1); return T_LD; }
+  {LD} "if" ":elseif"? {WS} ~ {RD}     { pushState(IN_EE_EXPRESSION); yypushback(yylength() - 1); return T_LD; }
   {LD} ("/if"|"if:else") {RD}          { pushState(IN_EE_CONDITIONAL); yypushback(yylength() - 1); return T_LD; }
   // Tags
-  {LD} {TAG_NAME} .* {RD}              { pushState(IN_EE_TAG); yypushback(yylength() - 1); return T_LD; }
+  {LD} {TAG_NAME} ~ {RD}               { pushState(IN_EE_TAG); yypushback(yylength() - 1); return T_LD; }
   {LD} "/" {TAG_NAME} {RD}             { pushState(IN_EE_TAG); yypushback(yylength() - 1); return T_LD; }
   // Variables
   {LD} {GLOBAL_VAR} {RD}               { pushState(IN_EE_VAR); yypushback(yylength() - 1); return T_LD; }
@@ -121,9 +121,8 @@ COMMENT="{!--" ~"--}"
   {LD} {LAYOUT_VAR} {RD}               { pushState(IN_EE_VAR); yypushback(yylength() - 1); return T_LD; }
   {LD} {VARIABLE} {RD}                 { pushState(IN_EE_VAR); yypushback(yylength() - 1); return T_LD; }
   // TODO: Specify the exact variables that have a primary param
-  {LD} {VARIABLE} "=" .+ {RD}          { pushState(IN_EE_VAR_WITH_PARAM); yypushback(yylength() - 1); return T_LD; }
-  // TODO: This matches variables with parameters but might be too greedy
-  {LD} {VARIABLE} {WS} {TAG_PARAM} .+ {RD} { pushState(IN_EE_VAR_WITH_PARAM); yypushback(yylength() - 1); return T_LD; }
+  {LD} {VARIABLE} "=" ~ {RD}           { pushState(IN_EE_VAR_WITH_PARAM); yypushback(yylength() - 1); return T_LD; }
+  {LD} {VARIABLE} {WS} {TAG_PARAM} ~ {RD} { pushState(IN_EE_VAR_WITH_PARAM); yypushback(yylength() - 1); return T_LD; }
   // Anything else is html
   !([^]*"{"[^]*)                       { return T_HTML; }
   {LD} ~ {RD}                          { return T_HTML; }
