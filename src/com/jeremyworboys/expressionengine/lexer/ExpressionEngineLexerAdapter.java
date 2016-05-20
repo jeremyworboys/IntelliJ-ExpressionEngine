@@ -1,4 +1,4 @@
-package com.jeremyworboys.expressionengine;
+package com.jeremyworboys.expressionengine.lexer;
 
 import com.intellij.lexer.FlexAdapter;
 

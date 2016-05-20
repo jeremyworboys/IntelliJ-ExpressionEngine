@@ -12,7 +12,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.TokenSet;
-import com.jeremyworboys.expressionengine.lexing.ExpressionEngineLexerAdapter;
+import com.jeremyworboys.expressionengine.lexer.ExpressionEngineLexerAdapter;
 import com.jeremyworboys.expressionengine.parser.ExpressionEngineParser;
 import com.jeremyworboys.expressionengine.psi.ExpressionEngineFile;
 import com.jeremyworboys.expressionengine.psi.ExpressionEngineTypes;
