@@ -73,6 +73,7 @@ GLOBAL_CONST=DATE_ATOM|DATE_COOKIE|DATE_ISO8601|DATE_RFC822|DATE_RFC850|DATE_RFC
             |DATE_W3C|XID_HASH
 
 TAG_NAME="exp:" [a-zA-Z\-_:]+
+TAG_PARAM=[a-zA-Z\-_]+ "="
 
 // ExpressionEngine tag delimiters
 LD="{"
@@ -120,7 +121,7 @@ COMMENT="{!--" ~"--}"
   // TODO: Specify the exact variables that have a primary param
   {LD} {VARIABLE} "=" .* {RD}          { pushState(IN_EE_VAR_WITH_PARAM); yypushback(yylength() - 1); return T_LD; }
   // TODO: This matches variables with parameters but might be too greedy
-  {LD} {VARIABLE} {WS} [a-zA-Z\-_]+ "=" .* {RD} { pushState(IN_EE_VAR_WITH_PARAM); yypushback(yylength() - 1); return T_LD; }
+  {LD} {VARIABLE} {WS} {TAG_PARAM} .* {RD} { pushState(IN_EE_VAR_WITH_PARAM); yypushback(yylength() - 1); return T_LD; }
   // Anything else is html
   !([^]*"{"[^]*)                       { return T_HTML; }
 }
@@ -201,7 +202,7 @@ COMMENT="{!--" ~"--}"
 
 <IN_EE_TAG_PARAMS> {
   {RD}                                 { popState(); popState(); return T_RD; }
-  [a-zA-Z\-_]+ "="                     { yypushback(1); return T_TAG_PARAM; }
+  {TAG_PARAM}                          { yypushback(1); return T_TAG_PARAM; }
   "="                                  { return T_EQUALS; }
   // Literals
   {NUMBER}                             { return T_NUMBER; }
