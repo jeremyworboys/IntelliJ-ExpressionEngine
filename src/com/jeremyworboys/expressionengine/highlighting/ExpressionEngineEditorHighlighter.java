@@ -1,4 +1,4 @@
-package com.jeremyworboys.expressionengine;
+package com.jeremyworboys.expressionengine.highlighting;
 
 import com.intellij.lang.Language;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;

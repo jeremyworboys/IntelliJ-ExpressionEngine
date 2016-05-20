@@ -1,10 +1,11 @@
-package com.jeremyworboys.expressionengine;
+package com.jeremyworboys.expressionengine.highlighting;
 
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterBase;
 import com.intellij.psi.tree.IElementType;
+import com.jeremyworboys.expressionengine.lexing.ExpressionEngineLexerAdapter;
 import com.jeremyworboys.expressionengine.psi.ExpressionEngineTypes;
 import org.jetbrains.annotations.NotNull;
 
