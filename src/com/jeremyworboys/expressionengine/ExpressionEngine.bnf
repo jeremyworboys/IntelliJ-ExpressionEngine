@@ -28,8 +28,8 @@ conditional ::= conditional_if
               | conditional_endif
 //conditional ::= conditional_if statement* (conditional_elseif statement*)* (conditional_else statement*)? conditional_endif
 
-private conditional_if     ::= T_LD T_IF expr T_RD
-private conditional_elseif ::= T_LD T_ELSEIF expr T_RD
+private conditional_if     ::= T_LD T_IF expr T_RD {pin=2}
+private conditional_elseif ::= T_LD T_ELSEIF expr T_RD {pin=2}
 private conditional_else   ::= T_LD T_ELSE T_RD
 private conditional_endif  ::= T_LD T_ENDIF T_RD
 
