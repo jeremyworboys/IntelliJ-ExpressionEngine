@@ -48,6 +48,8 @@ NUMBER=([0-9]*\.[0-9]+|[0-9]+\.[0-9]*|[0-9]+)
 
 // Identifiers
 VARIABLE=[a-zA-Z0-9\-_:]+
+// TODO: Double check allowed chars for paths
+PATH=[a-zA-Z0-9\-_]+([a-zA-Z0-9\-_/]+)*
 //VARIABLE=\w*([a-zA-Z]+([\w:-]+\w)?|(\w[\w:-]+)?[a-zA-Z]+)\w*
 //IDENTIFIER=[a-zA-Z][a-zA-Z0-9:_-]*[a-zA-Z]+
 
@@ -207,6 +209,7 @@ COMMENT="{!--" ~"--}"
   "="                                  { return T_EQUALS; }
   // Literals
   {NUMBER}                             { return T_NUMBER; }
+  {PATH}                               { return T_PATH; }
   // Variables
   {GLOBAL_VAR}                         { return T_GLOBAL_VAR; }
   {GLOBAL_CONST}                       { return T_GLOBAL_CONST; }
