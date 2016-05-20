@@ -35,10 +35,10 @@ public class ExpressionEngineSyntaxHighlighter extends SyntaxHighlighterBase {
     public TextAttributesKey[] getTokenHighlights(IElementType tokenType) {
         if (tokenType.equals(ExpressionEngineTypes.T_COMMENT)) {
             return COMMENT_KEYS;
-        //} else if (tokenType.equals(ExpressionEngineTypes.IDENTIFIER)) {
-        //    return IDENTIFIER_KEYS;
         } else if (tokenType.equals(ExpressionEngineTypes.T_NUMBER)) {
             return NUMBER_KEYS;
+        } else if (isPartOfTag(tokenType)) {
+            return IDENTIFIER_KEYS;
         } else if (isOperator(tokenType)) {
             return OPERATOR_KEYS;
         } else if (isPartOfString(tokenType)) {
@@ -46,6 +46,22 @@ public class ExpressionEngineSyntaxHighlighter extends SyntaxHighlighterBase {
         } else {
             return EMPTY_KEYS;
         }
+    }
+
+    private static boolean isPartOfTag(IElementType tokenType) {
+        return tokenType.equals(ExpressionEngineTypes.T_LD)
+            || tokenType.equals(ExpressionEngineTypes.T_RD)
+            || tokenType.equals(ExpressionEngineTypes.T_SLASH)
+            || tokenType.equals(ExpressionEngineTypes.T_IF)
+            || tokenType.equals(ExpressionEngineTypes.T_ELSEIF)
+            || tokenType.equals(ExpressionEngineTypes.T_ELSE)
+            || tokenType.equals(ExpressionEngineTypes.T_ENDIF)
+            || tokenType.equals(ExpressionEngineTypes.T_TAG_NAME)
+            || tokenType.equals(ExpressionEngineTypes.T_TAG_PARAM)
+            || tokenType.equals(ExpressionEngineTypes.T_VARIABLE)
+            || tokenType.equals(ExpressionEngineTypes.T_EMBED_VAR)
+            || tokenType.equals(ExpressionEngineTypes.T_LAYOUT_VAR)
+            || tokenType.equals(ExpressionEngineTypes.T_GLOBAL_VAR);
     }
 
     private boolean isOperator(IElementType tokenType) {
