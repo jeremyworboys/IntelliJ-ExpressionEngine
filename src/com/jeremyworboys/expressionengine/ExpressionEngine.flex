@@ -47,7 +47,7 @@ DOUBLE_QUOTE="\""
 NUMBER=([0-9]*\.[0-9]+|[0-9]+\.[0-9]*|[0-9]+)
 
 // Identifiers
-VARIABLE=[a-zA-Z\-_]+
+VARIABLE=[a-zA-Z0-9\-_:]+
 //VARIABLE=\w*([a-zA-Z]+([\w:-]+\w)?|(\w[\w:-]+)?[a-zA-Z]+)\w*
 //IDENTIFIER=[a-zA-Z][a-zA-Z0-9:_-]*[a-zA-Z]+
 
@@ -88,6 +88,7 @@ RD="}"
 COMMENT="{!--" ~"--}"
 
 %state IN_EE_VAR
+%state IN_EE_VAR_WITH_PARAM
 %state IN_EE_TAG
 %state IN_EE_TAG_PARAMS
 %state IN_EE_EXPRESSION
@@ -116,6 +117,8 @@ COMMENT="{!--" ~"--}"
   {LD} {EMBED_VAR} {RD}                { pushState(IN_EE_VAR); yypushback(yylength() - 1); return T_LD; }
   {LD} {LAYOUT_VAR} {RD}               { pushState(IN_EE_VAR); yypushback(yylength() - 1); return T_LD; }
   {LD} {VARIABLE} {RD}                 { pushState(IN_EE_VAR); yypushback(yylength() - 1); return T_LD; }
+  // TODO: Specify the exact variables that have a primary param
+  {LD} {VARIABLE} "=" .* {RD}          { pushState(IN_EE_VAR_WITH_PARAM); yypushback(yylength() - 1); return T_LD; }
   // Anything else is html
   [^]                                  { return T_HTML; }
 //  !([^]*"{"[^]*)                       { return T_HTML; }
@@ -180,6 +183,12 @@ COMMENT="{!--" ~"--}"
   {EMBED_VAR}                          { return T_EMBED_VAR; }
   {LAYOUT_VAR}                         { return T_LAYOUT_VAR; }
   {VARIABLE}                           { return T_VARIABLE; }
+}
+
+<IN_EE_VAR_WITH_PARAM> {
+  {RD}                                 { popState(); return T_RD; }
+  // Variables
+  {VARIABLE}                           {  pushState(IN_EE_TAG_PARAMS); return T_VARIABLE; }
 }
 
 <IN_EE_TAG> {
