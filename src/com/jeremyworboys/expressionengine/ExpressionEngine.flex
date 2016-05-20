@@ -50,8 +50,6 @@ NUMBER=([0-9]*\.[0-9]+|[0-9]+\.[0-9]*|[0-9]+)
 VARIABLE=[a-zA-Z0-9\-_]+ (":" [a-zA-Z0-9\-_]+)*
 // TODO: Double check allowed chars for paths
 PATH=[a-zA-Z0-9\-_]+([a-zA-Z0-9\-_/.]+)*
-//VARIABLE=\w*([a-zA-Z]+([\w:-]+\w)?|(\w[\w:-]+)?[a-zA-Z]+)\w*
-//IDENTIFIER=[a-zA-Z][a-zA-Z0-9:_-]*[a-zA-Z]+
 
 EMBED_VAR="embed:" {VARIABLE}
 LAYOUT_VAR="layout:" {VARIABLE}
@@ -85,12 +83,6 @@ TAG_PARAM=[a-zA-Z0-9\-_]+ (":" [a-zA-Z0-9\-_]+)* "="
 LD="{"
 RD="}"
 
-// ExpressionEngine tag types
-//TAG_ADDON=(exp:[a-zA-Z0-9_:]+)
-//TAG_BUILTIN=(exp:(channel:(entries|calendar|month_links|next_entry|prev_entry|categories|category_archive|category_heading|info)|comment:(ajax_edit_url|edit_comment_script|entries|notification_links|subscriber_list|form|preview)|cookie_consent:message|email:(contact_form|tell_a_friend)|emoticon|file:entries|ip_to_nation:world_flags|jquery:(script_tag|script_src|output_javascript)|mailinglist:form|member:(login_form|custom_profile_data|ignore_list)|moblog:check|pages:load_site_pages|query|referrer|rss:feed|rte:script_url|forum:forum_helper|forum:topic_titles|forum|xml_encode|safecracker|search:(advanced_form|simple_form|search_results|total_results|keywords)|magpie|updated_sites:pings|stats|simple_commerce:purchase|wiki)|wiki:(categories|category_subcategories|category_articles|files|recent_changes|search_results|title_list|associated_articles|associated_pages|custom_namespaces_list))
-//TAG_DEPRECATED=(exp:weblog:[^\s\}]*|exp:channel:entry_form|exp:trackback:[^\s\}]*|exp:gallery:[^\s\}]*|display_custom_fields|saef_javascript)
-//TAG_GLOBAL_VAR_PARAM=(path|permalink|title_permalink|comment_path|day_path|entry_id_path|embed|encode|redirect|last_author_profile_path|member_path|member_search_path|multi_field|next_path|preload_replace:[a-zA-Z0-9_-]+|previous_path|profile_path|stylesheet|switch|thread_path|url_title_path)
-
 // ExpressionEngine comment delimiters
 COMMENT="{!--" ~"--}"
 
@@ -123,7 +115,6 @@ COMMENT="{!--" ~"--}"
   {LD} {LAYOUT_VAR} {RD}               { pushState(IN_EE_VAR); yypushback(yylength() - 1); return T_LD; }
   {LD} {VARIABLE} {RD}                 { pushState(IN_EE_VAR); yypushback(yylength() - 1); return T_LD; }
   {LD} "/" {VARIABLE} {RD}             { pushState(IN_EE_VAR); yypushback(yylength() - 1); return T_LD; }
-  // TODO: Specify the exact variables that have a primary param
   {LD} {PARAM_VAR} "=" .+ {RD}          { pushState(IN_EE_VAR_WITH_PARAM); yypushback(yylength() - 1); return T_LD; }
   // TODO: This is accidentally matching {if:elseif}
   {LD} {VARIABLE} {WS} {TAG_PARAM} .+ {RD} { pushState(IN_EE_VAR_WITH_PARAM); yypushback(yylength() - 1); return T_LD; }
@@ -237,6 +228,7 @@ COMMENT="{!--" ~"--}"
   // TODO: Match comments in strings
   // TODO: Match variables in strings
   ((\\.)|[^'])+                        { return T_STRING; }
+//  ((\\.)|[^'{}])+                      { return T_STRING; }
   {SINGLE_QUOTE}                       { popState(); return T_STRING_END; }
 }
 
@@ -244,6 +236,7 @@ COMMENT="{!--" ~"--}"
   // TODO: Match comments in strings
   // TODO: Match variables in strings
   ((\\.)|[^\"])+                       { return T_STRING; }
+//  ((\\.)|[^\"{}])+                     { return T_STRING; }
   {DOUBLE_QUOTE}                       { popState(); return T_STRING_END; }
 }
 
