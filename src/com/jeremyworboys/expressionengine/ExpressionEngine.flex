@@ -101,8 +101,6 @@ COMMENT="{!--" ~"--}"
 
 %%
 
-{WS}+ | {CRLF}                         { return TokenType.WHITE_SPACE; }
-//{CRLF}                                 { return T_CRLF; }
 {COMMENT}                              { return T_COMMENT; }
 {LD}{WS}+                              { return T_HTML; }
 {LD}{CRLF}+                            { return T_HTML; }
@@ -241,4 +239,5 @@ COMMENT="{!--" ~"--}"
   {DOUBLE_QUOTE}                       { popState(); return T_STRING_END; }
 }
 
+{WS}+ | {CRLF}                         { return TokenType.WHITE_SPACE; }
 .                                      { return TokenType.BAD_CHARACTER; }
