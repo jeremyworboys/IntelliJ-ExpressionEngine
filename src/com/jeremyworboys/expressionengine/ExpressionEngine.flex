@@ -120,8 +120,7 @@ COMMENT="{!--" ~"--}"
   // TODO: Specify the exact variables that have a primary param
   {LD} {VARIABLE} "=" .* {RD}          { pushState(IN_EE_VAR_WITH_PARAM); yypushback(yylength() - 1); return T_LD; }
   // Anything else is html
-  [^]                                  { return T_HTML; }
-//  !([^]*"{"[^]*)                       { return T_HTML; }
+  !([^]*"{"[^]*)                       { return T_HTML; }
 }
 
 <IN_EE_EXPRESSION> {
