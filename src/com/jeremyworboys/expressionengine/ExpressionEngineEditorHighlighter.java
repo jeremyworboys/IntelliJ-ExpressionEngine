@@ -34,6 +34,6 @@ public class ExpressionEngineEditorHighlighter extends LayeredLexerEditorHighlig
 
         SyntaxHighlighter outerHighlighter = SyntaxHighlighterFactory.getSyntaxHighlighter(fileType, project, virtualFile);
 
-        registerLayer(ExpressionEngineTypes.HTML, new LayerDescriptor(outerHighlighter, ""));
+        registerLayer(ExpressionEngineTypes.T_HTML, new LayerDescriptor(outerHighlighter, ""));
     }
 }
