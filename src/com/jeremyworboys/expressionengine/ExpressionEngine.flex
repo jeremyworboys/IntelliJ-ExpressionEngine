@@ -106,7 +106,7 @@ COMMENT="{!--" ~"--}"
 
 <YYINITIAL> {
   // Conditionals
-  {LD} "if" ":elseif"? {WS}            { pushState(IN_EE_EXPRESSION); yypushback(yylength() - 1); return T_LD; }
+  {LD} "if" ":elseif"? .* {RD}         { pushState(IN_EE_EXPRESSION); yypushback(yylength() - 1); return T_LD; }
   {LD} ("/if"|"if:else") {RD}          { pushState(IN_EE_CONDITIONAL); yypushback(yylength() - 1); return T_LD; }
   // Tags
   {LD} {TAG_NAME} .* {RD}              { pushState(IN_EE_TAG); yypushback(yylength() - 1); return T_LD; }
