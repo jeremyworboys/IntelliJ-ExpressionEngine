@@ -61,6 +61,7 @@ public class ExpressionEngineSyntaxHighlighter extends SyntaxHighlighterBase {
             || tokenType.equals(ExpressionEngineTypes.T_VARIABLE)
             || tokenType.equals(ExpressionEngineTypes.T_EMBED_VAR)
             || tokenType.equals(ExpressionEngineTypes.T_LAYOUT_VAR)
+            || tokenType.equals(ExpressionEngineTypes.T_PARAM_VAR)
             || tokenType.equals(ExpressionEngineTypes.T_GLOBAL_VAR);
     }
 

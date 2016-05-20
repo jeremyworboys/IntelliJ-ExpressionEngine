@@ -74,6 +74,10 @@ GLOBAL_VAR=app_build|app_version|auto_log_in|build|captcha|charset|cp_url|curren
 GLOBAL_CONST=DATE_ATOM|DATE_COOKIE|DATE_ISO8601|DATE_RFC822|DATE_RFC850|DATE_RFC1036|DATE_RFC1123|DATE_RFC2822|DATE_RSS
             |DATE_W3C|XID_HASH
 
+PARAM_VAR=path|permalink|title_permalink|comment_path|day_path|entry_id_path|embed|encode|redirect
+         |last_author_profile_path|member_path|member_search_path|multi_field|next_path|preload_replace:[a-zA-Z0-9_-]+
+         |previous_path|profile_path|stylesheet|switch|thread_path|url_title_path
+
 TAG_NAME="exp:" [a-zA-Z0-9\-_]+ (":" [a-zA-Z0-9\-_]+)*
 TAG_PARAM=[a-zA-Z0-9\-_]+ (":" [a-zA-Z0-9\-_]+)* "="
 
@@ -120,7 +124,7 @@ COMMENT="{!--" ~"--}"
   {LD} {VARIABLE} {RD}                 { pushState(IN_EE_VAR); yypushback(yylength() - 1); return T_LD; }
   {LD} "/" {VARIABLE} {RD}             { pushState(IN_EE_VAR); yypushback(yylength() - 1); return T_LD; }
   // TODO: Specify the exact variables that have a primary param
-  {LD} {VARIABLE} "=" .+ {RD}          { pushState(IN_EE_VAR_WITH_PARAM); yypushback(yylength() - 1); return T_LD; }
+  {LD} {PARAM_VAR} "=" .+ {RD}          { pushState(IN_EE_VAR_WITH_PARAM); yypushback(yylength() - 1); return T_LD; }
   // TODO: This is accidentally matching {if:elseif}
   {LD} {VARIABLE} {WS} {TAG_PARAM} .+ {RD} { pushState(IN_EE_VAR_WITH_PARAM); yypushback(yylength() - 1); return T_LD; }
   // Anything else is html
@@ -197,6 +201,7 @@ COMMENT="{!--" ~"--}"
 <IN_EE_VAR_WITH_PARAM> {
   {RD}                                 { popState(); return T_RD; }
   // Variables
+  {PARAM_VAR}                          { pushState(IN_EE_TAG_PARAMS); return T_PARAM_VAR; }
   {VARIABLE}                           { pushState(IN_EE_TAG_PARAMS); return T_VARIABLE; }
 }
 
