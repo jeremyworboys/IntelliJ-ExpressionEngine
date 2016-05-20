@@ -201,7 +201,7 @@ COMMENT="{!--" ~"--}"
 
 <IN_EE_TAG_PARAMS> {
   {RD}                                 { popState(); popState(); return T_RD; }
-  [a-zA-Z\-_]+                         { return T_TAG_PARAM; }
+  [a-zA-Z\-_]+ "="                     { yypushback(1); return T_TAG_PARAM; }
   "="                                  { return T_EQUALS; }
   // Literals
   {NUMBER}                             { return T_NUMBER; }
