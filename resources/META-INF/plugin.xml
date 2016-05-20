@@ -1,17 +1,18 @@
 <idea-plugin version="2">
     <id>com.jeremyworboys.expressionengine</id>
-    <name>Plugin display name here</name>
-    <version>1.0</version>
-    <vendor email="support@yourcompany.com" url="http://www.yourcompany.com">YourCompany</vendor>
+    <name>ExpressionEngine</name>
+    <version>0.1.0</version>
+    <vendor email="jw@jeremyworboys.com" url="https://warblemedia.com.au">Jeremy Worboys</vendor>
 
     <description><![CDATA[
-      Enter short description for your plugin here.<br>
-      <em>most HTML tags may be used</em>
+<h1>ExpressionEngine</h1>
     ]]></description>
 
     <change-notes><![CDATA[
-      Add change notes here.<br>
-      <em>most HTML tags may be used</em>
+<h2>0.1.0</h2>
+<ul>
+    <li>Initial release</li>
+</ul>
     ]]>
     </change-notes>
 
