@@ -119,9 +119,9 @@ COMMENT="{!--" ~"--}"
   {LD} {LAYOUT_VAR} {RD}               { pushState(IN_EE_VAR); yypushback(yylength() - 1); return T_LD; }
   {LD} {VARIABLE} {RD}                 { pushState(IN_EE_VAR); yypushback(yylength() - 1); return T_LD; }
   // TODO: Specify the exact variables that have a primary param
-  {LD} {VARIABLE} "=" .* {RD}          { pushState(IN_EE_VAR_WITH_PARAM); yypushback(yylength() - 1); return T_LD; }
+  {LD} {VARIABLE} "=" .+ {RD}          { pushState(IN_EE_VAR_WITH_PARAM); yypushback(yylength() - 1); return T_LD; }
   // TODO: This matches variables with parameters but might be too greedy
-  {LD} {VARIABLE} {WS} {TAG_PARAM} .* {RD} { pushState(IN_EE_VAR_WITH_PARAM); yypushback(yylength() - 1); return T_LD; }
+  {LD} {VARIABLE} {WS} {TAG_PARAM} .+ {RD} { pushState(IN_EE_VAR_WITH_PARAM); yypushback(yylength() - 1); return T_LD; }
   // Anything else is html
   !([^]*"{"[^]*)                       { return T_HTML; }
 }
