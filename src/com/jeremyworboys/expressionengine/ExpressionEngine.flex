@@ -124,8 +124,12 @@ COMMENT="{!--" ~"--}"
   {LD} {VARIABLE} "=" ~ {RD}           { pushState(IN_EE_VAR_WITH_PARAM); yypushback(yylength() - 1); return T_LD; }
   {LD} {VARIABLE} {WS} {TAG_PARAM} ~ {RD} { pushState(IN_EE_VAR_WITH_PARAM); yypushback(yylength() - 1); return T_LD; }
   // Anything else is html
-  !([^]*"{"[^]*)                       { return T_HTML; }
-  {LD} ~ {RD}                          { return T_HTML; }
+  {LD} ~ {RD}                          |
+  !([^]*"{"[^]*)                       {
+    if (yylength() > 0) {
+      return (yytext().toString().trim().length() == 0) ? TokenType.WHITE_SPACE : T_HTML;
+    }
+  }
 }
 
 <IN_EE_EXPRESSION> {
