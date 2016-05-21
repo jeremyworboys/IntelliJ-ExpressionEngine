@@ -6,6 +6,7 @@ import com.intellij.patterns.ElementPattern;
 import com.intellij.patterns.PlatformPatterns;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
+import com.intellij.psi.TokenType;
 import com.intellij.psi.search.FileTypeIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.indexing.FileBasedIndex;
@@ -30,30 +31,36 @@ public class ExpressionEngineUtil {
     public static ElementPattern<PsiElement> getTemplateFileReferencePattern(String... tagNames) {
         // Matches: {embed="<xxx>"}
         //noinspection unchecked
-        ElementPattern<PsiElement> stringPattern = PlatformPatterns
-            .psiElement(ExpressionEngineTypes.T_STRING)
-            .afterLeafSkipping(
-                PlatformPatterns.or(
-                    PlatformPatterns.psiElement(ExpressionEngineTypes.T_LD),
-                    PlatformPatterns.psiElement(ExpressionEngineTypes.T_EQUALS),
-                    PlatformPatterns.psiElement(ExpressionEngineTypes.T_STRING_START)
-                ),
-                PlatformPatterns.psiElement(ExpressionEngineTypes.T_PARAM_VAR).withText(PlatformPatterns.string().oneOf(tagNames))
-            )
-            .withLanguage(ExpressionEngineLanguage.INSTANCE);
+        ElementPattern<PsiElement> stringPattern =
+            PlatformPatterns
+                .psiElement(ExpressionEngineTypes.T_STRING)
+                .withParent(PlatformPatterns.psiElement(ExpressionEngineTypes.TAG_PARAM_VALUE))
+                .afterLeafSkipping(
+                    PlatformPatterns.or(
+                        PlatformPatterns.psiElement(TokenType.WHITE_SPACE),
+                        PlatformPatterns.psiElement(ExpressionEngineTypes.T_LD),
+                        PlatformPatterns.psiElement(ExpressionEngineTypes.T_EQUALS),
+                        PlatformPatterns.psiElement(ExpressionEngineTypes.T_STRING_START)
+                    ),
+                    PlatformPatterns.psiElement(ExpressionEngineTypes.T_PARAM_VAR).withText(PlatformPatterns.string().oneOf(tagNames))
+                )
+                .withLanguage(ExpressionEngineLanguage.INSTANCE);
 
         // Matches: {embed=<xxx>}
         //noinspection unchecked
-        ElementPattern<PsiElement> pathPattern = PlatformPatterns
-            .psiElement(ExpressionEngineTypes.T_PATH)
-            .afterLeafSkipping(
-                PlatformPatterns.or(
-                    PlatformPatterns.psiElement(ExpressionEngineTypes.T_LD),
-                    PlatformPatterns.psiElement(ExpressionEngineTypes.T_EQUALS)
-                ),
-                PlatformPatterns.psiElement(ExpressionEngineTypes.T_PARAM_VAR).withText(PlatformPatterns.string().oneOf(tagNames))
-            )
-            .withLanguage(ExpressionEngineLanguage.INSTANCE);
+        ElementPattern<PsiElement> pathPattern =
+            PlatformPatterns
+                .psiElement(ExpressionEngineTypes.T_PATH)
+                .withParent(PlatformPatterns.psiElement(ExpressionEngineTypes.TAG_PARAM_VALUE))
+                .afterLeafSkipping(
+                    PlatformPatterns.or(
+                        PlatformPatterns.psiElement(TokenType.WHITE_SPACE),
+                        PlatformPatterns.psiElement(ExpressionEngineTypes.T_LD),
+                        PlatformPatterns.psiElement(ExpressionEngineTypes.T_EQUALS)
+                    ),
+                    PlatformPatterns.psiElement(ExpressionEngineTypes.T_PARAM_VAR).withText(PlatformPatterns.string().oneOf(tagNames))
+                )
+                .withLanguage(ExpressionEngineLanguage.INSTANCE);
 
         //noinspection unchecked
         return PlatformPatterns.or(stringPattern, pathPattern);

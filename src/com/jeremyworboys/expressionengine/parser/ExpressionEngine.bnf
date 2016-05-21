@@ -75,17 +75,18 @@ tag ::= tag_simple | tag_compound | tag_with_param | tag_module
 
 private tag_simple ::= T_LD group_vars T_RD
 
-private tag_compound ::= T_LD group_vars tag_param* T_RD
+private tag_compound ::= T_LD group_vars tag_contents* T_RD
                        | T_LD T_SLASH group_vars T_RD
 
-// TODO: Specify the exact variables that have a primary param
-private tag_with_param ::= T_LD T_PARAM_VAR T_EQUALS tag_param_value tag_param* T_RD
+private tag_with_param ::= T_LD T_PARAM_VAR T_EQUALS tag_param_value tag_contents* T_RD
 
-private tag_module ::= T_LD T_TAG_NAME tag_param* T_RD
+private tag_module ::= T_LD T_TAG_NAME tag_contents* T_RD
                      | T_LD T_SLASH T_TAG_NAME T_RD
 
-private tag_param ::= T_COMMENT | (T_TAG_PARAM T_EQUALS tag_param_value)
-private tag_param_value ::= T_NUMBER | T_PATH | group_vars | string
+private tag_contents ::= (T_COMMENT | tag_param)
+
+tag_param ::= T_COMMENT | (T_TAG_PARAM T_EQUALS tag_param_value)
+tag_param_value ::= T_NUMBER | T_PATH | group_vars | string
 
 //private tag_local_var  ::= T_LD T_VARIABLE T_RD
 
