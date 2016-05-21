@@ -75,7 +75,7 @@ GLOBAL_VAR=app_build|app_version|auto_log_in|build|captcha|charset|cp_url|curren
 GLOBAL_CONST=DATE_ATOM|DATE_COOKIE|DATE_ISO8601|DATE_RFC822|DATE_RFC850|DATE_RFC1036|DATE_RFC1123|DATE_RFC2822|DATE_RSS
             |DATE_W3C|XID_HASH
 
-PARAM_VAR=path|permalink|title_permalink|comment_path|day_path|entry_id_path|embed|encode|redirect
+PARAM_VAR=path|permalink|title_permalink|comment_path|day_path|entry_id_path|embed|layout|encode|redirect
          |last_author_profile_path|member_path|member_search_path|multi_field|next_path|preload_replace:[a-zA-Z0-9_-]+
          |previous_path|profile_path|stylesheet|switch|thread_path|url_title_path
 
