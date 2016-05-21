@@ -27,6 +27,7 @@
         <!-- Add your extensions here -->
         <fileTypeFactory implementation="com.jeremyworboys.expressionengine.ExpressionEngineFileTypeFactory"/>
         <colorSettingsPage implementation="com.jeremyworboys.expressionengine.highlighter.ExpressionEngineColorSettingsPage" />
+        <annotator language="ExpressionEngine" implementationClass="com.jeremyworboys.expressionengine.annotator.ExpressionEngineAnnotator"/>
         <lang.commenter language="ExpressionEngine" implementationClass="com.jeremyworboys.expressionengine.commenter.ExpressionEngineCommenter"/>
         <lang.parserDefinition language="ExpressionEngine" implementationClass="com.jeremyworboys.expressionengine.parser.ExpressionEngineParserDefinition"/>
         <lang.syntaxHighlighterFactory language="ExpressionEngine" implementationClass="com.jeremyworboys.expressionengine.highlighter.ExpressionEngineSyntaxHighlighterFactory"/>
