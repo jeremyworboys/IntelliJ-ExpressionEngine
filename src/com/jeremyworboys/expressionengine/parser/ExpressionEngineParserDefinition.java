@@ -13,9 +13,8 @@ import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.TokenSet;
 import com.jeremyworboys.expressionengine.ExpressionEngineLanguage;
-import com.jeremyworboys.expressionengine.lexer.ExpressionEngineLexerAdapter;
-import com.jeremyworboys.expressionengine.parser.psi.ExpressionEngineFile;
-import com.jeremyworboys.expressionengine.parser.psi.ExpressionEngineTypes;
+import com.jeremyworboys.expressionengine.psi.ExpressionEngineFile;
+import com.jeremyworboys.expressionengine.psi.ExpressionEngineTypes;
 import org.jetbrains.annotations.NotNull;
 
 public class ExpressionEngineParserDefinition implements ParserDefinition {

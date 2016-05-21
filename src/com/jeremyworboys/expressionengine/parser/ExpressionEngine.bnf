@@ -6,12 +6,12 @@
 
   psiClassPrefix="ExpressionEngine"
   psiImplClassSuffix="Impl"
-  psiPackage="com.jeremyworboys.expressionengine.parser.psi"
-  psiImplPackage="com.jeremyworboys.expressionengine.parser.psi.impl"
+  psiPackage="com.jeremyworboys.expressionengine.psi"
+  psiImplPackage="com.jeremyworboys.expressionengine.psi.impl"
 
-  elementTypeHolderClass="com.jeremyworboys.expressionengine.parser.psi.ExpressionEngineTypes"
-  elementTypeClass="com.jeremyworboys.expressionengine.parser.psi.ExpressionEngineElementType"
-  tokenTypeClass="com.jeremyworboys.expressionengine.parser.psi.ExpressionEngineTokenType"
+  elementTypeHolderClass="com.jeremyworboys.expressionengine.psi.ExpressionEngineTypes"
+  elementTypeClass="com.jeremyworboys.expressionengine.psi.ExpressionEngineElementType"
+  tokenTypeClass="com.jeremyworboys.expressionengine.psi.ExpressionEngineTokenType"
 }
 
 expressionengineFile ::= statement*

@@ -1,4 +1,4 @@
-package com.jeremyworboys.expressionengine.parser.psi;
+package com.jeremyworboys.expressionengine.psi;
 
 import com.intellij.extapi.psi.PsiFileBase;
 import com.intellij.openapi.fileTypes.FileType;

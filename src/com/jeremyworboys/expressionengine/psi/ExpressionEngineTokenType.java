@@ -1,4 +1,4 @@
-package com.jeremyworboys.expressionengine.parser.psi;
+package com.jeremyworboys.expressionengine.psi;
 
 import com.intellij.psi.tree.IElementType;
 import com.jeremyworboys.expressionengine.ExpressionEngineLanguage;

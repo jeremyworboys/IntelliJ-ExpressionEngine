@@ -11,7 +11,7 @@ import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.templateLanguages.TemplateDataLanguageMappings;
-import com.jeremyworboys.expressionengine.parser.psi.ExpressionEngineTypes;
+import com.jeremyworboys.expressionengine.psi.ExpressionEngineTypes;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
