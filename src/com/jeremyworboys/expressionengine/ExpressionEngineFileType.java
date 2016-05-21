@@ -9,6 +9,7 @@ import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.jeremyworboys.expressionengine.highlighting.ExpressionEngineEditorHighlighter;
+import com.jeremyworboys.expressionengine.icons.ExpressionEngineIcons;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
