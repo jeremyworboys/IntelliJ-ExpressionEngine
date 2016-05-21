@@ -1,4 +1,4 @@
-package com.jeremyworboys.expressionengine.highlighting;
+package com.jeremyworboys.expressionengine.highlighter;
 
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory;

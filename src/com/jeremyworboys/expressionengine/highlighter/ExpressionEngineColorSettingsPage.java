@@ -1,4 +1,4 @@
-package com.jeremyworboys.expressionengine.highlighting;
+package com.jeremyworboys.expressionengine.highlighter;
 
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
@@ -54,7 +54,7 @@ public class ExpressionEngineColorSettingsPage implements ColorSettingsPage {
     @Nullable
     @Override
     public Map<String, TextAttributesKey> getAdditionalHighlightingTagToDescriptorMap() {
-        // TODO: Add additional highlighting tags
+        // TODO: Add additional highlighter tags
         return null;
     }
 
