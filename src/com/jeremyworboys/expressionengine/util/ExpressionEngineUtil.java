@@ -4,9 +4,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.patterns.ElementPattern;
 import com.intellij.patterns.PlatformPatterns;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiManager;
-import com.intellij.psi.TokenType;
+import com.intellij.psi.*;
 import com.intellij.psi.search.FileTypeIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.indexing.FileBasedIndex;
@@ -96,7 +94,22 @@ public class ExpressionEngineUtil {
     }
 
     @Nullable
-    private static String toTemplatePath(String templateName) {
+    public static PsiDirectory getTemplateDirectory(@NotNull PsiFile file) {
+        PsiDirectory groupDirectory = file.getParent();
+        if (groupDirectory == null || !groupDirectory.getName().endsWith(".group")) {
+            return null;
+        }
+
+        PsiDirectory templateDirectory = groupDirectory.getParent();
+        if (templateDirectory == null) {
+            return null;
+        }
+
+        return templateDirectory;
+    }
+
+    @Nullable
+    public static String toTemplatePath(String templateName) {
         String[] parts = templateName.split("\\/");
 
         if (parts.length == 2) {

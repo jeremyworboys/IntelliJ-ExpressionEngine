@@ -3,6 +3,7 @@ package com.jeremyworboys.expressionengine.annotator;
 import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.Annotator;
 import com.intellij.psi.PsiElement;
+import com.jeremyworboys.expressionengine.annotator.fix.CreateTemplateFix;
 import com.jeremyworboys.expressionengine.psi.ExpressionEngineFile;
 import com.jeremyworboys.expressionengine.util.ExpressionEngineUtil;
 import org.jetbrains.annotations.NotNull;
@@ -28,5 +29,8 @@ public class ExpressionEngineAnnotator implements Annotator {
         }
 
         holder.createWarningAnnotation(element, "Missing Template");
+
+        holder.createWarningAnnotation(element, "Create Template")
+            .registerFix(new CreateTemplateFix(templateName));
     }
 }
