@@ -68,7 +68,7 @@ unary_not_expr   ::= T_OP_NOT expr
 unary_plus_expr  ::= T_OP_ADD expr
 unary_minus_expr ::= T_OP_SUB expr
 paren_expr       ::= T_LP expr T_RP
-literal_expr     ::= T_BOOL | T_NUMBER | group_vars | string
+literal_expr     ::= T_BOOL | T_NUMBER | group_vars | string_literal
 
 // Tags
 tag ::= tag_simple | tag_compound | tag_with_param | tag_module
@@ -86,7 +86,7 @@ private tag_module ::= T_LD T_TAG_NAME tag_contents* T_RD
 private tag_contents ::= (T_COMMENT | tag_param)
 
 tag_param ::= T_TAG_PARAM T_EQUALS tag_param_value
-tag_param_value ::= T_NUMBER | T_PATH | group_vars | string
+tag_param_value ::= T_NUMBER | T_PATH | group_vars | string_literal
 
 //private tag_local_var  ::= T_LD T_VARIABLE T_RD
 
@@ -106,5 +106,5 @@ tag_param_value ::= T_NUMBER | T_PATH | group_vars | string
 //attribute_string ::= (STRING_START (tag|COMMENT|STRING+) STRING_END) | (STRING_START STRING_END)
 
 // Strings
-private string ::= (T_STRING_START (T_COMMENT | T_STRING+) T_STRING_END)
+string_literal ::= (T_STRING_START (T_COMMENT | T_STRING+) T_STRING_END)
                  | (T_STRING_START T_STRING_END)
