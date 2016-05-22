@@ -18,7 +18,6 @@ import javax.swing.*;
 
 public class ExpressionEngineFileType extends LanguageFileType {
     public static final ExpressionEngineFileType INSTANCE = new ExpressionEngineFileType();
-    @NonNls public static final String DEFAULT_EXTENSION = "html;css";
 
     private ExpressionEngineFileType() {
         super(ExpressionEngineLanguage.INSTANCE);
@@ -46,12 +45,17 @@ public class ExpressionEngineFileType extends LanguageFileType {
     @NotNull
     @Override
     public String getDefaultExtension() {
-        return DEFAULT_EXTENSION;
+        return "html";
     }
 
     @Nullable
     @Override
     public Icon getIcon() {
         return ExpressionEngineIcons.FILE;
+    }
+
+    @NonNls
+    public String[] getExtensions() {
+        return new String[]{getDefaultExtension(), "css"};
     }
 }
