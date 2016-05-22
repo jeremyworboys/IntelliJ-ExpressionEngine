@@ -81,7 +81,8 @@ public class ExpressionEngineUtil {
 
         for (VirtualFile virtualFile : virtualFiles) {
             if (isMatchingTemplateName(virtualFile, templatePath)) {
-                ExpressionEngineFile expressionEngineFile = (ExpressionEngineFile) PsiManager.getInstance(project).findFile(virtualFile);
+                ExpressionEngineFile expressionEngineFile =
+                    (ExpressionEngineFile) PsiManager.getInstance(project).findFile(virtualFile);
                 if (expressionEngineFile != null) {
                     result.add(expressionEngineFile);
                 }
