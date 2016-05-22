@@ -88,7 +88,9 @@ private tag_module ::= T_LD T_TAG_NAME tag_contents* T_RD
 private tag_contents ::= (T_COMMENT | tag_param)
 
 tag_param ::= T_TAG_PARAM T_EQUALS tag_param_value
-tag_param_value ::= T_NUMBER | T_PATH | group_vars | string_literal {methods=[getReference getReferences]}
+tag_param_value ::= T_NUMBER | T_PATH | group_vars | string_literal {
+  mixin="com.jeremyworboys.expressionengine.psi.impl.ExpressionEngineTagParamValueMixin"
+}
 
 //private tag_local_var  ::= T_LD T_VARIABLE T_RD
 
