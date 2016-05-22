@@ -110,10 +110,15 @@ public class ExpressionEngineUtil {
 
     @Nullable
     public static String toTemplatePath(String templateName) {
+        return toTemplatePath(templateName, "html");
+    }
+
+    @Nullable
+    public static String toTemplatePath(String templateName, String extension) {
         String[] parts = templateName.split("\\/");
 
         if (parts.length == 2) {
-            return parts[0] + ".group/" + parts[1] + ".html";
+            return parts[0] + ".group/" + parts[1] + "." + extension;
         }
 
         return null;
