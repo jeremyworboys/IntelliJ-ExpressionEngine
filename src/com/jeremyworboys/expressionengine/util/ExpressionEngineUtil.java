@@ -72,19 +72,21 @@ public class ExpressionEngineUtil {
     public static List<ExpressionEngineFile> getTemplateFiles(@NotNull Project project, String templatePath) {
         List<ExpressionEngineFile> result = new ArrayList<>();
 
-        String[] filenameParts = templatePath.split("/");
-        String filename = filenameParts[filenameParts.length -1];
+        if (templatePath != null && templatePath.contains("/")) {
+            String[] filenameParts = templatePath.split("/");
+            String filename = filenameParts[filenameParts.length - 1];
 
-        GlobalSearchScope scope = GlobalSearchScope.allScope(project);
-        Collection<VirtualFile> virtualFiles = FileBasedIndex.getInstance()
-            .getContainingFiles(FilenameIndex.NAME, filename, scope);
+            GlobalSearchScope scope = GlobalSearchScope.allScope(project);
+            Collection<VirtualFile> virtualFiles = FileBasedIndex.getInstance()
+                .getContainingFiles(FilenameIndex.NAME, filename, scope);
 
-        for (VirtualFile virtualFile : virtualFiles) {
-            if (isMatchingTemplateName(virtualFile, templatePath)) {
-                ExpressionEngineFile expressionEngineFile =
-                    (ExpressionEngineFile) PsiManager.getInstance(project).findFile(virtualFile);
-                if (expressionEngineFile != null) {
-                    result.add(expressionEngineFile);
+            for (VirtualFile virtualFile : virtualFiles) {
+                if (isMatchingTemplateName(virtualFile, templatePath)) {
+                    ExpressionEngineFile expressionEngineFile =
+                        (ExpressionEngineFile) PsiManager.getInstance(project).findFile(virtualFile);
+                    if (expressionEngineFile != null) {
+                        result.add(expressionEngineFile);
+                    }
                 }
             }
         }
