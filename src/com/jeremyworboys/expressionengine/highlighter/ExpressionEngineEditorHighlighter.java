@@ -24,9 +24,21 @@ public class ExpressionEngineEditorHighlighter extends LayeredLexerEditorHighlig
             fileType = StdFileTypes.PLAIN_TEXT;
         } else {
             Language language = TemplateDataLanguageMappings.getInstance(project).getMapping(virtualFile);
+            // Check for registered mapping for this file type
             if (language != null) {
                 fileType = language.getAssociatedFileType();
             }
+            // Check if file has css extension and CSS language exists
+            if (fileType == null) {
+                String fileExtension = virtualFile.getExtension();
+                if (fileExtension != null && fileExtension.equalsIgnoreCase("css")) {
+                    language = Language.findLanguageByID("CSS");
+                    if (language != null) {
+                        fileType = language.getAssociatedFileType();
+                    }
+                }
+            }
+            // Default to HTML file type
             if (fileType == null) {
                 fileType = StdFileTypes.HTML;
             }
