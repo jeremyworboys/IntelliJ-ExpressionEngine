@@ -34,7 +34,12 @@ public class ExpressionEngineAnnotator implements Annotator {
             return;
         }
 
-        String templatePath = ExpressionEngineUtil.toTemplatePath(element.getText());
+        String extension = "html";
+        if (ExpressionEngineUtil.getStylesheetFileReferencePattern().accepts(element)) {
+            extension = "css";
+        }
+
+        String templatePath = ExpressionEngineUtil.toTemplatePath(element.getText(), extension);
         if (templatePath == null) {
             return;
         }

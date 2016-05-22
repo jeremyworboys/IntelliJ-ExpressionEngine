@@ -22,7 +22,12 @@ import java.util.List;
 public class ExpressionEngineUtil {
     @NotNull
     public static ElementPattern<PsiElement> getTemplateFileReferencePattern() {
-        return getTemplateFileReferencePattern("layout", "embed");
+        return getTemplateFileReferencePattern("layout", "embed", "stylesheet");
+    }
+
+    @NotNull
+    public static ElementPattern<PsiElement> getStylesheetFileReferencePattern() {
+        return getTemplateFileReferencePattern("stylesheet");
     }
 
     @NotNull
