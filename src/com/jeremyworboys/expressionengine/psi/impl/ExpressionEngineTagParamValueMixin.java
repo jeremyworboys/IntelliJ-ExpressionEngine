@@ -3,9 +3,10 @@ package com.jeremyworboys.expressionengine.psi.impl;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiReference;
-import com.intellij.psi.impl.source.resolve.reference.ReferenceProvidersRegistry;
 import com.intellij.psi.tree.IElementType;
+import com.jeremyworboys.expressionengine.psi.ExpressionEngineTagParamValue;
 import com.jeremyworboys.expressionengine.psi.ExpressionEngineTypes;
+import com.jeremyworboys.expressionengine.referencing.TemplateReference;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,6 +32,6 @@ public abstract class ExpressionEngineTagParamValueMixin extends ASTWrapperPsiEl
         if (type != ExpressionEngineTypes.T_PATH && type != ExpressionEngineTypes.STRING_LITERAL) {
             return PsiReference.EMPTY_ARRAY;
         }
-        return ReferenceProvidersRegistry.getReferencesFromProviders(this);
+        return new PsiReference[]{new TemplateReference((ExpressionEngineTagParamValue) this)};
     }
 }
