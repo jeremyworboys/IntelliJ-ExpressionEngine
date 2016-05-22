@@ -39,13 +39,13 @@ public abstract class ExpressionEngineTagParamValueMixin extends ASTWrapperPsiEl
         if (type == ExpressionEngineTypes.T_PATH) {
             String paramValue = getText();
             TextRange textRange = new TextRange(0, paramValue.length());
-            references.add(new TemplateReference((ExpressionEngineTagParamValue) this, paramValue, textRange));
+            references.add(new TemplateReference((ExpressionEngineTagParamValue) this, textRange));
         }
 
         if (type == ExpressionEngineTypes.STRING_LITERAL) {
             String paramValue = StringUtil.stripQuotesAroundValue(getText());
             TextRange textRange = new TextRange(1, paramValue.length() + 1);
-            references.add(new TemplateReference((ExpressionEngineTagParamValue) this, paramValue, textRange));
+            references.add(new TemplateReference((ExpressionEngineTagParamValue) this, textRange));
         }
 
         return references.toArray(new PsiReference[references.size()]);
