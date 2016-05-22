@@ -34,9 +34,12 @@ public class ExpressionEngineAnnotator implements Annotator {
             return;
         }
 
-        String templateName = element.getText();
-        List<ExpressionEngineFile> templateFiles = ExpressionEngineUtil.getTemplateFiles(element.getProject(), templateName);
+        String templatePath = ExpressionEngineUtil.toTemplatePath(element.getText());
+        if (templatePath == null) {
+            return;
+        }
 
+        List<ExpressionEngineFile> templateFiles = ExpressionEngineUtil.getTemplateFiles(element.getProject(), templatePath);
         if (templateFiles.size() > 0) {
             return;
         }
@@ -44,6 +47,6 @@ public class ExpressionEngineAnnotator implements Annotator {
         holder.createWarningAnnotation(element, "Missing Template");
 
         holder.createWarningAnnotation(element, "Create Template")
-            .registerFix(new CreateTemplateFix(templateName));
+            .registerFix(new CreateTemplateFix(templatePath));
     }
 }

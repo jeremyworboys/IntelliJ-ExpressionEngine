@@ -13,10 +13,10 @@ import com.jeremyworboys.expressionengine.util.ExpressionEngineUtil;
 import org.jetbrains.annotations.NotNull;
 
 public class CreateTemplateFix extends BaseIntentionAction {
-    private final String templateName;
+    private final String templatePath;
 
-    public CreateTemplateFix(String templateName) {
-        this.templateName = templateName;
+    public CreateTemplateFix(String templatePath) {
+        this.templatePath = templatePath;
     }
 
     @NotNull
@@ -47,7 +47,6 @@ public class CreateTemplateFix extends BaseIntentionAction {
                     return;
                 }
 
-                String templatePath = ExpressionEngineUtil.toTemplatePath(templateName);
                 if (templatePath == null) {
                     HintManager.getInstance().showErrorHint(editor, "Invalid template name");
                     return;
