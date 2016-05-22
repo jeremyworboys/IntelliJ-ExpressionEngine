@@ -23,7 +23,6 @@ public class ExpressionEngineFileType extends LanguageFileType {
         super(ExpressionEngineLanguage.INSTANCE);
 
         FileTypeEditorHighlighterProviders.INSTANCE.addExplicitExtension(this, new EditorHighlighterProvider() {
-            @Override
             public EditorHighlighter getEditorHighlighter(@Nullable Project project, @NotNull FileType fileType, @Nullable VirtualFile virtualFile, @NotNull EditorColorsScheme colors) {
                 return new ExpressionEngineEditorHighlighter(project, virtualFile, colors);
             }
@@ -33,7 +32,7 @@ public class ExpressionEngineFileType extends LanguageFileType {
     @NotNull
     @Override
     public String getName() {
-        return "ExpressionEngine file";
+        return "ExpressionEngine";
     }
 
     @NotNull
