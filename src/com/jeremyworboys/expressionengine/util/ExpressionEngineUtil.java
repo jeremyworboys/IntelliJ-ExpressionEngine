@@ -5,10 +5,9 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.patterns.ElementPattern;
 import com.intellij.patterns.PlatformPatterns;
 import com.intellij.psi.*;
-import com.intellij.psi.search.FileTypeIndex;
+import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.indexing.FileBasedIndex;
-import com.jeremyworboys.expressionengine.ExpressionEngineFileType;
 import com.jeremyworboys.expressionengine.ExpressionEngineLanguage;
 import com.jeremyworboys.expressionengine.psi.ExpressionEngineFile;
 import com.jeremyworboys.expressionengine.psi.ExpressionEngineTypes;
@@ -73,9 +72,12 @@ public class ExpressionEngineUtil {
     public static List<ExpressionEngineFile> getTemplateFiles(@NotNull Project project, String templatePath) {
         List<ExpressionEngineFile> result = new ArrayList<>();
 
+        String[] filenameParts = templatePath.split("/");
+        String filename = filenameParts[filenameParts.length -1];
+
         GlobalSearchScope scope = GlobalSearchScope.allScope(project);
         Collection<VirtualFile> virtualFiles = FileBasedIndex.getInstance()
-            .getContainingFiles(FileTypeIndex.NAME, ExpressionEngineFileType.INSTANCE, scope);
+            .getContainingFiles(FilenameIndex.NAME, filename, scope);
 
         for (VirtualFile virtualFile : virtualFiles) {
             if (isMatchingTemplateName(virtualFile, templatePath)) {
