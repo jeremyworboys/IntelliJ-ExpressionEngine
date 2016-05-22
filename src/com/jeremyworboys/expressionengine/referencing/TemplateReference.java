@@ -2,7 +2,6 @@ package com.jeremyworboys.expressionengine.referencing;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementResolveResult;
 import com.intellij.psi.PsiPolyVariantReference;
@@ -19,24 +18,22 @@ import java.util.List;
 
 public class TemplateReference implements PsiPolyVariantReference {
     private final ExpressionEngineTagParamValue element;
-    private final TextRange textRange;
     private final String paramValue;
+    private final TextRange textRange;
 
-    public TemplateReference(@NotNull ExpressionEngineTagParamValue element) {
+    public TemplateReference(@NotNull ExpressionEngineTagParamValue element, @NotNull String paramValue, @NotNull TextRange textRange) {
         this.element = element;
-        paramValue = StringUtil.stripQuotesAroundValue(element.getText());
-        if (paramValue.equals(element.getText())) {
-            textRange = new TextRange(0, paramValue.length());
-        } else {
-            textRange = new TextRange(1, paramValue.length() + 1);
-        }
+        this.paramValue = paramValue;
+        this.textRange = textRange;
     }
 
+    @NotNull
     @Override
     public PsiElement getElement() {
         return element;
     }
 
+    @NotNull
     @Override
     public TextRange getRangeInElement() {
         return textRange;
