@@ -85,7 +85,8 @@ public class TemplateReference implements PsiPolyVariantReference {
     public boolean isReferenceTo(PsiElement element) {
         ResolveResult[] results = multiResolve(false);
         for (ResolveResult result : results) {
-            if (result.getElement().equals(element)) {
+            PsiElement resultElement = result.getElement();
+            if (resultElement != null && resultElement.equals(element)) {
                 return true;
             }
         }
