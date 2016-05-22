@@ -40,7 +40,7 @@ public class ExpressionEngineFileType extends LanguageFileType {
     @NotNull
     @Override
     public String getDescription() {
-        return "ExpressionEngine language file";
+        return "ExpressionEngine template file";
     }
 
     @NotNull
