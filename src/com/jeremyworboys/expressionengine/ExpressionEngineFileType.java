@@ -18,13 +18,11 @@ import javax.swing.*;
 
 public class ExpressionEngineFileType extends LanguageFileType {
     public static final ExpressionEngineFileType INSTANCE = new ExpressionEngineFileType();
-    @NonNls public static final String DEFAULT_EXTENSION = "html";
 
     private ExpressionEngineFileType() {
         super(ExpressionEngineLanguage.INSTANCE);
 
         FileTypeEditorHighlighterProviders.INSTANCE.addExplicitExtension(this, new EditorHighlighterProvider() {
-            @Override
             public EditorHighlighter getEditorHighlighter(@Nullable Project project, @NotNull FileType fileType, @Nullable VirtualFile virtualFile, @NotNull EditorColorsScheme colors) {
                 return new ExpressionEngineEditorHighlighter(project, virtualFile, colors);
             }
@@ -34,24 +32,29 @@ public class ExpressionEngineFileType extends LanguageFileType {
     @NotNull
     @Override
     public String getName() {
-        return "ExpressionEngine file";
+        return "ExpressionEngine";
     }
 
     @NotNull
     @Override
     public String getDescription() {
-        return "ExpressionEngine language file";
+        return "ExpressionEngine template file";
     }
 
     @NotNull
     @Override
     public String getDefaultExtension() {
-        return DEFAULT_EXTENSION;
+        return "html";
     }
 
     @Nullable
     @Override
     public Icon getIcon() {
         return ExpressionEngineIcons.FILE;
+    }
+
+    @NonNls
+    public String[] getExtensions() {
+        return new String[]{getDefaultExtension(), "css"};
     }
 }
