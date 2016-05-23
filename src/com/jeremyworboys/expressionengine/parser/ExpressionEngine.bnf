@@ -20,6 +20,11 @@ expressionengineFile ::= statement*
 
 private statement ::= comment | tag | conditional | T_HTML | T_CRLF
 
+// Literals
+path_literal   ::= T_PATH
+string_literal ::= (T_STRING_START (T_COMMENT | T_STRING+) T_STRING_END)
+                 | (T_STRING_START T_STRING_END)
+
 // Comments
 comment ::= T_COMMENT
 
@@ -88,7 +93,7 @@ private tag_module ::= T_LD T_TAG_NAME tag_contents* T_RD
 private tag_contents ::= (T_COMMENT | tag_param)
 
 tag_param ::= T_TAG_PARAM T_EQUALS tag_param_value
-tag_param_value ::= T_NUMBER | T_PATH | group_vars | string_literal {
+tag_param_value ::= T_NUMBER | path_literal | group_vars | string_literal {
   mixin="com.jeremyworboys.expressionengine.psi.impl.ExpressionEngineTagParamValueMixin"
   implements="com.jeremyworboys.expressionengine.psi.ExpressionEngineTagParamValueElement"
 }
@@ -109,7 +114,3 @@ tag_param_value ::= T_NUMBER | T_PATH | group_vars | string_literal {
 //attribute ::= CRLF? IDENTIFIER EQUAL attribute_value CRLF?
 //attribute_value ::= (NUMBER|IDENTIFIER|attribute_string)
 //attribute_string ::= (STRING_START (tag|COMMENT|STRING+) STRING_END) | (STRING_START STRING_END)
-
-// Strings
-string_literal ::= (T_STRING_START (T_COMMENT | T_STRING+) T_STRING_END)
-                 | (T_STRING_START T_STRING_END)
