@@ -6,6 +6,7 @@ import com.intellij.psi.PsiElement;
 import com.jeremyworboys.expressionengine.pattern.TemplateReferencePatterns;
 import com.jeremyworboys.expressionengine.psi.ExpressionEngineFile;
 import com.jeremyworboys.expressionengine.util.ExpressionEngineUtil;
+import com.jeremyworboys.expressionengine.util.TemplateFilesFinder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -54,7 +55,8 @@ public class ExpressionEngineAnnotator implements Annotator {
             return;
         }
 
-        List<ExpressionEngineFile> templateFiles = ExpressionEngineUtil.getTemplateFiles(element.getProject(), templatePath);
+        TemplateFilesFinder finder = new TemplateFilesFinder(element.getProject());
+        List<ExpressionEngineFile> templateFiles = finder.getTemplateFilesWithPath(templatePath);
         if (templateFiles.size() > 0) {
             return;
         }
