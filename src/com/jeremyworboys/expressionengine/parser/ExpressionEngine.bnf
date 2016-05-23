@@ -44,9 +44,11 @@ stylesheet_tag ::= T_LD T_STYLESHEET T_EQUAL tag_param_value T_RD {pin=2}
 preload_replace_tag ::= T_LD T_PRELOAD_REPLACE T_COLON T_PARAM_NAME T_EQUAL tag_param_value T_RD {pin=2}
 
 // Variables
-private variable_tag ::= variable | variable_close_tag
+private variable_tag ::= parametric_variable | variable | variable_close_tag
 variable ::= T_LD T_VARIABLE_NAME tag_params T_RD {pin=2}
 variable_close_tag ::= T_LD T_SLASH T_VARIABLE_NAME T_RD {pin=3}
+// TODO: This is needed to parse an invalid tag - it is almost always an error
+parametric_variable ::= T_LD T_VARIABLE_NAME T_EQUAL tag_param_value T_RD {pin=3}
 
 // Modules
 module ::= module_open_tag statement* module_close_tag {pin=1}
