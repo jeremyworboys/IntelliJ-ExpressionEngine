@@ -101,6 +101,7 @@ VARIABLE_NAME={IDENTIFIER} (":" {IDENTIFIER})*
 }
 
 <IN_EE_TAG> {
+  {LD}                                 { pushState(IN_EE_TAG); return T_LD; }
   {RD}                                 { popState(); return T_RD; }
   {SLASH}                              { return T_SLASH; }
   // Conditional
