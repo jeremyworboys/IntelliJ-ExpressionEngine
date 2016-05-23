@@ -58,12 +58,12 @@ COMMENT="{!--" ~"--}"
 
 <YYINITIAL> {
   {LD}                                 { pushState(IN_EE_TAG); return T_LD; }
-  ~ {LD}                               { yypushback(1); return T_CONTENT; }
+  !([^]*"{"[^]*)                       { if (yylength() > 0) return T_CONTENT; }
 }
 
 <IN_EE_TAG> {
   {RD}                                 { popState(); return T_RD; }
-  ~ {RD}                               { yypushback(1); return T_TAG_CONTENT; }
+  ~{RD}                                { yypushback(1); return T_TAG_CONTENT; }
 }
 
 [^]                                    { return TokenType.BAD_CHARACTER; }
