@@ -106,26 +106,25 @@ PRELOAD_REPLACE="preload_replace:" [a-zA-Z][a-zA-Z0-9_]*
   "if"                                 { pushState(IN_EE_EXPRESSION); return T_IF; }
   "if:elseif"                          { pushState(IN_EE_EXPRESSION); return T_ELSEIF; }
   "if:else"                            { return T_ELSE; }
-  // {xxx=""}
+  // Special tag
   "path"                               { pushState(IN_EE_TAG_PARAMS); return T_PATH; }
   "embed"                              { pushState(IN_EE_TAG_PARAMS); return T_EMBED; }
   "layout"                             { pushState(IN_EE_TAG_PARAMS); return T_LAYOUT; }
   "redirect"                           { pushState(IN_EE_TAG_PARAMS); return T_REDIRECT; }
   "encode"                             { pushState(IN_EE_TAG_PARAMS); return T_ENCODE; }
   {PRELOAD_REPLACE}                    { pushState(IN_EE_TAG_PARAMS); return T_PRELOAD_REPLACE; }
-  // {exp:xxx:yyy}
+  // Module tag
   {MODULE_NAME}                        { pushState(IN_EE_TAG_PARAMS); return T_MODULE_NAME; }
-  // {xxx}
+  // Variable tag
   {VARIABLE_NAME}                      { pushState(IN_EE_TAG_PARAMS); return T_VARIABLE_NAME; }
-  .                                    { return TokenType.BAD_CHARACTER; }
 }
 
 <IN_EE_TAG_PARAMS> {
   {LD}                                 { pushState(IN_EE_TAG); return T_LD; }
   {RD}                                 { yypushback(1); popState(); }
-  {EQUAL}                              { return T_EQUAL; }
+  // Param
   {VARIABLE_NAME}                      { return T_PARAM_NAME; }
-
+  {EQUAL}                              { return T_EQUAL; }
   // Literals
   {PATH}                               { return T_PATH_LITERAL; }
   {NUMBER}                             { return T_NUMBER_LITERAL; }
@@ -167,8 +166,6 @@ PRELOAD_REPLACE="preload_replace:" [a-zA-Z][a-zA-Z0-9_]*
   {SINGLE_QUOTE}                       { pushState(IN_SINGLE_STRING); return T_STRING_START; }
   {DOUBLE_QUOTE}                       { pushState(IN_DOUBLE_STRING); return T_STRING_START; }
   {VARIABLE_NAME}                      { return T_VARIABLE_NAME; }
-
-  [^]                                  { return TokenType.BAD_CHARACTER; }
 }
 
 <IN_SINGLE_STRING> {
