@@ -3,7 +3,7 @@ package com.jeremyworboys.expressionengine.annotator;
 import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.Annotator;
 import com.intellij.psi.PsiElement;
-import com.jeremyworboys.expressionengine.annotator.fix.CreateTemplateFix;
+import com.jeremyworboys.expressionengine.pattern.TemplateReferencePatterns;
 import com.jeremyworboys.expressionengine.psi.ExpressionEngineFile;
 import com.jeremyworboys.expressionengine.util.ExpressionEngineUtil;
 import org.jetbrains.annotations.NotNull;
@@ -29,13 +29,23 @@ public class ExpressionEngineAnnotator implements Annotator {
     }
 
     private void annotateTemplateReference(@NotNull PsiElement element, @NotNull AnnotationHolder holder) {
-        // TODO: Check {path}, {route}, {redirect} but consider special cases for each
-        if (!ExpressionEngineUtil.getTemplateFileReferencePattern().accepts(element)) {
+        // Skip all elements that couldn't be a template reference
+        if (!TemplateReferencePatterns.getTemplateReferencePattern().accepts(element)) {
+            return;
+        }
+
+        // Ignore special {path=} values
+        if (TemplateReferencePatterns.getPathTemplateReferencePattern().accepts(element) && isSpecialPathValue(element.getText())) {
+            return;
+        }
+
+        // Ignore special {redirect=} values
+        if (TemplateReferencePatterns.getRedirectTemplateReferencePattern().accepts(element) && isSpecialRedirectValue(element.getText())) {
             return;
         }
 
         String extension = "html";
-        if (ExpressionEngineUtil.getStylesheetFileReferencePattern().accepts(element)) {
+        if (TemplateReferencePatterns.getStylesheetTemplateReferencePattern().accepts(element)) {
             extension = "css";
         }
 
@@ -53,5 +63,13 @@ public class ExpressionEngineAnnotator implements Annotator {
 
         holder.createWarningAnnotation(element, "Create Template")
             .registerFix(new CreateTemplateFix(templatePath));
+    }
+
+    private boolean isSpecialPathValue(String text) {
+        return text.equals("site_index") || text.equals("logout");
+    }
+
+    private boolean isSpecialRedirectValue(String text) {
+        return text.equals("404");
     }
 }

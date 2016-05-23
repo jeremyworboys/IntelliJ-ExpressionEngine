@@ -2,17 +2,15 @@ package com.jeremyworboys.expressionengine.util;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.patterns.ElementPattern;
-import com.intellij.patterns.PlatformPatterns;
-import com.intellij.psi.*;
+import com.intellij.psi.PsiDirectory;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiManager;
 import com.intellij.psi.search.FileTypeIndex;
 import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.indexing.FileBasedIndex;
 import com.jeremyworboys.expressionengine.ExpressionEngineFileType;
-import com.jeremyworboys.expressionengine.ExpressionEngineLanguage;
 import com.jeremyworboys.expressionengine.psi.ExpressionEngineFile;
-import com.jeremyworboys.expressionengine.psi.ExpressionEngineTypes;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -24,63 +22,6 @@ import java.util.regex.Pattern;
 
 public class ExpressionEngineUtil {
     private static String templatePathPattern = "(.+/|^)(.+)\\.group/(.+)\\.(html|css)$";
-
-    @NotNull
-    public static ElementPattern<PsiElement> getTemplateFileReferencePattern() {
-        return getTemplateFileReferencePattern("layout", "embed", "stylesheet");
-    }
-
-    @NotNull
-    public static ElementPattern<PsiElement> getStylesheetFileReferencePattern() {
-        return getTemplateFileReferencePattern("stylesheet");
-    }
-
-    @NotNull
-    public static ElementPattern<PsiElement> getTemplateFileReferencePattern(String... tagNames) {
-        // Matches: {embed="<xxx>"}
-        //noinspection unchecked
-        ElementPattern<PsiElement> stringPattern =
-            PlatformPatterns
-                .psiElement(ExpressionEngineTypes.T_STRING)
-                .withParent(
-                    PlatformPatterns
-                        .psiElement(ExpressionEngineTypes.STRING_LITERAL)
-                        .withParent(PlatformPatterns.psiElement(ExpressionEngineTypes.TAG_PARAM_VALUE))
-                )
-                .afterLeafSkipping(
-                    PlatformPatterns.or(
-                        PlatformPatterns.psiElement(TokenType.WHITE_SPACE),
-                        PlatformPatterns.psiElement(ExpressionEngineTypes.T_LD),
-                        PlatformPatterns.psiElement(ExpressionEngineTypes.T_EQUALS),
-                        PlatformPatterns.psiElement(ExpressionEngineTypes.T_STRING_START)
-                    ),
-                    PlatformPatterns.psiElement(ExpressionEngineTypes.T_PARAM_VAR).withText(PlatformPatterns.string().oneOf(tagNames))
-                )
-                .withLanguage(ExpressionEngineLanguage.INSTANCE);
-
-        // Matches: {embed=<xxx>}
-        //noinspection unchecked
-        ElementPattern<PsiElement> pathPattern =
-            PlatformPatterns
-                .psiElement(ExpressionEngineTypes.T_PATH)
-                .withParent(
-                    PlatformPatterns
-                        .psiElement(ExpressionEngineTypes.PATH_LITERAL)
-                        .withParent(PlatformPatterns.psiElement(ExpressionEngineTypes.TAG_PARAM_VALUE))
-                )
-                .afterLeafSkipping(
-                    PlatformPatterns.or(
-                        PlatformPatterns.psiElement(TokenType.WHITE_SPACE),
-                        PlatformPatterns.psiElement(ExpressionEngineTypes.T_LD),
-                        PlatformPatterns.psiElement(ExpressionEngineTypes.T_EQUALS)
-                    ),
-                    PlatformPatterns.psiElement(ExpressionEngineTypes.T_PARAM_VAR).withText(PlatformPatterns.string().oneOf(tagNames))
-                )
-                .withLanguage(ExpressionEngineLanguage.INSTANCE);
-
-        //noinspection unchecked
-        return PlatformPatterns.or(stringPattern, pathPattern);
-    }
 
     @NotNull
     public static List<ExpressionEngineFile> getTemplateFiles(@NotNull Project project) {
