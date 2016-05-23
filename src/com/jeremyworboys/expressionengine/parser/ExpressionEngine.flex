@@ -36,6 +36,10 @@ import static com.jeremyworboys.expressionengine.psi.ExpressionEngineTypes.*;
       yybegin(lexStateStack.pop());
     }
   }
+
+  private boolean isAllWhitespace() {
+    return yytext().toString().trim().length() == 0;
+  }
 %}
 
 // Macros
@@ -72,7 +76,7 @@ VARIABLE_NAME=[a-zA-Z][a-zA-Z0-9_]* (":" [a-zA-Z][a-zA-Z0-9_]*)*
 
 <YYINITIAL> {
   {LD}                                 { pushState(IN_EE_TAG); return T_LD; }
-  !([^]*"{"[^]*)                       { if (yylength() > 0) return T_CONTENT; }
+  !([^]*"{"[^]*)                       { if (yylength() > 0) return isAllWhitespace() ? TokenType.WHITE_SPACE : T_CONTENT; }
 }
 
 <IN_EE_TAG> {
