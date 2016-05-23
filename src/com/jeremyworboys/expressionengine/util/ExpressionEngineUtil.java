@@ -5,9 +5,11 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.patterns.ElementPattern;
 import com.intellij.patterns.PlatformPatterns;
 import com.intellij.psi.*;
+import com.intellij.psi.search.FileTypeIndex;
 import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.indexing.FileBasedIndex;
+import com.jeremyworboys.expressionengine.ExpressionEngineFileType;
 import com.jeremyworboys.expressionengine.ExpressionEngineLanguage;
 import com.jeremyworboys.expressionengine.psi.ExpressionEngineFile;
 import com.jeremyworboys.expressionengine.psi.ExpressionEngineTypes;
@@ -17,8 +19,12 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ExpressionEngineUtil {
+    private static String templatePathPattern = "(.+/|^)(.+)\\.group/(.+)\\.(html|css)$";
+
     @NotNull
     public static ElementPattern<PsiElement> getTemplateFileReferencePattern() {
         return getTemplateFileReferencePattern("layout", "embed", "stylesheet");
@@ -36,7 +42,11 @@ public class ExpressionEngineUtil {
         ElementPattern<PsiElement> stringPattern =
             PlatformPatterns
                 .psiElement(ExpressionEngineTypes.T_STRING)
-                .withParent(PlatformPatterns.psiElement(ExpressionEngineTypes.TAG_PARAM_VALUE))
+                .withParent(
+                    PlatformPatterns
+                        .psiElement(ExpressionEngineTypes.STRING_LITERAL)
+                        .withParent(PlatformPatterns.psiElement(ExpressionEngineTypes.TAG_PARAM_VALUE))
+                )
                 .afterLeafSkipping(
                     PlatformPatterns.or(
                         PlatformPatterns.psiElement(TokenType.WHITE_SPACE),
@@ -53,7 +63,11 @@ public class ExpressionEngineUtil {
         ElementPattern<PsiElement> pathPattern =
             PlatformPatterns
                 .psiElement(ExpressionEngineTypes.T_PATH)
-                .withParent(PlatformPatterns.psiElement(ExpressionEngineTypes.TAG_PARAM_VALUE))
+                .withParent(
+                    PlatformPatterns
+                        .psiElement(ExpressionEngineTypes.PATH_LITERAL)
+                        .withParent(PlatformPatterns.psiElement(ExpressionEngineTypes.TAG_PARAM_VALUE))
+                )
                 .afterLeafSkipping(
                     PlatformPatterns.or(
                         PlatformPatterns.psiElement(TokenType.WHITE_SPACE),
@@ -69,22 +83,45 @@ public class ExpressionEngineUtil {
     }
 
     @NotNull
-    public static List<ExpressionEngineFile> getTemplateFiles(@NotNull Project project, String templatePath) {
+    public static List<ExpressionEngineFile> getTemplateFiles(@NotNull Project project) {
         List<ExpressionEngineFile> result = new ArrayList<>();
-
-        String[] filenameParts = templatePath.split("/");
-        String filename = filenameParts[filenameParts.length -1];
 
         GlobalSearchScope scope = GlobalSearchScope.allScope(project);
         Collection<VirtualFile> virtualFiles = FileBasedIndex.getInstance()
-            .getContainingFiles(FilenameIndex.NAME, filename, scope);
+            .getContainingFiles(FileTypeIndex.NAME, ExpressionEngineFileType.INSTANCE, scope);
 
         for (VirtualFile virtualFile : virtualFiles) {
-            if (isMatchingTemplateName(virtualFile, templatePath)) {
+            if (virtualFile.getPath().matches(templatePathPattern)) {
                 ExpressionEngineFile expressionEngineFile =
                     (ExpressionEngineFile) PsiManager.getInstance(project).findFile(virtualFile);
                 if (expressionEngineFile != null) {
                     result.add(expressionEngineFile);
+                }
+            }
+        }
+
+        return result;
+    }
+
+    @NotNull
+    public static List<ExpressionEngineFile> getTemplateFiles(@NotNull Project project, String templatePath) {
+        List<ExpressionEngineFile> result = new ArrayList<>();
+
+        if (templatePath != null && templatePath.contains("/")) {
+            String[] filenameParts = templatePath.split("/");
+            String filename = filenameParts[filenameParts.length - 1];
+
+            GlobalSearchScope scope = GlobalSearchScope.allScope(project);
+            Collection<VirtualFile> virtualFiles = FileBasedIndex.getInstance()
+                .getContainingFiles(FilenameIndex.NAME, filename, scope);
+
+            for (VirtualFile virtualFile : virtualFiles) {
+                if (isMatchingTemplateName(virtualFile, templatePath)) {
+                    ExpressionEngineFile expressionEngineFile =
+                        (ExpressionEngineFile) PsiManager.getInstance(project).findFile(virtualFile);
+                    if (expressionEngineFile != null) {
+                        result.add(expressionEngineFile);
+                    }
                 }
             }
         }
@@ -126,6 +163,18 @@ public class ExpressionEngineUtil {
 
         if (parts.length == 2) {
             return parts[0] + ".group/" + parts[1] + "." + extension;
+        }
+
+        return null;
+    }
+
+    @Nullable
+    public static String toTemplateName(String templatePath) {
+        Pattern pattern = Pattern.compile(templatePathPattern);
+        Matcher matcher = pattern.matcher(templatePath);
+
+        if (matcher.matches()) {
+            return matcher.group(2) + "/" + matcher.group(3);
         }
 
         return null;
