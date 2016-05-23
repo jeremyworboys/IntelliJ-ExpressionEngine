@@ -70,7 +70,7 @@ SLASH="/"
 EQUAL="="
 COLON=":"
 
-PATH=[a-zA-Z0-9\-_\.]+("/"[a-zA-Z0-9\-_\.]+)+
+PATH=[a-zA-Z0-9\-_\.]+("/"[a-zA-Z0-9\-_\.]+)*
 NUMBER=([0-9]*\.[0-9]+|[0-9]+\.[0-9]*|[0-9]+)
 
 SINGLE_QUOTE="\'"
@@ -125,7 +125,7 @@ VARIABLE_NAME=[a-zA-Z][a-zA-Z0-9_]* (":" [a-zA-Z][a-zA-Z0-9_]*)*
   {LD}                                 { pushState(IN_EE_TAG); return T_LD; }
   {RD}                                 { yypushback(1); popState(); }
   // Param
-  {VARIABLE_NAME}                      { return T_PARAM_NAME; }
+  {VARIABLE_NAME} "="                  { yypushback(1); return T_PARAM_NAME; }
   {EQUAL}                              { return T_EQUAL; }
   // Literals
   {PATH}                               { return T_PATH_LITERAL; }
