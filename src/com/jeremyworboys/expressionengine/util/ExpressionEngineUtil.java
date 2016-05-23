@@ -5,9 +5,11 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.patterns.ElementPattern;
 import com.intellij.patterns.PlatformPatterns;
 import com.intellij.psi.*;
+import com.intellij.psi.search.FileTypeIndex;
 import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.indexing.FileBasedIndex;
+import com.jeremyworboys.expressionengine.ExpressionEngineFileType;
 import com.jeremyworboys.expressionengine.ExpressionEngineLanguage;
 import com.jeremyworboys.expressionengine.psi.ExpressionEngineFile;
 import com.jeremyworboys.expressionengine.psi.ExpressionEngineTypes;
@@ -17,8 +19,12 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ExpressionEngineUtil {
+    private static String templatePathPattern = ".+/(.+)\\.group/(.+)\\.(html|css)$";
+
     @NotNull
     public static ElementPattern<PsiElement> getTemplateFileReferencePattern() {
         return getTemplateFileReferencePattern("layout", "embed", "stylesheet");
@@ -66,6 +72,27 @@ public class ExpressionEngineUtil {
 
         //noinspection unchecked
         return PlatformPatterns.or(stringPattern, pathPattern);
+    }
+
+    @NotNull
+    public static List<ExpressionEngineFile> getTemplateFiles(@NotNull Project project) {
+        List<ExpressionEngineFile> result = new ArrayList<>();
+
+        GlobalSearchScope scope = GlobalSearchScope.allScope(project);
+        Collection<VirtualFile> virtualFiles = FileBasedIndex.getInstance()
+            .getContainingFiles(FileTypeIndex.NAME, ExpressionEngineFileType.INSTANCE, scope);
+
+        for (VirtualFile virtualFile : virtualFiles) {
+            if (virtualFile.getPath().matches(templatePathPattern)) {
+                ExpressionEngineFile expressionEngineFile =
+                    (ExpressionEngineFile) PsiManager.getInstance(project).findFile(virtualFile);
+                if (expressionEngineFile != null) {
+                    result.add(expressionEngineFile);
+                }
+            }
+        }
+
+        return result;
     }
 
     @NotNull
@@ -128,6 +155,18 @@ public class ExpressionEngineUtil {
 
         if (parts.length == 2) {
             return parts[0] + ".group/" + parts[1] + "." + extension;
+        }
+
+        return null;
+    }
+
+    @Nullable
+    public static String toTemplateName(String templatePath) {
+        Pattern pattern = Pattern.compile(templatePathPattern);
+        Matcher matcher = pattern.matcher(templatePath);
+
+        if (matcher.matches()) {
+            return matcher.group(1) + "/" + matcher.group(2);
         }
 
         return null;

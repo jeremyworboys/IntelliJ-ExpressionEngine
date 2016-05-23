@@ -1,5 +1,6 @@
 package com.jeremyworboys.expressionengine.referencing;
 
+import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
@@ -48,6 +49,14 @@ public class TemplateReference extends PsiReferenceBase.Poly<PsiElement> {
     @NotNull
     @Override
     public Object[] getVariants() {
-        return new Object[0];
+        Project project = myElement.getProject();
+
+        List<LookupElement> variants = new ArrayList<LookupElement>();
+        List<ExpressionEngineFile> templateFiles = ExpressionEngineUtil.getTemplateFiles(project);
+        for (ExpressionEngineFile templateFile : templateFiles) {
+            variants.add(new TemplateReferenceLookupElement(templateFile));
+        }
+
+        return variants.toArray();
     }
 }
