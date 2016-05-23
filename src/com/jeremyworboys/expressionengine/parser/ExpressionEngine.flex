@@ -107,6 +107,7 @@ VARIABLE_NAME=[a-zA-Z][a-zA-Z0-9_]* (":" [a-zA-Z][a-zA-Z0-9_]*)*
   "embed"                              { pushState(IN_EE_TAG_PARAMS); return T_EMBED; }
   "layout"                             { pushState(IN_EE_TAG_PARAMS); return T_LAYOUT; }
   "redirect"                           { pushState(IN_EE_TAG_PARAMS); return T_REDIRECT; }
+  "encode"                             { pushState(IN_EE_TAG_PARAMS); return T_ENCODE; }
   // {exp:xxx:yyy}
   {MODULE_NAME}                        { pushState(IN_EE_TAG_PARAMS); return T_MODULE_NAME; }
   // {xxx}
