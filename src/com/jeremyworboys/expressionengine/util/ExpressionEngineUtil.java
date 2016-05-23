@@ -23,7 +23,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ExpressionEngineUtil {
-    private static String templatePathPattern = ".+/(.+)\\.group/(.+)\\.(html|css)$";
+    private static String templatePathPattern = "(.+/|^)(.+)\\.group/(.+)\\.(html|css)$";
 
     @NotNull
     public static ElementPattern<PsiElement> getTemplateFileReferencePattern() {
@@ -166,7 +166,7 @@ public class ExpressionEngineUtil {
         Matcher matcher = pattern.matcher(templatePath);
 
         if (matcher.matches()) {
-            return matcher.group(1) + "/" + matcher.group(2);
+            return matcher.group(2) + "/" + matcher.group(3);
         }
 
         return null;
