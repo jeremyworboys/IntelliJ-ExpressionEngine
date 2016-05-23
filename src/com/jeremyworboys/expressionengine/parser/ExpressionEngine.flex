@@ -119,6 +119,7 @@ PRELOAD_REPLACE="preload_replace:" [a-zA-Z][a-zA-Z0-9_]*
 }
 
 <IN_EE_TAG_PARAMS> {
+  {LD}                                 { pushState(IN_EE_TAG); return T_LD; }
   {RD}                                 { yypushback(1); popState(); }
   {EQUAL}                              { return T_EQUAL; }
   {VARIABLE_NAME}                      { return T_PARAM_NAME; }
