@@ -16,6 +16,30 @@ expressionEngineFile ::= statement*
 private statement    ::= tag | whitespace | comment | T_CONTENT+
 private whitespace   ::= (T_WS | T_CRLF)+
 
+// Literals
+path_literal   ::= T_PATH_LITERAL
+number_literal ::= T_NUMBER_LITERAL
+string_literal ::= T_STRING_START T_STRING_LITERAL+ T_STRING_END
+                 | T_STRING_START T_STRING_END
+
+// Comments
 comment ::= T_COMMENT
 
-tag ::= T_LD T_TAG_CONTENT+ T_RD
+// Tags
+tag ::= variable | module | path | embed | layout
+
+private path ::= T_LD T_PATH T_EQUAL tag_param_value T_RD
+private embed ::= T_LD T_EMBED T_EQUAL tag_param_value tag_param* T_RD
+private layout ::= T_LD T_LAYOUT T_EQUAL tag_param_value tag_param* T_RD
+
+private variable ::= variable_open_tag statement* variable_close_tag
+private variable_open_tag ::= T_LD T_VARIABLE_NAME tag_param* T_RD
+private variable_close_tag ::= T_LD T_SLASH T_VARIABLE_NAME T_RD
+
+private module ::= module_open_tag statement* module_close_tag
+private module_open_tag ::= T_LD T_MODULE_NAME tag_param* T_RD
+private module_close_tag ::= T_LD T_SLASH T_MODULE_NAME T_RD
+
+private tag_param ::= T_PARAM_NAME T_EQUAL tag_param_value
+private tag_param_value ::= (path_literal | number_literal | string_literal)
+

@@ -44,11 +44,24 @@ CRLF=(\n|\r|\r\n)
 
 LD="{"
 RD="}"
+SLASH="/"
+EQUAL="="
+
+PATH=[a-zA-Z0-9\-_]+("/"[a-zA-Z0-9\-_]+)+
+NUMBER=([0-9]*\.[0-9]+|[0-9]+\.[0-9]*|[0-9]+)
+
+SINGLE_QUOTE="\'"
+DOUBLE_QUOTE="\""
 
 COMMENT="{!--" ~"--}"
+MODULE_NAME="exp:" [a-zA-Z_]+ (":" [a-zA-Z_]+)?
+VARIABLE_NAME=[a-zA-Z_]+ (":" [a-zA-Z_]+)?
 
 // States
 %state IN_EE_TAG
+%state IN_EE_TAG_PARAMS
+%state IN_SINGLE_STRING
+%state IN_DOUBLE_STRING
 
 %%
 
@@ -63,7 +76,38 @@ COMMENT="{!--" ~"--}"
 
 <IN_EE_TAG> {
   {RD}                                 { popState(); return T_RD; }
-  ~{RD}                                { yypushback(1); return T_TAG_CONTENT; }
+  {SLASH}                              { return T_SLASH; }
+  "path"                               { pushState(IN_EE_TAG_PARAMS); return T_PATH; }
+  "embed"                              { pushState(IN_EE_TAG_PARAMS); return T_EMBED; }
+  "layout"                             { pushState(IN_EE_TAG_PARAMS); return T_LAYOUT; }
+  {MODULE_NAME}                        { pushState(IN_EE_TAG_PARAMS); return T_MODULE_NAME; }
+
+//  {VARIABLE_NAME}                      { pushState(IN_EE_TAG_PARAMS); return T_VARIABLE_NAME; }
+  .                                    { pushState(IN_EE_TAG_PARAMS); return T_VARIABLE_NAME; }
+}
+
+<IN_EE_TAG_PARAMS> {
+  {RD}                                 { yypushback(1); popState(); }
+  {EQUAL}                              { return T_EQUAL; }
+  {VARIABLE_NAME}                      { return T_PARAM_NAME; }
+
+  // Literals
+  {PATH}                               { return T_PATH_LITERAL; }
+  {NUMBER}                             { return T_NUMBER_LITERAL; }
+  {SINGLE_QUOTE}                       { pushState(IN_SINGLE_STRING); return T_STRING_START; }
+  {DOUBLE_QUOTE}                       { pushState(IN_DOUBLE_STRING); return T_STRING_START; }
+}
+
+<IN_SINGLE_STRING> {
+  // TODO: Match variables in strings
+  {SINGLE_QUOTE}                       { popState(); return T_STRING_END; }
+  ~{SINGLE_QUOTE}                      { yypushback(1); return T_STRING_LITERAL; }
+}
+
+<IN_DOUBLE_STRING> {
+  // TODO: Match variables in strings
+  {DOUBLE_QUOTE}                       { popState(); return T_STRING_END; }
+  ~{DOUBLE_QUOTE}                      { yypushback(1); return T_STRING_LITERAL; }
 }
 
 [^]                                    { return TokenType.BAD_CHARACTER; }

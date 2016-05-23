@@ -12,17 +12,17 @@ import org.jetbrains.annotations.NotNull;
 import static com.intellij.openapi.editor.colors.TextAttributesKey.createTextAttributesKey;
 
 public class ExpressionEngineSyntaxHighlighter extends SyntaxHighlighterBase {
-    public static final TextAttributesKey IDENTIFIER = createTextAttributesKey("EE_IDENTIFIER", DefaultLanguageHighlighterColors.IDENTIFIER);
     public static final TextAttributesKey COMMENT = createTextAttributesKey("EE_COMMENT", DefaultLanguageHighlighterColors.BLOCK_COMMENT);
     public static final TextAttributesKey NUMBER = createTextAttributesKey("EE_NUMBER", DefaultLanguageHighlighterColors.NUMBER);
     public static final TextAttributesKey STRING = createTextAttributesKey("EE_STRING", DefaultLanguageHighlighterColors.STRING);
     public static final TextAttributesKey OPERATOR = createTextAttributesKey("EE_OPERATOR", DefaultLanguageHighlighterColors.OPERATION_SIGN);
+    public static final TextAttributesKey TAG = createTextAttributesKey("EE_TAG", DefaultLanguageHighlighterColors.IDENTIFIER);
 
-    private static final TextAttributesKey[] IDENTIFIER_KEYS = new TextAttributesKey[]{IDENTIFIER};
     private static final TextAttributesKey[] COMMENT_KEYS = new TextAttributesKey[]{COMMENT};
     private static final TextAttributesKey[] NUMBER_KEYS = new TextAttributesKey[]{NUMBER};
     private static final TextAttributesKey[] STRING_KEYS = new TextAttributesKey[]{STRING};
     private static final TextAttributesKey[] OPERATOR_KEYS = new TextAttributesKey[]{OPERATOR};
+    private static final TextAttributesKey[] TAG_KEYS = new TextAttributesKey[]{TAG};
     private static final TextAttributesKey[] EMPTY_KEYS = new TextAttributesKey[0];
 
     @NotNull
@@ -34,32 +34,50 @@ public class ExpressionEngineSyntaxHighlighter extends SyntaxHighlighterBase {
     @NotNull
     @Override
     public TextAttributesKey[] getTokenHighlights(IElementType tokenType) {
-        if (tokenType.equals(ExpressionEngineTypes.T_COMMENT)) {
+        if (isPartOfComment(tokenType)) {
             return COMMENT_KEYS;
-        } else if (tokenType.equals(ExpressionEngineTypes.T_NUMBER)) {
+        } else if (isPartOfNumber(tokenType)) {
             return NUMBER_KEYS;
-        } else if (isPartOfTag(tokenType)) {
-            return IDENTIFIER_KEYS;
-        } else if (isOperator(tokenType)) {
-            return OPERATOR_KEYS;
         } else if (isPartOfString(tokenType)) {
             return STRING_KEYS;
+        } else if (isPartOfTag(tokenType)) {
+            return TAG_KEYS;
+        } else if (isOperator(tokenType)) {
+            return OPERATOR_KEYS;
         } else {
             return EMPTY_KEYS;
         }
+    }
+
+    private static boolean isPartOfComment(IElementType tokenType) {
+        return tokenType.equals(ExpressionEngineTypes.T_COMMENT);
+    }
+
+    private static boolean isPartOfNumber(IElementType tokenType) {
+        return tokenType.equals(ExpressionEngineTypes.T_NUMBER_LITERAL);
+    }
+
+    private static boolean isPartOfString(IElementType tokenType) {
+        return tokenType.equals(ExpressionEngineTypes.T_PATH_LITERAL)
+            || tokenType.equals(ExpressionEngineTypes.T_STRING_LITERAL)
+            || tokenType.equals(ExpressionEngineTypes.T_STRING_START)
+            || tokenType.equals(ExpressionEngineTypes.T_STRING_END);
     }
 
     private static boolean isPartOfTag(IElementType tokenType) {
         return tokenType.equals(ExpressionEngineTypes.T_LD)
             || tokenType.equals(ExpressionEngineTypes.T_RD)
             || tokenType.equals(ExpressionEngineTypes.T_SLASH)
+            || tokenType.equals(ExpressionEngineTypes.T_PATH)
+            || tokenType.equals(ExpressionEngineTypes.T_EMBED)
+            || tokenType.equals(ExpressionEngineTypes.T_LAYOUT)
+            || tokenType.equals(ExpressionEngineTypes.T_VARIABLE_NAME)
+            || tokenType.equals(ExpressionEngineTypes.T_MODULE_NAME)
             || tokenType.equals(ExpressionEngineTypes.T_IF)
             || tokenType.equals(ExpressionEngineTypes.T_ELSEIF)
             || tokenType.equals(ExpressionEngineTypes.T_ELSE)
             || tokenType.equals(ExpressionEngineTypes.T_ENDIF)
-            || tokenType.equals(ExpressionEngineTypes.T_TAG_NAME)
             || tokenType.equals(ExpressionEngineTypes.T_TAG_PARAM)
-            || tokenType.equals(ExpressionEngineTypes.T_VARIABLE)
             || tokenType.equals(ExpressionEngineTypes.T_EMBED_VAR)
             || tokenType.equals(ExpressionEngineTypes.T_LAYOUT_VAR)
             || tokenType.equals(ExpressionEngineTypes.T_PARAM_VAR)
@@ -88,12 +106,5 @@ public class ExpressionEngineSyntaxHighlighter extends SyntaxHighlighterBase {
             || tokenType.equals(ExpressionEngineTypes.T_OP_POW)
             || tokenType.equals(ExpressionEngineTypes.T_OP_MOD)
             || tokenType.equals(ExpressionEngineTypes.T_OP_CONCAT);
-    }
-
-    private static boolean isPartOfString(IElementType tokenType) {
-        return tokenType.equals(ExpressionEngineTypes.T_STRING)
-            || tokenType.equals(ExpressionEngineTypes.T_PATH)
-            || tokenType.equals(ExpressionEngineTypes.T_STRING_START)
-            || tokenType.equals(ExpressionEngineTypes.T_STRING_END);
     }
 }
