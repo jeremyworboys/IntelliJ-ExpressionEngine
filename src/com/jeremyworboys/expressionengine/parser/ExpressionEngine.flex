@@ -78,6 +78,8 @@ COMMENT="{!--" ~"--}"
 MODULE_NAME="exp:" [a-zA-Z][a-zA-Z0-9_]* (":" [a-zA-Z][a-zA-Z0-9_]*)?
 VARIABLE_NAME=[a-zA-Z][a-zA-Z0-9_]* (":" [a-zA-Z][a-zA-Z0-9_]*)*
 
+PRELOAD_REPLACE="preload_replace:" [a-zA-Z][a-zA-Z0-9_]*
+
 // States
 %state IN_EE_TAG
 %state IN_EE_TAG_PARAMS
@@ -108,6 +110,7 @@ VARIABLE_NAME=[a-zA-Z][a-zA-Z0-9_]* (":" [a-zA-Z][a-zA-Z0-9_]*)*
   "layout"                             { pushState(IN_EE_TAG_PARAMS); return T_LAYOUT; }
   "redirect"                           { pushState(IN_EE_TAG_PARAMS); return T_REDIRECT; }
   "encode"                             { pushState(IN_EE_TAG_PARAMS); return T_ENCODE; }
+  {PRELOAD_REPLACE}                    { pushState(IN_EE_TAG_PARAMS); return T_PRELOAD_REPLACE; }
   // {exp:xxx:yyy}
   {MODULE_NAME}                        { pushState(IN_EE_TAG_PARAMS); return T_MODULE_NAME; }
   // {xxx}

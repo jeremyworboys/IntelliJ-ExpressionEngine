@@ -90,6 +90,7 @@ public class ExpressionEngineSyntaxHighlighter extends SyntaxHighlighterBase {
             || tokenType.equals(ExpressionEngineTypes.T_LAYOUT)
             || tokenType.equals(ExpressionEngineTypes.T_REDIRECT)
             || tokenType.equals(ExpressionEngineTypes.T_ENCODE)
+            || tokenType.equals(ExpressionEngineTypes.T_PRELOAD_REPLACE)
             || tokenType.equals(ExpressionEngineTypes.T_VARIABLE_NAME)
             || tokenType.equals(ExpressionEngineTypes.T_MODULE_NAME)
             || tokenType.equals(ExpressionEngineTypes.T_IF)
