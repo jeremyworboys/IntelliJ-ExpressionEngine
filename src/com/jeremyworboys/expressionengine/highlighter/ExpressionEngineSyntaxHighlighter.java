@@ -84,6 +84,7 @@ public class ExpressionEngineSyntaxHighlighter extends SyntaxHighlighterBase {
     private static boolean isPartOfTag(IElementType tokenType) {
         return tokenType.equals(ExpressionEngineTypes.T_LD)
             || tokenType.equals(ExpressionEngineTypes.T_RD)
+            || tokenType.equals(ExpressionEngineTypes.T_COLON)
             || tokenType.equals(ExpressionEngineTypes.T_SLASH)
             || tokenType.equals(ExpressionEngineTypes.T_PATH)
             || tokenType.equals(ExpressionEngineTypes.T_EMBED)

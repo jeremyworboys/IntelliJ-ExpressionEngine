@@ -40,7 +40,7 @@ redirect_tag ::= T_LD T_REDIRECT T_EQUAL tag_param_value T_RD
 switch_tag ::= T_LD T_SWITCH T_EQUAL tag_param_value T_RD
 encode_tag ::= T_LD T_ENCODE T_EQUAL tag_param_value tag_params T_RD
 stylesheet_tag ::= T_LD T_STYLESHEET T_EQUAL tag_param_value T_RD
-preload_replace_tag ::= T_LD T_PRELOAD_REPLACE T_EQUAL tag_param_value T_RD
+preload_replace_tag ::= T_LD T_PRELOAD_REPLACE T_COLON T_PARAM_NAME T_EQUAL tag_param_value T_RD
 
 // Variables
 private variable_tag ::= variable | variable_pair

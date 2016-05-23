@@ -68,6 +68,7 @@ LD="{"
 RD="}"
 SLASH="/"
 EQUAL="="
+COLON=":"
 
 PATH=[a-zA-Z0-9\-_\.]+("/"[a-zA-Z0-9\-_\.]+)+
 NUMBER=([0-9]*\.[0-9]+|[0-9]+\.[0-9]*|[0-9]+)
@@ -79,11 +80,10 @@ COMMENT="{!--" ~"--}"
 MODULE_NAME="exp:" [a-zA-Z][a-zA-Z0-9_]* (":" [a-zA-Z][a-zA-Z0-9_]*)?
 VARIABLE_NAME=[a-zA-Z][a-zA-Z0-9_]* (":" [a-zA-Z][a-zA-Z0-9_]*)*
 
-PRELOAD_REPLACE="preload_replace:" [a-zA-Z][a-zA-Z0-9_]*
-
 // States
 %state IN_EE_TAG
 %state IN_EE_TAG_PARAMS
+%state IN_EE_PRELOAD_REPLACE
 %state IN_EE_EXPRESSION
 %state IN_SINGLE_STRING
 %state IN_DOUBLE_STRING
@@ -114,7 +114,7 @@ PRELOAD_REPLACE="preload_replace:" [a-zA-Z][a-zA-Z0-9_]*
   "switch="                            { yypushback(1); pushState(IN_EE_TAG_PARAMS); return T_SWITCH; }
   "encode"                             { pushState(IN_EE_TAG_PARAMS); return T_ENCODE; }
   "stylesheet"                         { pushState(IN_EE_TAG_PARAMS); return T_STYLESHEET; }
-  {PRELOAD_REPLACE}                    { pushState(IN_EE_TAG_PARAMS); return T_PRELOAD_REPLACE; }
+  "preload_replace" ~ {RD}             { yypushback(yylength() - 15); pushState(IN_EE_PRELOAD_REPLACE); return T_PRELOAD_REPLACE; }
   // Module tag
   {MODULE_NAME}                        { pushState(IN_EE_TAG_PARAMS); return T_MODULE_NAME; }
   // Variable tag
@@ -129,6 +129,18 @@ PRELOAD_REPLACE="preload_replace:" [a-zA-Z][a-zA-Z0-9_]*
   {EQUAL}                              { return T_EQUAL; }
   // Literals
   {PATH}                               { return T_PATH_LITERAL; }
+  {NUMBER}                             { return T_NUMBER_LITERAL; }
+  {SINGLE_QUOTE}                       { pushState(IN_SINGLE_STRING); return T_STRING_START; }
+  {DOUBLE_QUOTE}                       { pushState(IN_DOUBLE_STRING); return T_STRING_START; }
+}
+
+<IN_EE_PRELOAD_REPLACE> {
+  {RD}                                 { yypushback(1); popState(); }
+  // Param
+  {VARIABLE_NAME}                      { return T_PARAM_NAME; }
+  {EQUAL}                              { return T_EQUAL; }
+  {COLON}                              { return T_COLON; }
+  // Literals
   {NUMBER}                             { return T_NUMBER_LITERAL; }
   {SINGLE_QUOTE}                       { pushState(IN_SINGLE_STRING); return T_STRING_START; }
   {DOUBLE_QUOTE}                       { pushState(IN_DOUBLE_STRING); return T_STRING_START; }
@@ -182,4 +194,4 @@ PRELOAD_REPLACE="preload_replace:" [a-zA-Z][a-zA-Z0-9_]*
   ~{DOUBLE_QUOTE}                      { yypushback(1); return T_STRING_CONTENT; }
 }
 
-[^]                                    { return TokenType.BAD_CHARACTER; }
+[^]                                    { yybegin(YYINITIAL); return T_CONTENT; }
