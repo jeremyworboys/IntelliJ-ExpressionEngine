@@ -8,9 +8,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.IncorrectOperationException;
-import com.jeremyworboys.expressionengine.psi.ExpressionEngineTagParamValue;
-import com.jeremyworboys.expressionengine.psi.ExpressionEngineTagParamValueElement;
-import com.jeremyworboys.expressionengine.psi.ExpressionEngineTypes;
+import com.jeremyworboys.expressionengine.psi.*;
 import com.jeremyworboys.expressionengine.referencing.TemplateReference;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -26,6 +24,18 @@ public abstract class ExpressionEngineTagParamValueMixin extends ASTWrapperPsiEl
 
     @Override
     public PsiElement setName(@NonNls @NotNull String name) throws IncorrectOperationException {
+        ASTNode literalNode = this.getNode().getFirstChildNode();
+
+        if (literalNode.getElementType() == ExpressionEngineTypes.T_PATH) {
+            ExpressionEnginePathLiteral pathLiteral = ExpressionEngineElementFactory.createPathLiteral(getProject(), name);
+            this.getFirstChild().replace(pathLiteral);
+        }
+
+        if (literalNode.getElementType() == ExpressionEngineTypes.STRING_LITERAL) {
+            ExpressionEngineStringLiteral stringLiteral = ExpressionEngineElementFactory.createStringLiteral(getProject(), name);
+            this.getFirstChild().replace(stringLiteral);
+        }
+
         return this;
     }
 
