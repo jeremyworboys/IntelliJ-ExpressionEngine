@@ -78,7 +78,7 @@ DOUBLE_QUOTE="\""
 
 COMMENT="{!--" ~"--}"
 MODULE_NAME="exp:" [a-zA-Z][a-zA-Z0-9_]* (":" [a-zA-Z][a-zA-Z0-9_]*)?
-VARIABLE_NAME=[a-zA-Z][a-zA-Z0-9_-]* (":" [a-zA-Z][a-zA-Z0-9_-]*)*
+VARIABLE_NAME=[a-zA-Z_][a-zA-Z0-9_-]* (":" [a-zA-Z][a-zA-Z0-9_-]*)*
 
 // States
 %state IN_EE_TAG
