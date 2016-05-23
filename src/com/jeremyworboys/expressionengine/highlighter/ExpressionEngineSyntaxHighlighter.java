@@ -89,6 +89,7 @@ public class ExpressionEngineSyntaxHighlighter extends SyntaxHighlighterBase {
             || tokenType.equals(ExpressionEngineTypes.T_EMBED)
             || tokenType.equals(ExpressionEngineTypes.T_LAYOUT)
             || tokenType.equals(ExpressionEngineTypes.T_REDIRECT)
+            || tokenType.equals(ExpressionEngineTypes.T_SWITCH)
             || tokenType.equals(ExpressionEngineTypes.T_ENCODE)
             || tokenType.equals(ExpressionEngineTypes.T_STYLESHEET)
             || tokenType.equals(ExpressionEngineTypes.T_PRELOAD_REPLACE)
