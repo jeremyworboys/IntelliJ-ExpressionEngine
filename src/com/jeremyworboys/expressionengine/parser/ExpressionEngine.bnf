@@ -26,40 +26,40 @@ boolean_literal ::= T_TRUE | T_FALSE
 comment ::= T_COMMENT
 
 // Tag params
-tag_param ::= T_PARAM_NAME T_EQUAL tag_param_value
 private tag_params ::= (tag_param | conditional_tag_param | comment)*
+tag_param ::= T_PARAM_NAME T_EQUAL tag_param_value {pin=1}
 tag_param_value ::= path_literal | number_literal | string_literal | boolean_literal
-conditional_tag_param ::= conditional_if tag_params (conditional_elseif tag_params)* (conditional_else tag_params)? conditional_endif
+conditional_tag_param ::= conditional_if tag_params (conditional_elseif tag_params)* (conditional_else tag_params)? conditional_endif {pin=1}
 
 // Special tags
 private special_tag ::= path_tag | embed_tag | layout_tag | redirect_tag | switch_tag | encode_tag | stylesheet_tag | preload_replace_tag
-path_tag ::= T_LD T_PATH T_EQUAL tag_param_value T_RD
-embed_tag ::= T_LD T_EMBED T_EQUAL tag_param_value tag_params T_RD
-layout_tag ::= T_LD T_LAYOUT T_EQUAL tag_param_value tag_params T_RD
-redirect_tag ::= T_LD T_REDIRECT T_EQUAL tag_param_value tag_params T_RD
-switch_tag ::= T_LD T_SWITCH T_EQUAL tag_param_value T_RD
-encode_tag ::= T_LD T_ENCODE T_EQUAL tag_param_value tag_params T_RD
-stylesheet_tag ::= T_LD T_STYLESHEET T_EQUAL tag_param_value T_RD
-preload_replace_tag ::= T_LD T_PRELOAD_REPLACE T_COLON T_PARAM_NAME T_EQUAL tag_param_value T_RD
+path_tag ::= T_LD T_PATH T_EQUAL tag_param_value T_RD {pin=2}
+embed_tag ::= T_LD T_EMBED T_EQUAL tag_param_value tag_params T_RD {pin=2}
+layout_tag ::= T_LD T_LAYOUT T_EQUAL tag_param_value tag_params T_RD {pin=2}
+redirect_tag ::= T_LD T_REDIRECT T_EQUAL tag_param_value tag_params T_RD {pin=2}
+switch_tag ::= T_LD T_SWITCH T_EQUAL tag_param_value T_RD {pin=2}
+encode_tag ::= T_LD T_ENCODE T_EQUAL tag_param_value tag_params T_RD {pin=2}
+stylesheet_tag ::= T_LD T_STYLESHEET T_EQUAL tag_param_value T_RD {pin=2}
+preload_replace_tag ::= T_LD T_PRELOAD_REPLACE T_COLON T_PARAM_NAME T_EQUAL tag_param_value T_RD {pin=2}
 
 // Variables
 private variable_tag ::= variable | variable_pair
-variable ::= T_LD T_VARIABLE_NAME tag_params T_RD
-variable_pair ::= variable_open_tag statement* variable_close_tag
-variable_open_tag ::= T_LD T_VARIABLE_NAME tag_params T_RD
-variable_close_tag ::= T_LD T_SLASH T_VARIABLE_NAME T_RD
+variable ::= T_LD T_VARIABLE_NAME tag_params T_RD {pin=2}
+variable_pair ::= variable_open_tag statement* variable_close_tag //{pin=1}
+variable_open_tag ::= T_LD T_VARIABLE_NAME tag_params T_RD {pin=2}
+variable_close_tag ::= T_LD T_SLASH T_VARIABLE_NAME T_RD {pin=3}
 
 // Modules
-module ::= module_open_tag statement* module_close_tag
-module_open_tag  ::= T_LD T_MODULE_NAME tag_params T_RD
-module_close_tag ::= T_LD T_SLASH T_MODULE_NAME T_RD
+module ::= module_open_tag statement* module_close_tag //{pin=1}
+module_open_tag  ::= T_LD T_MODULE_NAME tag_params T_RD {pin=2}
+module_close_tag ::= T_LD T_SLASH T_MODULE_NAME T_RD {pin=3}
 
 // Conditionals
-conditional ::= conditional_if statement* (conditional_elseif statement*)* (conditional_else statement*)? conditional_endif
+conditional ::= conditional_if statement* (conditional_elseif statement*)* (conditional_else statement*)? conditional_endif {pin=1}
 conditional_if     ::= T_LD T_IF expr T_RD {pin=2}
 conditional_elseif ::= T_LD T_ELSEIF expr T_RD {pin=2}
-conditional_else   ::= T_LD T_ELSE T_RD
-conditional_endif  ::= T_LD T_SLASH T_IF T_RD
+conditional_else   ::= T_LD T_ELSE T_RD {pin=2}
+conditional_endif  ::= T_LD T_SLASH T_IF T_RD {pin=3}
 
 // Conditional expressions
 expr ::= group_bool | group_cmp | group_add | group_mul | group_unary | op_pow_expr | op_concat_expr | group_primary
