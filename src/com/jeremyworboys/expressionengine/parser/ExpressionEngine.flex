@@ -108,7 +108,31 @@ VARIABLE_NAME=[a-zA-Z][a-zA-Z0-9_]* (":" [a-zA-Z][a-zA-Z0-9_]*)?
 
 <IN_EE_EXPRESSION> {
   {RD}                                 { yypushback(1); popState(); }
-
+  // Parens
+  "("                                  { return T_LP; }
+  ")"                                  { return T_RP; }
+  // Operators
+  "=="                                 { return T_OP_EQ; }
+  "!="|"<>"                            { return T_OP_NEQ; }
+  "<"                                  { return T_OP_LT; }
+  "<="                                 { return T_OP_LTE; }
+  ">"                                  { return T_OP_GT; }
+  ">="                                 { return T_OP_GTE; }
+  "^="                                 { return T_OP_STARTS; }
+  "*="                                 { return T_OP_CONTAINS; }
+  "$="                                 { return T_OP_ENDS; }
+  "~"                                  { return T_OP_MATCH; }
+  "!"                                  { return T_OP_NOT; }
+  "&&"|"AND"                           { return T_OP_AND; }
+  "XOR"                                { return T_OP_XOR; }
+  "||"|"OR"                            { return T_OP_OR; }
+  "+"                                  { return T_OP_ADD; }
+  "-"                                  { return T_OP_SUB; }
+  "*"                                  { return T_OP_MUL; }
+  "/"                                  { return T_OP_DIV; }
+  "**"|"^"                             { return T_OP_POW; }
+  "%"                                  { return T_OP_MOD; }
+  "."                                  { return T_OP_CONCAT; }
   // Literals
   "true"                               { return T_TRUE; }
   "false"                              { return T_FALSE; }

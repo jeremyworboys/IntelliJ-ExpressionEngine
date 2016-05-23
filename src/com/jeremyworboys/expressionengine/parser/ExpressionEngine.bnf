@@ -10,6 +10,7 @@
   tokenTypeClass="com.jeremyworboys.expressionengine.psi.ExpressionEngineTokenType"
 
   extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+  extends(".*expr")=expr
 }
 
 expressionEngineFile ::= statement*
@@ -53,6 +54,38 @@ private conditional_elseif ::= T_LD T_ELSEIF expr T_RD {pin=2}
 private conditional_else   ::= T_LD T_ELSE T_RD
 private conditional_endif  ::= T_LD T_SLASH T_IF T_RD
 
-expr ::= literal_expr
-private literal_expr ::= (number_literal | string_literal | boolean_literal | T_VARIABLE_NAME)
+expr ::= group_bool | group_cmp | group_add | group_mul | group_unary | op_pow_expr | op_concat_expr | group_primary
+
+private group_bool    ::= op_and_expr | op_xor_expr | op_or_expr
+private group_cmp     ::= op_eq_expr | op_neq_expr | op_lt_expr | op_lte_expr | op_gt_expr | op_gte_expr | op_starts_expr | op_contains_expr | op_ends_expr | op_match_expr
+private group_mul     ::= op_mul_expr | op_div_expr | op_mod_expr
+private group_add     ::= op_add_expr | op_sub_expr
+private group_unary   ::= unary_not_expr | unary_plus_expr | unary_minus_expr
+private group_primary ::= literal_expr | paren_expr
+
+op_eq_expr       ::= expr T_OP_EQ expr
+op_neq_expr      ::= expr T_OP_NEQ expr
+op_lt_expr       ::= expr T_OP_LT expr
+op_lte_expr      ::= expr T_OP_LTE expr
+op_gt_expr       ::= expr T_OP_GT expr
+op_gte_expr      ::= expr T_OP_GTE expr
+op_starts_expr   ::= expr T_OP_STARTS expr
+op_contains_expr ::= expr T_OP_CONTAINS expr
+op_ends_expr     ::= expr T_OP_ENDS expr
+op_match_expr    ::= expr T_OP_MATCH expr
+op_and_expr      ::= expr T_OP_AND expr
+op_xor_expr      ::= expr T_OP_XOR expr
+op_or_expr       ::= expr T_OP_OR expr
+op_add_expr      ::= expr T_OP_ADD expr
+op_sub_expr      ::= expr T_OP_SUB expr
+op_mul_expr      ::= expr T_OP_MUL expr
+op_div_expr      ::= expr T_OP_DIV expr
+op_pow_expr      ::= expr T_OP_POW expr
+op_mod_expr      ::= expr T_OP_MOD expr
+op_concat_expr   ::= expr T_OP_CONCAT expr
+unary_not_expr   ::= T_OP_NOT expr
+unary_plus_expr  ::= T_OP_ADD expr
+unary_minus_expr ::= T_OP_SUB expr
+paren_expr       ::= T_LP expr T_RP
+literal_expr     ::= (number_literal | string_literal | boolean_literal | T_VARIABLE_NAME)
 
