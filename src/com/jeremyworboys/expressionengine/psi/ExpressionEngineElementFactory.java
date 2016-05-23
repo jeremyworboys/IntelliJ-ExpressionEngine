@@ -9,7 +9,7 @@ public class ExpressionEngineElementFactory {
     @NotNull
     public static ExpressionEnginePathLiteral createPathLiteral(@NotNull Project project, @NotNull String content) {
         final ExpressionEngineFile file = createDummyFile(project, "{path=" + content + "}");
-        final ExpressionEngineTag tag = (ExpressionEngineTag) file.getFirstChild();
+        final ExpressionEnginePathTag tag = (ExpressionEnginePathTag) file.getFirstChild();
         //noinspection ConstantConditions
         return (ExpressionEnginePathLiteral) tag.getTagParamValue().getFirstChild();
     }
@@ -17,7 +17,7 @@ public class ExpressionEngineElementFactory {
     @NotNull
     public static ExpressionEngineStringLiteral createStringLiteral(Project project, String content) {
         final ExpressionEngineFile file = createDummyFile(project, "{path=\"" + content + "\"}");
-        final ExpressionEngineTag tag = (ExpressionEngineTag) file.getFirstChild();
+        final ExpressionEnginePathTag tag = (ExpressionEnginePathTag) file.getFirstChild();
         //noinspection ConstantConditions
         return (ExpressionEngineStringLiteral) tag.getTagParamValue().getFirstChild();
     }
