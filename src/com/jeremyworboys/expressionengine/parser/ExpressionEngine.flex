@@ -94,6 +94,9 @@ VARIABLE_NAME={IDENTIFIER} (":" {IDENTIFIER})*
 {WHITE_SPACE}                          { return TokenType.WHITE_SPACE; }
 {COMMENT}                              { return T_COMMENT; }
 {LD}{WHITE_SPACE}                      { return T_CONTENT; }
+{LD}{RD}                               { return T_CONTENT; }
+{LD}{DOUBLE_QUOTE}                     { return T_CONTENT; }
+{LD}{SINGLE_QUOTE}                     { return T_CONTENT; }
 
 <YYINITIAL> {
   {LD}                                 { pushState(IN_EE_TAG); return T_LD; }
