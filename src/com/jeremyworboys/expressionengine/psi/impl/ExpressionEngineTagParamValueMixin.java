@@ -4,20 +4,29 @@ import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.tree.IElementType;
+import com.intellij.util.IncorrectOperationException;
 import com.jeremyworboys.expressionengine.psi.ExpressionEngineTagParamValue;
+import com.jeremyworboys.expressionengine.psi.ExpressionEngineTagParamValueElement;
 import com.jeremyworboys.expressionengine.psi.ExpressionEngineTypes;
 import com.jeremyworboys.expressionengine.referencing.TemplateReference;
+import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class ExpressionEngineTagParamValueMixin extends ASTWrapperPsiElement {
+public abstract class ExpressionEngineTagParamValueMixin extends ASTWrapperPsiElement implements ExpressionEngineTagParamValueElement {
     public ExpressionEngineTagParamValueMixin(@NotNull ASTNode node) {
         super(node);
+    }
+
+    @Override
+    public PsiElement setName(@NonNls @NotNull String name) throws IncorrectOperationException {
+        return this;
     }
 
     @Override

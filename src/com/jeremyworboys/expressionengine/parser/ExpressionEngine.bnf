@@ -90,6 +90,7 @@ private tag_contents ::= (T_COMMENT | tag_param)
 tag_param ::= T_TAG_PARAM T_EQUALS tag_param_value
 tag_param_value ::= T_NUMBER | T_PATH | group_vars | string_literal {
   mixin="com.jeremyworboys.expressionengine.psi.impl.ExpressionEngineTagParamValueMixin"
+  implements="com.jeremyworboys.expressionengine.psi.ExpressionEngineTagParamValueElement"
 }
 
 //private tag_local_var  ::= T_LD T_VARIABLE T_RD
