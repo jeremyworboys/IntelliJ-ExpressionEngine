@@ -60,7 +60,7 @@ import static com.jeremyworboys.expressionengine.psi.ExpressionEngineTypes.*;
 %}
 
 // Macros
-WS=[\ \t\f]
+WS=[\ \t\f\s]
 CRLF=(\n|\r|\r\n)
 WHITE_SPACE={WS}+ | {CRLF}
 
