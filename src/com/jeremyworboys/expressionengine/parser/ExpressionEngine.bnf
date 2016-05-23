@@ -48,7 +48,7 @@ variable ::= T_LD T_VARIABLE_NAME tag_params T_RD {pin=2}
 variable_close_tag ::= T_LD T_SLASH T_VARIABLE_NAME T_RD {pin=3}
 
 // Modules
-module ::= module_open_tag statement* module_close_tag //{pin=1}
+module ::= module_open_tag statement* module_close_tag {pin=1}
 module_open_tag  ::= T_LD T_MODULE_NAME tag_params T_RD {pin=2}
 module_close_tag ::= T_LD T_SLASH T_MODULE_NAME T_RD {pin=3}
 
