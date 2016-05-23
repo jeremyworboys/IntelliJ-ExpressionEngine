@@ -13,7 +13,8 @@
 }
 
 expressionEngineFile ::= statement*
-statement            ::= whitespace | template_content
+private statement    ::= whitespace | T_CONTENT+
+private whitespace   ::= (T_WS | T_CRLF)+
 
 // Template content
 whitespace       ::= (T_LINEBREAK | T_SPACE)+

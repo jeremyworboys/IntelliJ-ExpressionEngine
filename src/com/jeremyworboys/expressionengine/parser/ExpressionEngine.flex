@@ -38,11 +38,18 @@ import static com.jeremyworboys.expressionengine.psi.ExpressionEngineTypes.*;
   }
 %}
 
+// Macros
+WS=[\ \t\f]
+CRLF=(\n|\r|\r\n)
+
+// States
 %state IN_EE_TAG
 
 %%
 
-[\ ]                                   { return T_SPACE; }
+{WS}                                   { return T_WS; }
+{CRLF}                                 { return T_CRLF; }
+
 
 <IN_EE_TAG> {
   [^]                                  { return TokenType.BAD_CHARACTER; }
