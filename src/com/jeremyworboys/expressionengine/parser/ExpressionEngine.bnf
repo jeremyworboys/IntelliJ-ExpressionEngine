@@ -33,8 +33,9 @@ variable_tag_param ::= variable
 conditional_tag_param ::= conditional_if tag_params (conditional_elseif tag_params)* (conditional_else tag_params)? conditional_endif {pin=1}
 
 // Special tags
-private special_tag ::= path_tag | embed_tag | layout_tag | redirect_tag | switch_tag | encode_tag | stylesheet_tag | preload_replace_tag
+private special_tag ::= path_tag | route_tag | embed_tag | layout_tag | redirect_tag | switch_tag | encode_tag | stylesheet_tag | preload_replace_tag
 path_tag ::= T_LD T_PATH T_EQUAL tag_param_value T_RD {pin=2}
+route_tag ::= T_LD T_ROUTE T_EQUAL tag_param_value tag_params T_RD {pin=2}
 embed_tag ::= T_LD T_EMBED T_EQUAL tag_param_value tag_params T_RD {pin=2}
 layout_tag ::= T_LD T_LAYOUT T_EQUAL tag_param_value tag_params T_RD {pin=2}
 redirect_tag ::= T_LD T_REDIRECT T_EQUAL tag_param_value tag_params T_RD {pin=2}

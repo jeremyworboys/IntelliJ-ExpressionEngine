@@ -113,6 +113,7 @@ VARIABLE_NAME={IDENTIFIER} (":" {IDENTIFIER})*
   "if:else"                            { return T_ELSE; }
   // Special tag
   "path="                              { yypushback(1); pushState(IN_EE_TAG_PARAMS); return T_PATH; }
+  "route="                             { yypushback(1); pushState(IN_EE_TAG_PARAMS); return T_ROUTE; }
   "embed="                             { yypushback(1); pushState(IN_EE_TAG_PARAMS); return T_EMBED; }
   "layout="                            { yypushback(1); pushState(IN_EE_TAG_PARAMS); return T_LAYOUT; }
   "redirect"                           { pushState(IN_EE_TAG_PARAMS); return T_REDIRECT; }
