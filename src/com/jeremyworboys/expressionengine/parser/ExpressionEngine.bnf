@@ -14,8 +14,7 @@
 }
 
 expressionEngineFile ::= statement*
-private statement ::= module | conditional | special_tag | variable_tag | whitespace | comment | T_CONTENT+
-private whitespace ::= (T_WS | T_CRLF)+
+private statement ::= module | conditional | special_tag | variable_tag | comment | T_CONTENT+
 
 // Literals
 path_literal ::= T_PATH_LITERAL

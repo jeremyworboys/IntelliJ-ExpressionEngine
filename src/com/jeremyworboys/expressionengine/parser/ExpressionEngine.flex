@@ -70,8 +70,7 @@ VARIABLE_NAME=[a-zA-Z][a-zA-Z0-9_]* (":" [a-zA-Z][a-zA-Z0-9_]*)*
 
 %%
 
-{WS}                                   { return T_WS; }
-{CRLF}                                 { return T_CRLF; }
+{WS}+ | {CRLF}                         { return TokenType.WHITE_SPACE; }
 {COMMENT}                              { return T_COMMENT; }
 
 <YYINITIAL> {
