@@ -42,6 +42,9 @@ import static com.jeremyworboys.expressionengine.psi.ExpressionEngineTypes.*;
 WS=[\ \t\f]
 CRLF=(\n|\r|\r\n)
 
+LD="{"
+RD="}"
+
 // States
 %state IN_EE_TAG
 
@@ -50,10 +53,14 @@ CRLF=(\n|\r|\r\n)
 {WS}                                   { return T_WS; }
 {CRLF}                                 { return T_CRLF; }
 
-
-<IN_EE_TAG> {
-  [^]                                  { return TokenType.BAD_CHARACTER; }
+<YYINITIAL> {
+  {LD}                                 { pushState(IN_EE_TAG); return T_LD; }
+  ~ {LD}                               { yypushback(1); return T_CONTENT; }
 }
 
-[\n]                                   { return T_LINEBREAK; }
-[^]                                    { return T_CONTENT; }
+<IN_EE_TAG> {
+  {RD}                                 { popState(); return T_RD; }
+  ~ {RD}                               { yypushback(1); return T_TAG_CONTENT; }
+}
+
+[^]                                    { return TokenType.BAD_CHARACTER; }
