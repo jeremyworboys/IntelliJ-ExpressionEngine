@@ -13,33 +13,46 @@
 }
 
 expressionEngineFile ::= statement*
-private statement    ::= tag | whitespace | comment | T_CONTENT+
+private statement    ::= module | conditional | tag | whitespace | comment | T_CONTENT+
 private whitespace   ::= (T_WS | T_CRLF)+
 
 // Literals
-path_literal   ::= T_PATH_LITERAL
+path_literal ::= T_PATH_LITERAL
 number_literal ::= T_NUMBER_LITERAL
 string_literal ::= T_STRING_START T_STRING_LITERAL+ T_STRING_END
-                 | T_STRING_START T_STRING_END
+                  | T_STRING_START T_STRING_END
+boolean_literal ::= T_TRUE | T_FALSE
 
 // Comments
 comment ::= T_COMMENT
 
 // Tags
-tag ::= variable | module | path | embed | layout
+tag ::= path | embed | layout | redirect | variable
 
 private path ::= T_LD T_PATH T_EQUAL tag_param_value T_RD
 private embed ::= T_LD T_EMBED T_EQUAL tag_param_value tag_param* T_RD
 private layout ::= T_LD T_LAYOUT T_EQUAL tag_param_value tag_param* T_RD
+private redirect ::= T_LD T_REDIRECT T_EQUAL tag_param_value T_RD
 
-private variable ::= variable_open_tag statement* variable_close_tag
+private variable ::= variable_open_tag
+                   | variable_open_tag statement* variable_close_tag
 private variable_open_tag ::= T_LD T_VARIABLE_NAME tag_param* T_RD
 private variable_close_tag ::= T_LD T_SLASH T_VARIABLE_NAME T_RD
 
-private module ::= module_open_tag statement* module_close_tag
+module ::= module_open_tag statement* module_close_tag
 private module_open_tag ::= T_LD T_MODULE_NAME tag_param* T_RD
 private module_close_tag ::= T_LD T_SLASH T_MODULE_NAME T_RD
 
 private tag_param ::= T_PARAM_NAME T_EQUAL tag_param_value
-private tag_param_value ::= (path_literal | number_literal | string_literal)
+private tag_param_value ::= path_literal | number_literal | string_literal | boolean_literal
+
+conditional ::= conditional_if statement* (conditional_elseif statement*)* (conditional_else statement*)? conditional_endif
+
+private conditional_if     ::= T_LD T_IF expr T_RD {pin=2}
+private conditional_elseif ::= T_LD T_ELSEIF expr T_RD {pin=2}
+private conditional_else   ::= T_LD T_ELSE T_RD
+private conditional_endif  ::= T_LD T_SLASH T_IF T_RD
+
+expr ::= literal_expr
+private literal_expr ::= (number_literal | string_literal | boolean_literal | T_VARIABLE_NAME)
 

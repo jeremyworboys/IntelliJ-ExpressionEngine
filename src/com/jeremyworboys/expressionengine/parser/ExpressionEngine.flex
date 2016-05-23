@@ -54,12 +54,13 @@ SINGLE_QUOTE="\'"
 DOUBLE_QUOTE="\""
 
 COMMENT="{!--" ~"--}"
-MODULE_NAME="exp:" [a-zA-Z_]+ (":" [a-zA-Z_]+)?
-VARIABLE_NAME=[a-zA-Z_]+ (":" [a-zA-Z_]+)?
+MODULE_NAME="exp:" [a-zA-Z][a-zA-Z0-9_]* (":" [a-zA-Z][a-zA-Z0-9_]*)?
+VARIABLE_NAME=[a-zA-Z][a-zA-Z0-9_]* (":" [a-zA-Z][a-zA-Z0-9_]*)?
 
 // States
 %state IN_EE_TAG
 %state IN_EE_TAG_PARAMS
+%state IN_EE_EXPRESSION
 %state IN_SINGLE_STRING
 %state IN_DOUBLE_STRING
 
@@ -77,13 +78,20 @@ VARIABLE_NAME=[a-zA-Z_]+ (":" [a-zA-Z_]+)?
 <IN_EE_TAG> {
   {RD}                                 { popState(); return T_RD; }
   {SLASH}                              { return T_SLASH; }
+  // Conditional
+  "if"                                 { pushState(IN_EE_EXPRESSION); return T_IF; }
+  "if:elseif"                          { pushState(IN_EE_EXPRESSION); return T_ELSEIF; }
+  "if:else"                            { return T_ELSE; }
+  // {xxx=""}
   "path"                               { pushState(IN_EE_TAG_PARAMS); return T_PATH; }
   "embed"                              { pushState(IN_EE_TAG_PARAMS); return T_EMBED; }
   "layout"                             { pushState(IN_EE_TAG_PARAMS); return T_LAYOUT; }
+  "redirect"                           { pushState(IN_EE_TAG_PARAMS); return T_REDIRECT; }
+  // {exp:xxx:yyy}
   {MODULE_NAME}                        { pushState(IN_EE_TAG_PARAMS); return T_MODULE_NAME; }
-
-//  {VARIABLE_NAME}                      { pushState(IN_EE_TAG_PARAMS); return T_VARIABLE_NAME; }
-  .                                    { pushState(IN_EE_TAG_PARAMS); return T_VARIABLE_NAME; }
+  // {xxx}
+  {VARIABLE_NAME}                      { pushState(IN_EE_TAG_PARAMS); return T_VARIABLE_NAME; }
+  .                                    { return TokenType.BAD_CHARACTER; }
 }
 
 <IN_EE_TAG_PARAMS> {
@@ -96,6 +104,20 @@ VARIABLE_NAME=[a-zA-Z_]+ (":" [a-zA-Z_]+)?
   {NUMBER}                             { return T_NUMBER_LITERAL; }
   {SINGLE_QUOTE}                       { pushState(IN_SINGLE_STRING); return T_STRING_START; }
   {DOUBLE_QUOTE}                       { pushState(IN_DOUBLE_STRING); return T_STRING_START; }
+}
+
+<IN_EE_EXPRESSION> {
+  {RD}                                 { yypushback(1); popState(); }
+
+  // Literals
+  "true"                               { return T_TRUE; }
+  "false"                              { return T_FALSE; }
+  {NUMBER}                             { return T_NUMBER_LITERAL; }
+  {SINGLE_QUOTE}                       { pushState(IN_SINGLE_STRING); return T_STRING_START; }
+  {DOUBLE_QUOTE}                       { pushState(IN_DOUBLE_STRING); return T_STRING_START; }
+  {VARIABLE_NAME}                      { return T_VARIABLE_NAME; }
+
+  [^]                                  { return TokenType.BAD_CHARACTER; }
 }
 
 <IN_SINGLE_STRING> {
