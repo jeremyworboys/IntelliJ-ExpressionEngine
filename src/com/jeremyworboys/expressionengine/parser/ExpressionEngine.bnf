@@ -1,0 +1,20 @@
+{
+  parserClass="com.jeremyworboys.expressionengine.parser.ExpressionEngineParser"
+  psiPackage="com.jeremyworboys.expressionengine.psi"
+  psiImplPackage="com.jeremyworboys.expressionengine.psi.impl"
+  psiClassPrefix="ExpressionEngine"
+  psiImplClassSuffix="Impl"
+
+  elementTypeHolderClass="com.jeremyworboys.expressionengine.psi.ExpressionEngineTypes"
+  elementTypeClass="com.jeremyworboys.expressionengine.psi.ExpressionEngineElementType"
+  tokenTypeClass="com.jeremyworboys.expressionengine.psi.ExpressionEngineTokenType"
+
+  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+}
+
+expressionEngineFile ::= statement*
+statement            ::= whitespace | template_content
+
+// Template content
+whitespace       ::= (T_LINEBREAK | T_SPACE)+
+template_content ::= T_CONTENT+
