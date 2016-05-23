@@ -42,7 +42,11 @@ public class ExpressionEngineUtil {
         ElementPattern<PsiElement> stringPattern =
             PlatformPatterns
                 .psiElement(ExpressionEngineTypes.T_STRING)
-                .withParent(PlatformPatterns.psiElement(ExpressionEngineTypes.TAG_PARAM_VALUE))
+                .withParent(
+                    PlatformPatterns
+                        .psiElement(ExpressionEngineTypes.STRING_LITERAL)
+                        .withParent(PlatformPatterns.psiElement(ExpressionEngineTypes.TAG_PARAM_VALUE))
+                )
                 .afterLeafSkipping(
                     PlatformPatterns.or(
                         PlatformPatterns.psiElement(TokenType.WHITE_SPACE),
@@ -59,7 +63,11 @@ public class ExpressionEngineUtil {
         ElementPattern<PsiElement> pathPattern =
             PlatformPatterns
                 .psiElement(ExpressionEngineTypes.T_PATH)
-                .withParent(PlatformPatterns.psiElement(ExpressionEngineTypes.TAG_PARAM_VALUE))
+                .withParent(
+                    PlatformPatterns
+                        .psiElement(ExpressionEngineTypes.PATH_LITERAL)
+                        .withParent(PlatformPatterns.psiElement(ExpressionEngineTypes.TAG_PARAM_VALUE))
+                )
                 .afterLeafSkipping(
                     PlatformPatterns.or(
                         PlatformPatterns.psiElement(TokenType.WHITE_SPACE),
