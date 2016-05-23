@@ -1,6 +1,7 @@
 package com.jeremyworboys.expressionengine.parser;
 
 import com.intellij.lexer.FlexLexer;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.TokenType;
 
@@ -37,8 +38,24 @@ import static com.jeremyworboys.expressionengine.psi.ExpressionEngineTypes.*;
     }
   }
 
-  private boolean isAllWhitespace() {
-    return yytext().toString().trim().length() == 0;
+  private IElementType determineContentToken() {
+    if (yylength() == 0) {
+      return null;
+    }
+    String captured = yytext().toString();
+    if (StringUtil.trim(captured).length() == 0) {
+      return TokenType.WHITE_SPACE;
+    }
+    // Ignore leading whitespace
+    if (StringUtil.trimLeading(captured).length() != captured.length()) {
+      yypushback(StringUtil.trimLeading(captured).length());
+      return TokenType.WHITE_SPACE;
+    }
+    // Ignore trailing whitespace
+    if (StringUtil.trimTrailing(captured).length() != captured.length()) {
+      yypushback(captured.length() - StringUtil.trimTrailing(captured).length());
+    }
+    return T_CONTENT;
   }
 %}
 
@@ -75,7 +92,7 @@ VARIABLE_NAME=[a-zA-Z][a-zA-Z0-9_]* (":" [a-zA-Z][a-zA-Z0-9_]*)*
 
 <YYINITIAL> {
   {LD}                                 { pushState(IN_EE_TAG); return T_LD; }
-  !([^]*"{"[^]*)                       { if (yylength() > 0) return isAllWhitespace() ? TokenType.WHITE_SPACE : T_CONTENT; }
+  !([^]*"{"[^]*)                       { return determineContentToken(); }
 }
 
 <IN_EE_TAG> {
