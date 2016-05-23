@@ -62,6 +62,7 @@ import static com.jeremyworboys.expressionengine.psi.ExpressionEngineTypes.*;
 // Macros
 WS=[\ \t\f]
 CRLF=(\n|\r|\r\n)
+WHITE_SPACE={WS}+ | {CRLF}
 
 LD="{"
 RD="}"
@@ -89,8 +90,9 @@ PRELOAD_REPLACE="preload_replace:" [a-zA-Z][a-zA-Z0-9_]*
 
 %%
 
-{WS}+ | {CRLF}                         { return TokenType.WHITE_SPACE; }
+{WHITE_SPACE}                          { return TokenType.WHITE_SPACE; }
 {COMMENT}                              { return T_COMMENT; }
+{LD}{WHITE_SPACE}                      { return T_CONTENT; }
 
 <YYINITIAL> {
   {LD}                                 { pushState(IN_EE_TAG); return T_LD; }
