@@ -13,7 +13,9 @@
 }
 
 expressionEngineFile ::= statement*
-private statement    ::= tag | whitespace | T_CONTENT+
+private statement    ::= tag | whitespace | comment | T_CONTENT+
 private whitespace   ::= (T_WS | T_CRLF)+
+
+comment ::= T_COMMENT
 
 tag ::= T_LD T_TAG_CONTENT+ T_RD

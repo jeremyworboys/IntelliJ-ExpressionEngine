@@ -45,6 +45,8 @@ CRLF=(\n|\r|\r\n)
 LD="{"
 RD="}"
 
+COMMENT="{!--" ~"--}"
+
 // States
 %state IN_EE_TAG
 
@@ -52,6 +54,7 @@ RD="}"
 
 {WS}                                   { return T_WS; }
 {CRLF}                                 { return T_CRLF; }
+{COMMENT}                              { return T_COMMENT; }
 
 <YYINITIAL> {
   {LD}                                 { pushState(IN_EE_TAG); return T_LD; }
