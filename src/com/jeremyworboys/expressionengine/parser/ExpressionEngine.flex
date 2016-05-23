@@ -147,13 +147,13 @@ VARIABLE_NAME=[a-zA-Z][a-zA-Z0-9_]* (":" [a-zA-Z][a-zA-Z0-9_]*)*
 <IN_SINGLE_STRING> {
   // TODO: Match variables in strings
   {SINGLE_QUOTE}                       { popState(); return T_STRING_END; }
-  ~{SINGLE_QUOTE}                      { yypushback(1); return T_STRING_LITERAL; }
+  ~{SINGLE_QUOTE}                      { yypushback(1); return T_STRING_CONTENT; }
 }
 
 <IN_DOUBLE_STRING> {
   // TODO: Match variables in strings
   {DOUBLE_QUOTE}                       { popState(); return T_STRING_END; }
-  ~{DOUBLE_QUOTE}                      { yypushback(1); return T_STRING_LITERAL; }
+  ~{DOUBLE_QUOTE}                      { yypushback(1); return T_STRING_CONTENT; }
 }
 
 [^]                                    { return TokenType.BAD_CHARACTER; }

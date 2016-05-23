@@ -63,7 +63,7 @@ public class ExpressionEngineSyntaxHighlighter extends SyntaxHighlighterBase {
 
     private static boolean isPartOfString(IElementType tokenType) {
         return tokenType.equals(ExpressionEngineTypes.T_PATH_LITERAL)
-            || tokenType.equals(ExpressionEngineTypes.T_STRING_LITERAL)
+            || tokenType.equals(ExpressionEngineTypes.T_STRING_CONTENT)
             || tokenType.equals(ExpressionEngineTypes.T_STRING_START)
             || tokenType.equals(ExpressionEngineTypes.T_STRING_END);
     }

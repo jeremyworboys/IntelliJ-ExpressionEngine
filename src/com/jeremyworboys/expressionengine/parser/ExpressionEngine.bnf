@@ -14,46 +14,49 @@
 }
 
 expressionEngineFile ::= statement*
-private statement    ::= module | conditional | tag | whitespace | comment | T_CONTENT+
-private whitespace   ::= (T_WS | T_CRLF)+
+private statement ::= module | conditional | special_tag | variable_tag | whitespace | comment | T_CONTENT+
+private whitespace ::= (T_WS | T_CRLF)+
 
 // Literals
 path_literal ::= T_PATH_LITERAL
 number_literal ::= T_NUMBER_LITERAL
-string_literal ::= T_STRING_START T_STRING_LITERAL+ T_STRING_END
-                  | T_STRING_START T_STRING_END
+string_literal ::= T_STRING_START T_STRING_CONTENT* T_STRING_END
 boolean_literal ::= T_TRUE | T_FALSE
 
 // Comments
 comment ::= T_COMMENT
 
-// Tags
-tag ::= path | embed | layout | redirect | variable
-
-private path ::= T_LD T_PATH T_EQUAL tag_param_value T_RD
-private embed ::= T_LD T_EMBED T_EQUAL tag_param_value tag_param* T_RD
-private layout ::= T_LD T_LAYOUT T_EQUAL tag_param_value tag_param* T_RD
-private redirect ::= T_LD T_REDIRECT T_EQUAL tag_param_value T_RD
-
-private variable ::= variable_open_tag
-                   | variable_open_tag statement* variable_close_tag
-private variable_open_tag ::= T_LD T_VARIABLE_NAME tag_param* T_RD
-private variable_close_tag ::= T_LD T_SLASH T_VARIABLE_NAME T_RD
-
-module ::= module_open_tag statement* module_close_tag
-private module_open_tag ::= T_LD T_MODULE_NAME tag_param* T_RD
-private module_close_tag ::= T_LD T_SLASH T_MODULE_NAME T_RD
-
+// Tag params
 private tag_param ::= T_PARAM_NAME T_EQUAL tag_param_value
 private tag_param_value ::= path_literal | number_literal | string_literal | boolean_literal
 
+// Special tags
+private special_tag ::= path_tag | embed_tag | layout_tag | redirect_tag
+path_tag ::= T_LD T_PATH T_EQUAL tag_param_value T_RD
+embed_tag ::= T_LD T_EMBED T_EQUAL tag_param_value tag_param* T_RD
+layout_tag ::= T_LD T_LAYOUT T_EQUAL tag_param_value tag_param* T_RD
+redirect_tag ::= T_LD T_REDIRECT T_EQUAL tag_param_value T_RD
+
+// Variables
+private variable_tag ::= variable | variable_pair
+variable ::= T_LD T_VARIABLE_NAME tag_param* T_RD
+variable_pair ::= variable_open_tag statement* variable_close_tag
+variable_open_tag ::= T_LD T_VARIABLE_NAME tag_param* T_RD
+variable_close_tag ::= T_LD T_SLASH T_VARIABLE_NAME T_RD
+
+// Modules
+module ::= module_open_tag statement* module_close_tag
+module_open_tag  ::= T_LD T_MODULE_NAME tag_param* T_RD
+module_close_tag ::= T_LD T_SLASH T_MODULE_NAME T_RD
+
+// Conditionals
 conditional ::= conditional_if statement* (conditional_elseif statement*)* (conditional_else statement*)? conditional_endif
+conditional_if     ::= T_LD T_IF expr T_RD {pin=2}
+conditional_elseif ::= T_LD T_ELSEIF expr T_RD {pin=2}
+conditional_else   ::= T_LD T_ELSE T_RD
+conditional_endif  ::= T_LD T_SLASH T_IF T_RD
 
-private conditional_if     ::= T_LD T_IF expr T_RD {pin=2}
-private conditional_elseif ::= T_LD T_ELSEIF expr T_RD {pin=2}
-private conditional_else   ::= T_LD T_ELSE T_RD
-private conditional_endif  ::= T_LD T_SLASH T_IF T_RD
-
+// Conditional expressions
 expr ::= group_bool | group_cmp | group_add | group_mul | group_unary | op_pow_expr | op_concat_expr | group_primary
 
 private group_bool    ::= op_and_expr | op_xor_expr | op_or_expr
@@ -87,5 +90,5 @@ unary_not_expr   ::= T_OP_NOT expr
 unary_plus_expr  ::= T_OP_ADD expr
 unary_minus_expr ::= T_OP_SUB expr
 paren_expr       ::= T_LP expr T_RP
-literal_expr     ::= (number_literal | string_literal | boolean_literal | T_VARIABLE_NAME)
+literal_expr     ::= number_literal | string_literal | boolean_literal | T_VARIABLE_NAME
 
