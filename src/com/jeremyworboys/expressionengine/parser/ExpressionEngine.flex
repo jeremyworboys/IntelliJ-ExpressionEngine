@@ -111,19 +111,19 @@ VARIABLE_NAME={IDENTIFIER} (":" {IDENTIFIER})*
   "if"                                 { pushState(IN_EE_EXPRESSION); return T_IF; }
   "if:elseif"                          { pushState(IN_EE_EXPRESSION); return T_ELSEIF; }
   "if:else"                            { return T_ELSE; }
-  // Special tag
+  // Special tags
   "path="                              { yypushback(1); pushState(IN_EE_TAG_PARAMS); return T_PATH; }
   "route="                             { yypushback(1); pushState(IN_EE_TAG_PARAMS); return T_ROUTE; }
   "embed="                             { yypushback(1); pushState(IN_EE_TAG_PARAMS); return T_EMBED; }
   "layout="                            { yypushback(1); pushState(IN_EE_TAG_PARAMS); return T_LAYOUT; }
-  "redirect"                           { pushState(IN_EE_TAG_PARAMS); return T_REDIRECT; }
+  "redirect="                          { yypushback(1); pushState(IN_EE_TAG_PARAMS); return T_REDIRECT; }
   "switch="                            { yypushback(1); pushState(IN_EE_TAG_PARAMS); return T_SWITCH; }
-  "encode"                             { pushState(IN_EE_TAG_PARAMS); return T_ENCODE; }
-  "stylesheet"                         { pushState(IN_EE_TAG_PARAMS); return T_STYLESHEET; }
+  "encode="                            { yypushback(1); pushState(IN_EE_TAG_PARAMS); return T_ENCODE; }
+  "stylesheet="                        { yypushback(1); pushState(IN_EE_TAG_PARAMS); return T_STYLESHEET; }
   "preload_replace" ~ {RD}             { yypushback(yylength() - 15); pushState(IN_EE_PRELOAD_REPLACE); return T_PRELOAD_REPLACE; }
-  // Module tag
+  // Module tags
   {MODULE_NAME}                        { pushState(IN_EE_TAG_PARAMS); return T_MODULE_NAME; }
-  // Variable tag
+  // Variable tags
   {VARIABLE_NAME}                      { pushState(IN_EE_TAG_PARAMS); return T_VARIABLE_NAME; }
 }
 
