@@ -107,7 +107,7 @@ VARIABLE_NAME=[a-zA-Z][a-zA-Z0-9_]* (":" [a-zA-Z][a-zA-Z0-9_]*)*
   "if:elseif"                          { pushState(IN_EE_EXPRESSION); return T_ELSEIF; }
   "if:else"                            { return T_ELSE; }
   // Special tag
-  "path"                               { pushState(IN_EE_TAG_PARAMS); return T_PATH; }
+  "path="                              { yypushback(1); pushState(IN_EE_TAG_PARAMS); return T_PATH; }
   "embed"                              { pushState(IN_EE_TAG_PARAMS); return T_EMBED; }
   "layout"                             { pushState(IN_EE_TAG_PARAMS); return T_LAYOUT; }
   "redirect"                           { pushState(IN_EE_TAG_PARAMS); return T_REDIRECT; }
