@@ -75,6 +75,7 @@ public class ExpressionEngineSyntaxHighlighter extends SyntaxHighlighterBase {
             || tokenType.equals(ExpressionEngineTypes.T_PATH)
             || tokenType.equals(ExpressionEngineTypes.T_EMBED)
             || tokenType.equals(ExpressionEngineTypes.T_LAYOUT)
+            || tokenType.equals(ExpressionEngineTypes.T_REDIRECT)
             || tokenType.equals(ExpressionEngineTypes.T_VARIABLE_NAME)
             || tokenType.equals(ExpressionEngineTypes.T_MODULE_NAME)
             || tokenType.equals(ExpressionEngineTypes.T_IF)
