@@ -17,12 +17,14 @@ public class ExpressionEngineSyntaxHighlighter extends SyntaxHighlighterBase {
     public static final TextAttributesKey STRING = createTextAttributesKey("EE_STRING", DefaultLanguageHighlighterColors.STRING);
     public static final TextAttributesKey OPERATOR = createTextAttributesKey("EE_OPERATOR", DefaultLanguageHighlighterColors.OPERATION_SIGN);
     public static final TextAttributesKey TAG = createTextAttributesKey("EE_TAG", DefaultLanguageHighlighterColors.IDENTIFIER);
+    public static final TextAttributesKey TAG_PARAM = createTextAttributesKey("EE_TAG_PARAM", DefaultLanguageHighlighterColors.IDENTIFIER);
 
     private static final TextAttributesKey[] COMMENT_KEYS = new TextAttributesKey[]{COMMENT};
     private static final TextAttributesKey[] NUMBER_KEYS = new TextAttributesKey[]{NUMBER};
     private static final TextAttributesKey[] STRING_KEYS = new TextAttributesKey[]{STRING};
     private static final TextAttributesKey[] OPERATOR_KEYS = new TextAttributesKey[]{OPERATOR};
     private static final TextAttributesKey[] TAG_KEYS = new TextAttributesKey[]{TAG};
+    private static final TextAttributesKey[] TAG_PARAM_KEYS = new TextAttributesKey[]{TAG_PARAM};
     private static final TextAttributesKey[] EMPTY_KEYS = new TextAttributesKey[0];
 
     @NotNull
@@ -42,6 +44,8 @@ public class ExpressionEngineSyntaxHighlighter extends SyntaxHighlighterBase {
             return STRING_KEYS;
         } else if (isPartOfTag(tokenType)) {
             return TAG_KEYS;
+        } else if (isPartOfTagParam(tokenType)) {
+            return TAG_PARAM_KEYS;
         } else if (isOperator(tokenType)) {
             return OPERATOR_KEYS;
         } else {
@@ -76,12 +80,15 @@ public class ExpressionEngineSyntaxHighlighter extends SyntaxHighlighterBase {
             || tokenType.equals(ExpressionEngineTypes.T_IF)
             || tokenType.equals(ExpressionEngineTypes.T_ELSEIF)
             || tokenType.equals(ExpressionEngineTypes.T_ELSE)
-            || tokenType.equals(ExpressionEngineTypes.T_ENDIF)
-            || tokenType.equals(ExpressionEngineTypes.T_TAG_PARAM)
             || tokenType.equals(ExpressionEngineTypes.T_EMBED_VAR)
             || tokenType.equals(ExpressionEngineTypes.T_LAYOUT_VAR)
             || tokenType.equals(ExpressionEngineTypes.T_PARAM_VAR)
             || tokenType.equals(ExpressionEngineTypes.T_GLOBAL_VAR);
+    }
+
+    private static boolean isPartOfTagParam(IElementType tokenType) {
+        return tokenType.equals(ExpressionEngineTypes.T_PARAM_NAME)
+            || tokenType.equals(ExpressionEngineTypes.T_EQUAL);
     }
 
     private boolean isOperator(IElementType tokenType) {
