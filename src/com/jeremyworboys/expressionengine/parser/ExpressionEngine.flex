@@ -72,13 +72,14 @@ COLON=":"
 
 PATH=[a-zA-Z0-9\-_\.]+("/"[a-zA-Z0-9\-_\.]+)*
 NUMBER=([0-9]*\.[0-9]+|[0-9]+\.[0-9]*|[0-9]+)
+IDENTIFIER=[a-zA-Z_][a-zA-Z0-9_-]*
 
 SINGLE_QUOTE="\'"
 DOUBLE_QUOTE="\""
 
 COMMENT="{!--" ~"--}"
-MODULE_NAME="exp:" [a-zA-Z][a-zA-Z0-9_]* (":" [a-zA-Z][a-zA-Z0-9_]*)?
-VARIABLE_NAME=[a-zA-Z_][a-zA-Z0-9_-]* (":" [a-zA-Z][a-zA-Z0-9_-]*)*
+MODULE_NAME="exp:" {IDENTIFIER} (":" {IDENTIFIER})?
+VARIABLE_NAME={IDENTIFIER} (":" {IDENTIFIER})*
 
 // States
 %state IN_EE_TAG
@@ -108,8 +109,8 @@ VARIABLE_NAME=[a-zA-Z_][a-zA-Z0-9_-]* (":" [a-zA-Z][a-zA-Z0-9_-]*)*
   "if:else"                            { return T_ELSE; }
   // Special tag
   "path="                              { yypushback(1); pushState(IN_EE_TAG_PARAMS); return T_PATH; }
-  "embed"                              { pushState(IN_EE_TAG_PARAMS); return T_EMBED; }
-  "layout"                             { pushState(IN_EE_TAG_PARAMS); return T_LAYOUT; }
+  "embed="                             { yypushback(1); pushState(IN_EE_TAG_PARAMS); return T_EMBED; }
+  "layout="                            { yypushback(1); pushState(IN_EE_TAG_PARAMS); return T_LAYOUT; }
   "redirect"                           { pushState(IN_EE_TAG_PARAMS); return T_REDIRECT; }
   "switch="                            { yypushback(1); pushState(IN_EE_TAG_PARAMS); return T_SWITCH; }
   "encode"                             { pushState(IN_EE_TAG_PARAMS); return T_ENCODE; }
