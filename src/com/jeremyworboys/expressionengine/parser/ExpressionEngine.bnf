@@ -26,8 +26,8 @@ boolean_literal ::= T_TRUE | T_FALSE
 comment ::= T_COMMENT
 
 // Tag params
-private tag_params ::= (tag_param | conditional_tag_param)*
 tag_param ::= T_PARAM_NAME T_EQUAL tag_param_value
+private tag_params ::= (tag_param | conditional_tag_param | comment)*
 tag_param_value ::= path_literal | number_literal | string_literal | boolean_literal
 conditional_tag_param ::= conditional_if tag_params (conditional_elseif tag_params)* (conditional_else tag_params)? conditional_endif
 
