@@ -8,6 +8,8 @@ import org.jetbrains.annotations.NotNull;
 public class ExpressionEngineFileTypeFactory extends FileTypeFactory {
     @Override
     public void createFileTypes(@NotNull FileTypeConsumer fileTypeConsumer) {
-        fileTypeConsumer.consume(ExpressionEngineFileType.INSTANCE, StringUtil.join(ExpressionEngineFileType.INSTANCE.getExtensions(), ";"));
+        fileTypeConsumer.consume(
+            ExpressionEngineFileType.INSTANCE,
+            StringUtil.join(ExpressionEngineFileType.INSTANCE.getExtensions(), FileTypeConsumer.EXTENSION_DELIMITER));
     }
 }
