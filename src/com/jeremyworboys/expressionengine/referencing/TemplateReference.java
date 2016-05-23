@@ -17,14 +17,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TemplateReference extends PsiReferenceBase.Poly<PsiElement> {
+    @NotNull
+    private final ExpressionEngineTagParamValue element;
+
     public TemplateReference(@NotNull ExpressionEngineTagParamValue element, @NotNull TextRange textRange) {
         super(element, textRange, false);
+        this.element = element;
     }
 
     @NotNull
     @Override
     public ResolveResult[] multiResolve(boolean incompleteCode) {
-        Project project = myElement.getProject();
+        Project project = element.getProject();
         String templatePath = ExpressionEngineUtil.toTemplatePath(getValue());
 
         List<ResolveResult> results = new ArrayList<ResolveResult>();
@@ -49,7 +53,7 @@ public class TemplateReference extends PsiReferenceBase.Poly<PsiElement> {
     @NotNull
     @Override
     public Object[] getVariants() {
-        Project project = myElement.getProject();
+        Project project = element.getProject();
 
         List<LookupElement> variants = new ArrayList<LookupElement>();
         List<ExpressionEngineFile> templateFiles = ExpressionEngineUtil.getTemplateFiles(project);
