@@ -8,8 +8,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.IncorrectOperationException;
-import com.jeremyworboys.expressionengine.psi.ExpressionEngineElementFactory;
 import com.jeremyworboys.expressionengine.util.ExpressionEngineUtil;
+import com.jeremyworboys.expressionengine.util.TemplateFileFactory;
 import org.jetbrains.annotations.NotNull;
 
 public class CreateTemplateFix extends BaseIntentionAction {
@@ -52,8 +52,8 @@ public class CreateTemplateFix extends BaseIntentionAction {
                     return;
                 }
 
-                ExpressionEngineElementFactory
-                    .createAndOpenFile(project, targetDirectory.getVirtualFile(), templatePath);
+                TemplateFileFactory templateFileFactory = new TemplateFileFactory(project);
+                templateFileFactory.createAndOpenFile(targetDirectory.getVirtualFile(), templatePath);
             }
         });
     }
