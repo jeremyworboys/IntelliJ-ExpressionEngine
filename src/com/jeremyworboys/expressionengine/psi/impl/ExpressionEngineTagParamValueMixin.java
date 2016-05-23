@@ -26,7 +26,7 @@ public abstract class ExpressionEngineTagParamValueMixin extends ASTWrapperPsiEl
     public PsiElement setName(@NonNls @NotNull String name) throws IncorrectOperationException {
         ASTNode literalNode = this.getNode().getFirstChildNode();
 
-        if (literalNode.getElementType() == ExpressionEngineTypes.T_PATH) {
+        if (literalNode.getElementType() == ExpressionEngineTypes.PATH_LITERAL) {
             ExpressionEnginePathLiteral pathLiteral = ExpressionEngineElementFactory.createPathLiteral(getProject(), name);
             this.getFirstChild().replace(pathLiteral);
         }
@@ -55,7 +55,7 @@ public abstract class ExpressionEngineTagParamValueMixin extends ASTWrapperPsiEl
         List<PsiReference> references = new ArrayList<PsiReference>();
         IElementType type = this.getNode().getFirstChildNode().getElementType();
 
-        if (type == ExpressionEngineTypes.T_PATH) {
+        if (type == ExpressionEngineTypes.PATH_LITERAL) {
             String paramValue = getText();
             TextRange textRange = new TextRange(0, paramValue.length());
             references.add(new TemplateReference((ExpressionEngineTagParamValue) this, textRange));
