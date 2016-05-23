@@ -111,7 +111,7 @@ PRELOAD_REPLACE="preload_replace:" [a-zA-Z][a-zA-Z0-9_]*
   "embed"                              { pushState(IN_EE_TAG_PARAMS); return T_EMBED; }
   "layout"                             { pushState(IN_EE_TAG_PARAMS); return T_LAYOUT; }
   "redirect"                           { pushState(IN_EE_TAG_PARAMS); return T_REDIRECT; }
-  "switch"                             { pushState(IN_EE_TAG_PARAMS); return T_SWITCH; }
+  "switch="                            { yypushback(1); pushState(IN_EE_TAG_PARAMS); return T_SWITCH; }
   "encode"                             { pushState(IN_EE_TAG_PARAMS); return T_ENCODE; }
   "stylesheet"                         { pushState(IN_EE_TAG_PARAMS); return T_STYLESHEET; }
   {PRELOAD_REPLACE}                    { pushState(IN_EE_TAG_PARAMS); return T_PRELOAD_REPLACE; }
