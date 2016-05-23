@@ -18,8 +18,9 @@ import com.jeremyworboys.expressionengine.psi.ExpressionEngineTypes;
 import org.jetbrains.annotations.NotNull;
 
 public class ExpressionEngineParserDefinition implements ParserDefinition {
-    public static final TokenSet WHITE_SPACES = TokenSet.create(TokenType.WHITE_SPACE);
-    public static final TokenSet COMMENTS = TokenSet.create(ExpressionEngineTypes.COMMENT);
+    public static final TokenSet STRING_LITERALS = TokenSet.EMPTY;
+    public static final TokenSet WHITE_SPACES = TokenSet.create(ExpressionEngineTypes.T_WS, ExpressionEngineTypes.T_CRLF, TokenType.WHITE_SPACE);
+    public static final TokenSet COMMENTS = TokenSet.EMPTY; //TokenSet.create(ExpressionEngineTypes.COMMENT);
 
     public static final IFileElementType FILE =
         new IFileElementType(Language.<ExpressionEngineLanguage>findInstance(ExpressionEngineLanguage.class));
@@ -42,6 +43,12 @@ public class ExpressionEngineParserDefinition implements ParserDefinition {
 
     @NotNull
     @Override
+    public TokenSet getStringLiteralElements() {
+        return STRING_LITERALS;
+    }
+
+    @NotNull
+    @Override
     public TokenSet getWhitespaceTokens() {
         return WHITE_SPACES;
     }
@@ -50,12 +57,6 @@ public class ExpressionEngineParserDefinition implements ParserDefinition {
     @Override
     public TokenSet getCommentTokens() {
         return COMMENTS;
-    }
-
-    @NotNull
-    @Override
-    public TokenSet getStringLiteralElements() {
-        return TokenSet.EMPTY;
     }
 
     @NotNull
