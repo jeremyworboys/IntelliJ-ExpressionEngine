@@ -60,7 +60,7 @@ public class ModuleIndex {
             String tagName = "exp:" + moduleName;
             if (!methods.containsKey(tagName)) {
                 Method moduleConstructor = moduleClass.getConstructor();
-                if (moduleConstructor != null && isViableModuleMethod(moduleConstructor)) {
+                if (moduleConstructor != null && isViableModuleConstructor(moduleConstructor)) {
                     methods.put(tagName, new ModuleMethod(tagName, moduleConstructor));
                 }
             }
@@ -70,6 +70,13 @@ public class ModuleIndex {
     }
 
     private boolean isViableModuleMethod(@NotNull Method method) {
-        return method.getAccess().isPublic() && method.getParameters().length == 0;
+        return method.getAccess().isPublic()
+            && !method.getName().startsWith("_")
+            && method.getParameters().length == 0;
+    }
+
+    private boolean isViableModuleConstructor(@NotNull Method method) {
+        return method.getAccess().isPublic()
+            && method.getParameters().length == 0;
     }
 }
