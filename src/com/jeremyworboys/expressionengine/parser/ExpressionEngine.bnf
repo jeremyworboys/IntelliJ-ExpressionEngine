@@ -27,7 +27,11 @@ comment ::= T_COMMENT
 
 // Tag params
 private tag_params ::= (tag_param | variable_tag_param | conditional_tag_param | comment)*
-tag_param ::= T_PARAM_NAME T_EQUAL tag_param_value {pin=1}
+tag_param ::= T_PARAM_NAME T_EQUAL tag_param_value {
+  pin=1
+  mixin="com.jeremyworboys.expressionengine.psi.impl.ExpressionEngineTagParamMixin"
+  implements="com.jeremyworboys.expressionengine.psi.ExpressionEngineTagParamElement"
+}
 tag_param_value ::= path_literal | number_literal | string_literal | boolean_literal {
   mixin="com.jeremyworboys.expressionengine.psi.impl.ExpressionEngineTagParamValueMixin"
   implements="com.jeremyworboys.expressionengine.psi.ExpressionEngineTagParamValueElement"
