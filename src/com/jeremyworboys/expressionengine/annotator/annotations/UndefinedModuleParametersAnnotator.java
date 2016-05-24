@@ -31,7 +31,7 @@ public class UndefinedModuleParametersAnnotator implements Annotator {
         String moduleName = moduleOpenTag.getModuleName();
 
         Project project = element.getProject();
-        ModuleMethod moduleMethod = ModuleIndex.getInstance(project).getModuleMethod(moduleName);
+        ModuleMethod moduleMethod = ModuleIndex.getInstance(project).getMethod(moduleName);
         if (moduleMethod == null) {
             return;
         }
