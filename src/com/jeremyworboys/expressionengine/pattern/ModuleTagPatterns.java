@@ -14,6 +14,7 @@ public class ModuleTagPatterns {
 
     @NotNull
     public static ElementPattern<PsiElement> getModuleTagParamPattern() {
+        // TODO: Test this correctly matches conditional tag params
         return PlatformPatterns
             .psiElement(ExpressionEngineTypes.TAG_PARAM)
             .withTreeParent(getModuleOpenTagPattern());
