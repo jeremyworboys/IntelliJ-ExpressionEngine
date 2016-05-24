@@ -16,14 +16,14 @@ import java.util.List;
 
 public class PhpElementsUtil {
     @NotNull
-    public static PsiElementPattern.Capture<PsiElement> isMethod() {
+    public static PsiElementPattern.Capture<PsiElement> isMethodReference() {
         return PlatformPatterns.psiElement(PhpElementTypes.METHOD_REFERENCE);
     }
 
     @NotNull
-    public static PsiElementPattern.Capture<PsiElement> isMethodNamed(String name) {
+    public static PsiElementPattern.Capture<PsiElement> isMethodReferenceNamed(String name) {
         return PhpElementsUtil
-            .isMethod()
+            .isMethodReference()
             //.withName(name) <- This doesn't work, so it is handled below
             .with(new PatternCondition<PsiElement>("withName") {
                 @Override
@@ -34,9 +34,9 @@ public class PhpElementsUtil {
     }
 
     @NotNull
-    public static PsiElementPattern.Capture<PsiElement> isMethodNameWithFirstString(String name) {
+    public static PsiElementPattern.Capture<PsiElement> isMethodReferenceWithFirstStringNamed(String name) {
         return PhpElementsUtil
-            .isMethodNamed(name)
+            .isMethodReferenceNamed(name)
             .withChild(PlatformPatterns
                 .psiElement(PhpElementTypes.PARAMETER_LIST)
                 .withFirstChild(PlatformPatterns

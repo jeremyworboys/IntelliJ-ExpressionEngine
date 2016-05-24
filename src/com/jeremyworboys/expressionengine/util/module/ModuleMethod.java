@@ -23,7 +23,7 @@ public class ModuleMethod {
     public List<String> getParameterNames() {
         List<String> parameterNames = new OrderedSet<>();
         List<MethodReference> fetchParamMethodCalls = PhpElementsUtil
-            .getLogicalDescendantOf(method, PhpElementsUtil.isMethodNameWithFirstString("fetch_param"));
+            .getLogicalDescendantOf(method, PhpElementsUtil.isMethodReferenceWithFirstStringNamed("fetch_param"));
 
         for (MethodReference fetchParamMethodCall : fetchParamMethodCalls) {
             PsiElement[] parameters = fetchParamMethodCall.getParameters();
