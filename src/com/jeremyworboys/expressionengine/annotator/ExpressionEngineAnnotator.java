@@ -4,6 +4,7 @@ import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.Annotator;
 import com.intellij.psi.PsiElement;
 import com.jeremyworboys.expressionengine.annotator.annotations.TemplateReferenceAnnotator;
+import com.jeremyworboys.expressionengine.annotator.annotations.UndefinedModuleAnnotator;
 import com.jeremyworboys.expressionengine.annotator.annotations.UndefinedModuleParametersAnnotator;
 import org.jetbrains.annotations.NotNull;
 
@@ -11,6 +12,7 @@ public class ExpressionEngineAnnotator implements Annotator {
     @Override
     public void annotate(@NotNull PsiElement element, @NotNull AnnotationHolder holder) {
         new TemplateReferenceAnnotator().annotate(element, holder);
+        new UndefinedModuleAnnotator().annotate(element, holder);
         new UndefinedModuleParametersAnnotator().annotate(element, holder);
         // TODO: constant expression in conditional (e.g. {if TRUE} ... {endif})
         // TODO: in conditional expression the string "0" is considered TRUE since it is a non-empty string
