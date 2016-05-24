@@ -7,6 +7,7 @@ import com.jetbrains.php.lang.psi.elements.MethodReference;
 import com.jetbrains.php.lang.psi.elements.PhpClass;
 import com.jetbrains.php.lang.psi.elements.StringLiteralExpression;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -34,6 +35,11 @@ public abstract class TagMethodBase {
     @NotNull
     public Method getPhpMethod() {
         return phpMethod;
+    }
+
+    @Nullable
+    public MethodReference getParameterName(String paramName) {
+        return getParameterNamesImpl().get(paramName);
     }
 
     @NotNull
