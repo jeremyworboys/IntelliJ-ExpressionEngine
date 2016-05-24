@@ -1,7 +1,6 @@
 package com.jeremyworboys.expressionengine.util;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.search.FileTypeIndex;
 import com.intellij.psi.search.GlobalSearchScope;
@@ -41,7 +40,8 @@ public class ExpressionEngineAddonUtil {
                 String addonName = matcher.group(1);
                 String addonType = matcher.group(2);
                 if (!expressionEngineAddons.containsKey(addonName)) {
-                    PhpClass addonClass = phpIndex.getClassByName(getAddonClassName(addonName, addonType));
+                    PhpClass addonClass = phpIndex.getClassByName(
+                        ExpressionEngineAddonClassUtil.getAddonClassName(addonName, addonType));
                     if (addonClass != null) {
                         expressionEngineAddons.putIfAbsent(addonName,
                             new ExpressionEngineAddon(addonClass.getContainingFile().getParent()));
@@ -53,28 +53,5 @@ public class ExpressionEngineAddonUtil {
 
     public Collection<ExpressionEngineAddon> getAddons() {
         return this.expressionEngineAddons.values();
-    }
-
-    @NotNull
-    private String getAddonClassName(@NotNull String addonName, @NotNull String addonType) {
-        switch (addonType) {
-            case "acc":
-                return StringUtil.capitalize(addonName) + "_acc";
-            case "ext":
-                return StringUtil.capitalize(addonName) + "_ext";
-            case "ft":
-                return StringUtil.capitalize(addonName) + "_ft";
-            case "pi":
-            case "mod":
-                return StringUtil.capitalize(addonName);
-            case "mcp":
-                return StringUtil.capitalize(addonName) + "_mcp";
-            case "tab":
-                return StringUtil.capitalize(addonName) + "_tab";
-            case "upd":
-                return StringUtil.capitalize(addonName) + "_upd";
-            default:
-                throw new IllegalStateException("Unrecognised state " + addonType);
-        }
     }
 }
