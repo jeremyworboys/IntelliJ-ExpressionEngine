@@ -31,6 +31,7 @@ public class ExpressionEngineAddonUtil {
 
     private void loadAddons() {
         expressionEngineAddons = new HashMap<>();
+        // TODO: Look into how EE loads add-ons to optimise this
         Collection<VirtualFile> phpFiles = FileBasedIndex.getInstance()
             .getContainingFiles(FileTypeIndex.NAME, PhpFileType.INSTANCE, GlobalSearchScope.allScope(project));
 
