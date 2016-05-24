@@ -6,12 +6,14 @@ import com.intellij.patterns.PlatformPatterns;
 import com.intellij.patterns.PsiElementPattern;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.ProcessingContext;
+import com.intellij.util.containers.OrderedSet;
 import com.jetbrains.php.lang.parser.PhpElementTypes;
 import com.jetbrains.php.lang.psi.elements.MethodReference;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class PhpElementsUtil {
@@ -47,6 +49,11 @@ public class PhpElementsUtil {
 
     @NotNull
     public static <T extends PsiElement> List<T> getLogicalDescendantOf(@Nullable PsiElement root, @NotNull ElementPattern<PsiElement> pattern) {
+        return getLogicalDescendantOf(root, pattern, new OrderedSet<>());
+    }
+
+    @NotNull
+    private static <T extends PsiElement> List<T> getLogicalDescendantOf(@Nullable PsiElement root, @NotNull ElementPattern<PsiElement> pattern, @NotNull Collection<PsiElement> visited) {
         List<T> results = new ArrayList<>();
 
         if (root == null) {
@@ -54,6 +61,11 @@ public class PhpElementsUtil {
         }
 
         for (PsiElement element : root.getChildren()) {
+            // Ignore elements that have been scanned previously
+            if (visited.contains(element)) {
+                continue;
+            }
+            visited.add(element);
             // Found an element matching pattern - don't recurse
             if (pattern.accepts(element)) {
                 results.add((T) element);
@@ -63,13 +75,13 @@ public class PhpElementsUtil {
             if (isMethodReference().accepts(element)) {
                 PsiElement method = ((MethodReference) element).resolve();
                 if (method != null) {
-                    results.addAll(getLogicalDescendantOf(method, pattern));
+                    results.addAll(getLogicalDescendantOf(method, pattern, visited));
                     continue;
                 }
             }
             // Recurse over children of this element
             if (element.getChildren().length > 0) {
-                results.addAll(getLogicalDescendantOf(element, pattern));
+                results.addAll(getLogicalDescendantOf(element, pattern, visited));
             }
         }
 
