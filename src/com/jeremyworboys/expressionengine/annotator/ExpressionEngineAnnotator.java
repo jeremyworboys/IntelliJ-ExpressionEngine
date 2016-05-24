@@ -4,8 +4,10 @@ import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.Annotator;
 import com.intellij.psi.PsiElement;
 import com.jeremyworboys.expressionengine.annotator.fix.CreateTemplateFix;
+import com.jeremyworboys.expressionengine.pattern.TemplateReferencePatterns;
 import com.jeremyworboys.expressionengine.psi.ExpressionEngineFile;
 import com.jeremyworboys.expressionengine.util.ExpressionEngineUtil;
+import com.jeremyworboys.expressionengine.util.TemplateFilesFinder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -14,6 +16,7 @@ public class ExpressionEngineAnnotator implements Annotator {
     @Override
     public void annotate(@NotNull PsiElement element, @NotNull AnnotationHolder holder) {
         annotateTemplateReference(element, holder);
+        // TODO: constant expression in conditional (e.g. {if TRUE} ... {endif})
         // TODO: in conditional expression the string "0" is considered TRUE since it is a non-empty string
         // TODO: in conditional expression negation happens after exponentiation (-5 ** 2 == -25 vs (-5) **2 == 25)
         // TODO: right expr after "matches" operator in conditional expression must be a valid regular expression
@@ -29,13 +32,23 @@ public class ExpressionEngineAnnotator implements Annotator {
     }
 
     private void annotateTemplateReference(@NotNull PsiElement element, @NotNull AnnotationHolder holder) {
-        // TODO: Check {path}, {route}, {redirect} but consider special cases for each
-        if (!ExpressionEngineUtil.getTemplateFileReferencePattern().accepts(element)) {
+        // Skip all elements that couldn't be a template reference
+        if (!TemplateReferencePatterns.getTemplateReferencePattern().accepts(element)) {
+            return;
+        }
+
+        // Ignore special {path=} values
+        if (TemplateReferencePatterns.getPathTemplateReferencePattern().accepts(element) && isSpecialPathValue(element.getText())) {
+            return;
+        }
+
+        // Ignore special {redirect=} values
+        if (TemplateReferencePatterns.getRedirectTemplateReferencePattern().accepts(element) && isSpecialRedirectValue(element.getText())) {
             return;
         }
 
         String extension = "html";
-        if (ExpressionEngineUtil.getStylesheetFileReferencePattern().accepts(element)) {
+        if (TemplateReferencePatterns.getStylesheetTemplateReferencePattern().accepts(element)) {
             extension = "css";
         }
 
@@ -44,7 +57,8 @@ public class ExpressionEngineAnnotator implements Annotator {
             return;
         }
 
-        List<ExpressionEngineFile> templateFiles = ExpressionEngineUtil.getTemplateFiles(element.getProject(), templatePath);
+        TemplateFilesFinder finder = new TemplateFilesFinder(element.getProject());
+        List<ExpressionEngineFile> templateFiles = finder.getTemplateFilesWithPath(templatePath);
         if (templateFiles.size() > 0) {
             return;
         }
@@ -53,5 +67,13 @@ public class ExpressionEngineAnnotator implements Annotator {
 
         holder.createWarningAnnotation(element, "Create Template")
             .registerFix(new CreateTemplateFix(templatePath));
+    }
+
+    private boolean isSpecialPathValue(String text) {
+        return text.equals("site_index") || text.equals("logout");
+    }
+
+    private boolean isSpecialRedirectValue(String text) {
+        return text.equals("404");
     }
 }

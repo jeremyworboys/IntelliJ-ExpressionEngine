@@ -1,44 +1,69 @@
 {
   parserClass="com.jeremyworboys.expressionengine.parser.ExpressionEngineParser"
-
-  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
-  extends(".*expr")=expr
-
-  psiClassPrefix="ExpressionEngine"
-  psiImplClassSuffix="Impl"
   psiPackage="com.jeremyworboys.expressionengine.psi"
   psiImplPackage="com.jeremyworboys.expressionengine.psi.impl"
+  psiClassPrefix="ExpressionEngine"
+  psiImplClassSuffix="Impl"
 
   elementTypeHolderClass="com.jeremyworboys.expressionengine.psi.ExpressionEngineTypes"
   elementTypeClass="com.jeremyworboys.expressionengine.psi.ExpressionEngineElementType"
   tokenTypeClass="com.jeremyworboys.expressionengine.psi.ExpressionEngineTokenType"
 
-  psiImplUtilClass="com.jeremyworboys.expressionengine.psi.impl.ExpressionEnginePsiImplUtil"
+  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+  extends(".*expr")=expr
 }
 
-expressionengineFile ::= statement*
-
-private statement ::= comment | tag | conditional | T_HTML | T_CRLF
+expressionEngineFile ::= statement*
+private statement ::= module | conditional | special_tag | variable_tag | comment | T_CONTENT
 
 // Literals
-path_literal   ::= T_PATH
-string_literal ::= (T_STRING_START (T_COMMENT | T_STRING+) T_STRING_END)
-                 | (T_STRING_START T_STRING_END)
+path_literal ::= T_PATH_LITERAL
+number_literal ::= T_NUMBER_LITERAL
+string_literal ::= T_STRING_START T_STRING_CONTENT* T_STRING_END
+boolean_literal ::= T_TRUE | T_FALSE
 
 // Comments
 comment ::= T_COMMENT
 
-// Conditionals
-conditional ::= conditional_if
-              | conditional_elseif
-              | conditional_else
-              | conditional_endif
-//conditional ::= conditional_if statement* (conditional_elseif statement*)* (conditional_else statement*)? conditional_endif
+// Tag params
+private tag_params ::= (tag_param | variable_tag_param | conditional_tag_param | comment)*
+tag_param ::= T_PARAM_NAME T_EQUAL tag_param_value {pin=1}
+tag_param_value ::= path_literal | number_literal | string_literal | boolean_literal {
+  mixin="com.jeremyworboys.expressionengine.psi.impl.ExpressionEngineTagParamValueMixin"
+  implements="com.jeremyworboys.expressionengine.psi.ExpressionEngineTagParamValueElement"
+}
+variable_tag_param ::= variable
+conditional_tag_param ::= conditional_if tag_params (conditional_elseif tag_params)* (conditional_else tag_params)? conditional_endif {pin=1}
 
-private conditional_if     ::= T_LD T_IF expr T_RD {pin=2}
-private conditional_elseif ::= T_LD T_ELSEIF expr T_RD {pin=2}
-private conditional_else   ::= T_LD T_ELSE T_RD
-private conditional_endif  ::= T_LD T_ENDIF T_RD
+// Special tags
+private special_tag ::= path_tag | route_tag | embed_tag | layout_tag | redirect_tag | switch_tag | encode_tag | stylesheet_tag | preload_replace_tag
+path_tag ::= T_LD T_PATH T_EQUAL tag_param_value T_RD {pin=2}
+route_tag ::= T_LD T_ROUTE T_EQUAL tag_param_value tag_params T_RD {pin=2}
+embed_tag ::= T_LD T_EMBED T_EQUAL tag_param_value tag_params T_RD {pin=2}
+layout_tag ::= T_LD T_LAYOUT T_EQUAL tag_param_value tag_params T_RD {pin=2}
+redirect_tag ::= T_LD T_REDIRECT T_EQUAL tag_param_value tag_params T_RD {pin=2}
+switch_tag ::= T_LD T_SWITCH T_EQUAL tag_param_value T_RD {pin=2}
+encode_tag ::= T_LD T_ENCODE T_EQUAL tag_param_value tag_params T_RD {pin=2}
+stylesheet_tag ::= T_LD T_STYLESHEET T_EQUAL tag_param_value T_RD {pin=2}
+preload_replace_tag ::= T_LD T_PRELOAD_REPLACE T_COLON T_PARAM_NAME T_EQUAL tag_param_value T_RD {pin=2}
+
+// Variables
+private variable_tag ::= parametric_variable | variable | variable_close_tag
+variable ::= T_LD T_VARIABLE_NAME tag_params T_RD {pin=2}
+variable_close_tag ::= T_LD T_SLASH T_VARIABLE_NAME T_RD {pin=3}
+parametric_variable ::= T_LD T_VARIABLE_NAME T_EQUAL tag_param_value T_RD {pin=3}
+
+// Modules
+module ::= module_open_tag statement* module_close_tag {pin=1}
+module_open_tag  ::= T_LD T_MODULE_NAME tag_params T_RD {pin=2}
+module_close_tag ::= T_LD T_SLASH T_MODULE_NAME T_RD {pin=3}
+
+// Conditionals
+conditional ::= conditional_if statement* (conditional_elseif statement*)* (conditional_else statement*)? conditional_endif {pin=1}
+conditional_if     ::= T_LD T_IF expr T_RD {pin=2}
+conditional_elseif ::= T_LD T_ELSEIF expr T_RD {pin=2}
+conditional_else   ::= T_LD T_ELSE T_RD {pin=2}
+conditional_endif  ::= T_LD T_SLASH T_IF T_RD {pin=3}
 
 // Conditional expressions
 expr ::= group_bool | group_cmp | group_add | group_mul | group_unary | op_pow_expr | op_concat_expr | group_primary
@@ -49,7 +74,6 @@ private group_mul     ::= op_mul_expr | op_div_expr | op_mod_expr
 private group_add     ::= op_add_expr | op_sub_expr
 private group_unary   ::= unary_not_expr | unary_plus_expr | unary_minus_expr
 private group_primary ::= literal_expr | paren_expr
-private group_vars    ::= T_GLOBAL_VAR | T_GLOBAL_CONST | T_EMBED_VAR | T_LAYOUT_VAR | T_VARIABLE
 
 op_eq_expr       ::= expr T_OP_EQ expr
 op_neq_expr      ::= expr T_OP_NEQ expr
@@ -75,42 +99,4 @@ unary_not_expr   ::= T_OP_NOT expr
 unary_plus_expr  ::= T_OP_ADD expr
 unary_minus_expr ::= T_OP_SUB expr
 paren_expr       ::= T_LP expr T_RP
-literal_expr     ::= T_BOOL | T_NUMBER | group_vars | string_literal
-
-// Tags
-tag ::= tag_simple | tag_compound | tag_with_param | tag_module
-
-private tag_simple ::= T_LD group_vars T_RD
-
-private tag_compound ::= T_LD group_vars tag_contents* T_RD
-                       | T_LD T_SLASH group_vars T_RD
-
-private tag_with_param ::= T_LD T_PARAM_VAR T_EQUALS tag_param_value tag_contents* T_RD
-
-private tag_module ::= T_LD T_TAG_NAME tag_contents* T_RD
-                     | T_LD T_SLASH T_TAG_NAME T_RD
-
-private tag_contents ::= (T_COMMENT | tag_param)
-
-tag_param ::= T_TAG_PARAM T_EQUALS tag_param_value
-tag_param_value ::= T_NUMBER | path_literal | group_vars | string_literal {
-  mixin="com.jeremyworboys.expressionengine.psi.impl.ExpressionEngineTagParamValueMixin"
-  implements="com.jeremyworboys.expressionengine.psi.ExpressionEngineTagParamValueElement"
-}
-
-//private tag_local_var  ::= T_LD T_VARIABLE T_RD
-
-//tag ::= LD tag_name tag_attribute* RD
-//      | LD tag_param tag_attribute* RD
-
-//tag_name ::= (TAG_BUILTIN|TAG_BUILTIN_CLOSE|TAG_ADDON|TAG_ADDON_CLOSE|TAG_CONSTANT|TAG_DEPRECATED|TAG_DEPRECATED_CLOSE|TAG_GLOBAL_VAR|TAG_LOCAL_VAR|IDENTIFIER)
-//tag_param ::= TAG_GLOBAL_VAR_PARAM EQUAL attribute_value
-//tag_attribute ::= (CRLF|attribute|conditional)
-
-//conditional ::= CRLF? LD (conditional_open|ELSE|END_IF) RD CRLF?
-//conditional_open ::= (IF|ELSE_IF) conditional_expression
-//conditional_expression ::= CRLF? IDENTIFIER CRLF?
-
-//attribute ::= CRLF? IDENTIFIER EQUAL attribute_value CRLF?
-//attribute_value ::= (NUMBER|IDENTIFIER|attribute_string)
-//attribute_string ::= (STRING_START (tag|COMMENT|STRING+) STRING_END) | (STRING_START STRING_END)
+literal_expr     ::= number_literal | string_literal | boolean_literal | T_VARIABLE_NAME

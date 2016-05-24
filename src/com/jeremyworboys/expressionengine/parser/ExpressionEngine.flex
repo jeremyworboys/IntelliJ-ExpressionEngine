@@ -1,6 +1,7 @@
 package com.jeremyworboys.expressionengine.parser;
 
 import com.intellij.lexer.FlexLexer;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.TokenType;
 
@@ -36,105 +37,123 @@ import static com.jeremyworboys.expressionengine.psi.ExpressionEngineTypes.*;
       yybegin(lexStateStack.pop());
     }
   }
+
+  private IElementType determineContentToken() {
+    if (yylength() == 0) {
+      return null;
+    }
+    String captured = yytext().toString();
+    if (StringUtil.trim(captured).length() == 0) {
+      return TokenType.WHITE_SPACE;
+    }
+    // Ignore leading whitespace
+    if (StringUtil.trimLeading(captured).length() != captured.length()) {
+      yypushback(StringUtil.trimLeading(captured).length());
+      return TokenType.WHITE_SPACE;
+    }
+    // Ignore trailing whitespace
+    if (StringUtil.trimTrailing(captured).length() != captured.length()) {
+      yypushback(captured.length() - StringUtil.trimTrailing(captured).length());
+    }
+    return T_CONTENT;
+  }
 %}
 
-// Generics
+// Macros
 WS=[\ \t\f\s]
-CRLF=\n|\r|\r\n
+CRLF=(\n|\r|\r\n)
+WHITE_SPACE={WS}+ | {CRLF}
+
+LD="{"
+RD="}"
+SLASH="/"
+EQUAL="="
+COLON=":"
+
+PATH=[a-zA-Z0-9\-_\.]+("/"[a-zA-Z0-9\-_\.]+)*
+NUMBER=([0-9]*\.[0-9]+|[0-9]+\.[0-9]*|[0-9]+)
+IDENTIFIER=[a-zA-Z_][a-zA-Z0-9_-]*
 
 SINGLE_QUOTE="\'"
 DOUBLE_QUOTE="\""
 
-// Numbers
-NUMBER=([0-9]*\.[0-9]+|[0-9]+\.[0-9]*|[0-9]+)
-
-// Identifiers
-IDENTIFIER=[a-zA-Z0-9\-_]+ (":" [a-zA-Z0-9\-_]+)*
-VARIABLE={IDENTIFIER}
-// TODO: Double check allowed chars for paths
-PATH=[a-zA-Z0-9\-_]+([a-zA-Z0-9\-_/.]+)*
-
-EMBED_VAR="embed:" {VARIABLE}
-LAYOUT_VAR="layout:" {VARIABLE}
-GLOBAL_VAR=app_build|app_version|auto_log_in|build|captcha|charset|cp_url|current_id|current_page|current_path
-          |current_request|current_time|current_url|debug_mode|doc_url|elapsed_time|email|error_message
-          |form_declaration:wiki:edit|form_declaration:wiki:uploads|forum_build|forum_name|forum_url|group_description
-          |group_id|group_title|gzip_mode|hits|homepage|include:body_extra|include:head_extra|include:spellcheck_js
-          |include:theme_option_list|ip_address|ip_hostname|lang|lang:[a-zA-Z_]+|location|logged_in|logged_in_email
-          |logged_in_group_description|logged_in_group_id|logged_in_ip_address|logged_in_location|logged_in_member_id
-          |logged_in_private_messages|logged_in_screen_name|logged_in_total_comments|logged_in_total_entries
-          |logged_in_total_forum_posts|logged_in_total_forum_topics|logged_in_username|logged_out|member_group|member_id
-          |member_profile_link|module_version|page_title|path:advanced_search|path:atom|path:do_search|path:forgot
-          |path:forum_home|path:image_url|path:login|path:logout|path:mark_all_read|path:memberlist|path:private_messages
-          |path:recent_poster|path:register|path:rss|path:smileys|path:spellcheck_iframe|path:theme_css
-          |path:view_active_topics|path:view_new_topics|path:view_pending_topics|path:wiki_base_url|path:wiki_home
-          |path:your_control_panel|path:your_profile|private_messages|recent_poster|screen_name|site_id|site_index
-          |site_label|site_name|site_short_name|site_url|theme_folder_url|total_comments|total_entries|total_forum_posts
-          |total_forum_replies|total_forum_topics|total_queries|username|version|webmaster_email
-
-GLOBAL_CONST=DATE_ATOM|DATE_COOKIE|DATE_ISO8601|DATE_RFC822|DATE_RFC850|DATE_RFC1036|DATE_RFC1123|DATE_RFC2822|DATE_RSS
-            |DATE_W3C|XID_HASH
-
-PARAM_VAR=path|permalink|title_permalink|comment_path|day_path|entry_id_path|embed|layout|encode|redirect
-         |last_author_profile_path|member_path|member_search_path|multi_field|next_path|preload_replace:[a-zA-Z0-9_-]+
-         |previous_path|profile_path|stylesheet|switch|thread_path|url_title_path
-
-TAG_NAME="exp:" {IDENTIFIER}
-TAG_PARAM={IDENTIFIER} "="
-
-// ExpressionEngine tag delimiters
-LD="{"
-RD="}"
-
-// ExpressionEngine comment delimiters
 COMMENT="{!--" ~"--}"
+MODULE_NAME="exp:" {IDENTIFIER} (":" {IDENTIFIER})?
+VARIABLE_NAME={IDENTIFIER} (":" {IDENTIFIER})*
 
-%state IN_EE_VAR
-%state IN_EE_VAR_WITH_PARAM
+// States
 %state IN_EE_TAG
 %state IN_EE_TAG_PARAMS
+%state IN_EE_PRELOAD_REPLACE
 %state IN_EE_EXPRESSION
-%state IN_EE_CONDITIONAL
 %state IN_SINGLE_STRING
 %state IN_DOUBLE_STRING
 
 %%
 
-// TODO: Match and highlight embedded PHP
+{WHITE_SPACE}                          { return TokenType.WHITE_SPACE; }
 {COMMENT}                              { return T_COMMENT; }
-{LD}{WS}+                              { return T_HTML; }
-{LD}{CRLF}+                            { return T_HTML; }
+{LD}{WHITE_SPACE}                      { return T_CONTENT; }
+{LD}{RD}                               { return T_CONTENT; }
+{LD}{DOUBLE_QUOTE}                     { return T_CONTENT; }
+{LD}{SINGLE_QUOTE}                     { return T_CONTENT; }
 
 <YYINITIAL> {
-  // Conditionals
-  {LD} "if" ":elseif"? {WS} .+ {RD}    { pushState(IN_EE_EXPRESSION); yypushback(yylength() - 1); return T_LD; }
-  {LD} ("/if"|"if:else") {RD}          { pushState(IN_EE_CONDITIONAL); yypushback(yylength() - 1); return T_LD; }
-  // Tags
-  {LD} {TAG_NAME} ~ {RD}               { pushState(IN_EE_TAG); yypushback(yylength() - 1); return T_LD; }
-  {LD} "/" {TAG_NAME} {RD}             { pushState(IN_EE_TAG); yypushback(yylength() - 1); return T_LD; }
-  // Variables
-  {LD} {GLOBAL_VAR} {RD}               { pushState(IN_EE_VAR); yypushback(yylength() - 1); return T_LD; }
-  {LD} {GLOBAL_CONST} {RD}             { pushState(IN_EE_VAR); yypushback(yylength() - 1); return T_LD; }
-  {LD} {EMBED_VAR} {RD}                { pushState(IN_EE_VAR); yypushback(yylength() - 1); return T_LD; }
-  {LD} {LAYOUT_VAR} {RD}               { pushState(IN_EE_VAR); yypushback(yylength() - 1); return T_LD; }
-  {LD} {VARIABLE} {RD}                 { pushState(IN_EE_VAR); yypushback(yylength() - 1); return T_LD; }
-  {LD} "/" {VARIABLE} {RD}             { pushState(IN_EE_VAR); yypushback(yylength() - 1); return T_LD; }
-  {LD} {PARAM_VAR} "=" .+ {RD}          { pushState(IN_EE_VAR_WITH_PARAM); yypushback(yylength() - 1); return T_LD; }
-  // TODO: This is accidentally matching {if:elseif}
-  {LD} {VARIABLE} {WS} {TAG_PARAM} .+ {RD} { pushState(IN_EE_VAR_WITH_PARAM); yypushback(yylength() - 1); return T_LD; }
-  // Anything else is html
-  {LD} ~ {RD}                          |
-  !([^]*"{"[^]*)                       {
-    if (yylength() > 0) {
-      return (yytext().toString().trim().length() == 0) ? TokenType.WHITE_SPACE : T_HTML;
-    }
-  }
+  {LD}                                 { pushState(IN_EE_TAG); return T_LD; }
+  !([^]*"{"[^]*)                       { return determineContentToken(); }
+}
+
+<IN_EE_TAG> {
+  {LD}                                 { pushState(IN_EE_TAG); return T_LD; }
+  {RD}                                 { popState(); return T_RD; }
+  {SLASH}                              { return T_SLASH; }
+  // Conditional
+  "if"                                 { pushState(IN_EE_EXPRESSION); return T_IF; }
+  "if:elseif"                          { pushState(IN_EE_EXPRESSION); return T_ELSEIF; }
+  "if:else"                            { return T_ELSE; }
+  // Special tags
+  "path="                              { yypushback(1); pushState(IN_EE_TAG_PARAMS); return T_PATH; }
+  "route="                             { yypushback(1); pushState(IN_EE_TAG_PARAMS); return T_ROUTE; }
+  "embed="                             { yypushback(1); pushState(IN_EE_TAG_PARAMS); return T_EMBED; }
+  "layout="                            { yypushback(1); pushState(IN_EE_TAG_PARAMS); return T_LAYOUT; }
+  "redirect="                          { yypushback(1); pushState(IN_EE_TAG_PARAMS); return T_REDIRECT; }
+  "switch="                            { yypushback(1); pushState(IN_EE_TAG_PARAMS); return T_SWITCH; }
+  "encode="                            { yypushback(1); pushState(IN_EE_TAG_PARAMS); return T_ENCODE; }
+  "stylesheet="                        { yypushback(1); pushState(IN_EE_TAG_PARAMS); return T_STYLESHEET; }
+  "preload_replace" ~ {RD}             { yypushback(yylength() - 15); pushState(IN_EE_PRELOAD_REPLACE); return T_PRELOAD_REPLACE; }
+  // Module tags
+  {MODULE_NAME}                        { pushState(IN_EE_TAG_PARAMS); return T_MODULE_NAME; }
+  // Variable tags
+  {VARIABLE_NAME}                      { pushState(IN_EE_TAG_PARAMS); return T_VARIABLE_NAME; }
+}
+
+<IN_EE_TAG_PARAMS> {
+  {LD}                                 { pushState(IN_EE_TAG); return T_LD; }
+  {RD}                                 { yypushback(1); popState(); }
+  // Param
+  {VARIABLE_NAME} "="                  { yypushback(1); return T_PARAM_NAME; }
+  {EQUAL}                              { return T_EQUAL; }
+  // Literals
+  {PATH}                               { return T_PATH_LITERAL; }
+  {NUMBER}                             { return T_NUMBER_LITERAL; }
+  {SINGLE_QUOTE}                       { pushState(IN_SINGLE_STRING); return T_STRING_START; }
+  {DOUBLE_QUOTE}                       { pushState(IN_DOUBLE_STRING); return T_STRING_START; }
+}
+
+<IN_EE_PRELOAD_REPLACE> {
+  {RD}                                 { yypushback(1); popState(); }
+  // Param
+  {VARIABLE_NAME}                      { return T_PARAM_NAME; }
+  {EQUAL}                              { return T_EQUAL; }
+  {COLON}                              { return T_COLON; }
+  // Literals
+  {NUMBER}                             { return T_NUMBER_LITERAL; }
+  {SINGLE_QUOTE}                       { pushState(IN_SINGLE_STRING); return T_STRING_START; }
+  {DOUBLE_QUOTE}                       { pushState(IN_DOUBLE_STRING); return T_STRING_START; }
 }
 
 <IN_EE_EXPRESSION> {
-  "if"                                 { return T_IF; }
-  "if:elseif"                          { return T_ELSEIF; }
-  {RD}                                 { popState(); return T_RD; }
+  {RD}                                 { yypushback(1); popState(); }
   // Parens
   "("                                  { return T_LP; }
   ")"                                  { return T_RP; }
@@ -161,88 +180,26 @@ COMMENT="{!--" ~"--}"
   "%"                                  { return T_OP_MOD; }
   "."                                  { return T_OP_CONCAT; }
   // Literals
-  "true"|"false"                       { return T_BOOL; }
-  {NUMBER}                             { return T_NUMBER; }
-  // Variables
-  {GLOBAL_VAR}                         { return T_GLOBAL_VAR; }
-  {GLOBAL_CONST}                       { return T_GLOBAL_CONST; }
-  {EMBED_VAR}                          { return T_EMBED_VAR; }
-  {LAYOUT_VAR}                         { return T_LAYOUT_VAR; }
-  {VARIABLE}                           { return T_VARIABLE; }
-  // Strings
+  "true"                               { return T_TRUE; }
+  "false"                              { return T_FALSE; }
+  {NUMBER}                             { return T_NUMBER_LITERAL; }
   {SINGLE_QUOTE}                       { pushState(IN_SINGLE_STRING); return T_STRING_START; }
   {DOUBLE_QUOTE}                       { pushState(IN_DOUBLE_STRING); return T_STRING_START; }
-  // Nested tag
-//  {LD}                                 { pushState(IN_EE_TAG); return T_LD; }
-}
-
-<IN_EE_CONDITIONAL> {
-  "/if"                                { return T_ENDIF; }
-  "if:else"                            { return T_ELSE; }
-  {RD}                                 { popState(); return T_RD; }
-}
-
-<IN_EE_VAR> {
-  {RD}                                 { popState(); return T_RD; }
-  // Variables
-  {GLOBAL_VAR}                         { return T_GLOBAL_VAR; }
-  {GLOBAL_CONST}                       { return T_GLOBAL_CONST; }
-  {EMBED_VAR}                          { return T_EMBED_VAR; }
-  {LAYOUT_VAR}                         { return T_LAYOUT_VAR; }
-  {VARIABLE}                           { return T_VARIABLE; }
-  "/" {VARIABLE} {RD}                  { yypushback(yylength() - 1); return T_SLASH; }
-}
-
-<IN_EE_VAR_WITH_PARAM> {
-  {RD}                                 { popState(); return T_RD; }
-  // Variables
-  {PARAM_VAR}                          { pushState(IN_EE_TAG_PARAMS); return T_PARAM_VAR; }
-  {VARIABLE}                           { pushState(IN_EE_TAG_PARAMS); return T_VARIABLE; }
-}
-
-<IN_EE_TAG> {
-  {RD}                                 { popState(); return T_RD; }
-  // Match tag name
-  {TAG_NAME}                           { pushState(IN_EE_TAG_PARAMS); return T_TAG_NAME; }
-  "/" {TAG_NAME} {RD}                  { yypushback(yylength() - 1); return T_SLASH; }
-}
-
-<IN_EE_TAG_PARAMS> {
-  // TODO: Conditionals in tag params
-  {RD}                                 { popState(); popState(); return T_RD; }
-  {TAG_PARAM}                          { yypushback(1); return T_TAG_PARAM; }
-  "="                                  { return T_EQUALS; }
-  // Literals
-  {NUMBER}                             { return T_NUMBER; }
-  {PATH}                               { return T_PATH; }
-  // Variables
-  {GLOBAL_VAR}                         { return T_GLOBAL_VAR; }
-  {GLOBAL_CONST}                       { return T_GLOBAL_CONST; }
-  {EMBED_VAR}                          { return T_EMBED_VAR; }
-  {LAYOUT_VAR}                         { return T_LAYOUT_VAR; }
-  {VARIABLE}                           { return T_VARIABLE; }
-  // Strings
-  {SINGLE_QUOTE}                       { pushState(IN_SINGLE_STRING); return T_STRING_START; }
-  {DOUBLE_QUOTE}                       { pushState(IN_DOUBLE_STRING); return T_STRING_START; }
-//  // Nested tag
-////  {LD}                                 { pushState(IN_EE_TAG); return T_LD; }
+  {VARIABLE_NAME}                      { return T_VARIABLE_NAME; }
 }
 
 <IN_SINGLE_STRING> {
   // TODO: Match comments in strings
   // TODO: Match variables in strings
-  ((\\.)|[^'])+                        { return T_STRING; }
-//  ((\\.)|[^'{}])+                      { return T_STRING; }
   {SINGLE_QUOTE}                       { popState(); return T_STRING_END; }
+  ~{SINGLE_QUOTE}                      { yypushback(1); return T_STRING_CONTENT; }
 }
 
 <IN_DOUBLE_STRING> {
   // TODO: Match comments in strings
   // TODO: Match variables in strings
-  ((\\.)|[^\"])+                       { return T_STRING; }
-//  ((\\.)|[^\"{}])+                     { return T_STRING; }
   {DOUBLE_QUOTE}                       { popState(); return T_STRING_END; }
+  ~{DOUBLE_QUOTE}                      { yypushback(1); return T_STRING_CONTENT; }
 }
 
-{WS}+ | {CRLF}                         { return TokenType.WHITE_SPACE; }
-.                                      { return TokenType.BAD_CHARACTER; }
+[^]                                    { yybegin(YYINITIAL); return T_CONTENT; }
