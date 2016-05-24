@@ -6,7 +6,11 @@ import com.intellij.psi.PsiElement;
 import com.jeremyworboys.expressionengine.pattern.ModuleTagPatterns;
 import com.jeremyworboys.expressionengine.psi.ExpressionEngineModuleOpenTag;
 import com.jeremyworboys.expressionengine.psi.ExpressionEngineTagParam;
+import com.jeremyworboys.expressionengine.util.module.ModuleIndex;
+import com.jeremyworboys.expressionengine.util.module.ModuleMethod;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 public class UndefinedModuleParametersAnnotator implements Annotator {
     @Override
@@ -25,6 +29,19 @@ public class UndefinedModuleParametersAnnotator implements Annotator {
         String paramName = tagParameter.getTagParamName();
         String moduleName = moduleOpenTag.getModuleName();
 
-        // TODO: undefined module params (parse module file for $tmpl->fetch_param()?)
+        ModuleMethod moduleMethod = new ModuleIndex(element.getProject()).getModuleMethod(moduleName);
+        if (moduleMethod == null) {
+            return;
+        }
+
+        List<String> moduleParameterNames = moduleMethod.getParameterNames();
+        for (String moduleParameterName : moduleParameterNames) {
+            if (moduleParameterName.equalsIgnoreCase(paramName)) {
+                return;
+            }
+        }
+
+        // First child is T_PARAM_NAME
+        holder.createWarningAnnotation(tagParameter.getFirstChild(), "Unknown Parameter Name");
     }
 }
