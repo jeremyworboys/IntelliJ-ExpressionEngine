@@ -16,6 +16,7 @@ public class ExpressionEngineAnnotator implements Annotator {
     @Override
     public void annotate(@NotNull PsiElement element, @NotNull AnnotationHolder holder) {
         annotateTemplateReference(element, holder);
+        // TODO: constant expression in conditional (e.g. {if TRUE} ... {endif})
         // TODO: in conditional expression the string "0" is considered TRUE since it is a non-empty string
         // TODO: in conditional expression negation happens after exponentiation (-5 ** 2 == -25 vs (-5) **2 == 25)
         // TODO: right expr after "matches" operator in conditional expression must be a valid regular expression
