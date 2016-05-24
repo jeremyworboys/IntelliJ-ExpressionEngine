@@ -40,11 +40,11 @@ public class ModuleIndex {
         if (moduleClass != null) {
             // Add all public methods
             for (Method method : moduleClass.getMethods()) {
-                if (method.getAccess().isPublic()) {
+                if (isViableModuleMethod(method)) {
                     String methodName = StringUtil.toLowerCase(method.getName());
-                    if (moduleName.equals(methodName)) {
-                        hasShortTagMethod = true;
+                    if (methodName.equals(moduleName)) {
                         methods.add(new ModuleMethod("exp:" + moduleName, method));
+                        hasShortTagMethod = true;
                     }
                     methods.add(new ModuleMethod("exp:" + moduleName + ':' + methodName, method));
                 }
@@ -53,12 +53,16 @@ public class ModuleIndex {
             // Add constructor if a method doesn't share the same name as the module
             if (!hasShortTagMethod) {
                 Method moduleConstructor = moduleClass.getConstructor();
-                if (moduleConstructor != null) {
+                if (moduleConstructor != null && isViableModuleMethod(moduleConstructor)) {
                     methods.add(new ModuleMethod("exp:" + moduleName, moduleConstructor));
                 }
             }
         }
 
         return methods;
+    }
+
+    private boolean isViableModuleMethod(@NotNull Method method) {
+        return method.getAccess().isPublic() && method.getParameters().length == 0;
     }
 }
