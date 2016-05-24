@@ -7,8 +7,9 @@ import com.intellij.psi.PsiElement;
 import com.jeremyworboys.expressionengine.pattern.ModuleTagPatterns;
 import com.jeremyworboys.expressionengine.psi.ExpressionEngineModuleOpenTag;
 import com.jeremyworboys.expressionengine.psi.ExpressionEngineTagParam;
+import com.jeremyworboys.expressionengine.util.TagMethodBase;
 import com.jeremyworboys.expressionengine.util.module.ModuleIndex;
-import com.jeremyworboys.expressionengine.util.module.ModuleMethod;
+import com.jeremyworboys.expressionengine.util.plugin.PluginIndex;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -31,14 +32,17 @@ public class UndefinedModuleParametersAnnotator implements Annotator {
         String moduleName = moduleOpenTag.getModuleName();
 
         Project project = element.getProject();
-        ModuleMethod moduleMethod = ModuleIndex.getInstance(project).getMethod(moduleName);
-        if (moduleMethod == null) {
-            return;
+        TagMethodBase tagMethod = ModuleIndex.getInstance(project).getMethod(moduleName);
+        if (tagMethod == null) {
+            tagMethod = PluginIndex.getInstance(project).getMethod(moduleName);
+            if (tagMethod == null) {
+                return;
+            }
         }
 
-        List<String> moduleParameterNames = moduleMethod.getParameterNames();
-        for (String moduleParameterName : moduleParameterNames) {
-            if (moduleParameterName.equalsIgnoreCase(paramName)) {
+        List<String> tagParameterNames = tagMethod.getParameterNames();
+        for (String tagParameterName : tagParameterNames) {
+            if (tagParameterName.equalsIgnoreCase(paramName)) {
                 return;
             }
         }
