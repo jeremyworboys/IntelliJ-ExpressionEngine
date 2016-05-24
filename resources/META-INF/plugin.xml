@@ -33,6 +33,8 @@
         <lang.commenter language="ExpressionEngine" implementationClass="com.jeremyworboys.expressionengine.commenter.ExpressionEngineCommenter"/>
         <lang.parserDefinition language="ExpressionEngine" implementationClass="com.jeremyworboys.expressionengine.parser.ExpressionEngineParserDefinition"/>
         <lang.syntaxHighlighterFactory language="ExpressionEngine" implementationClass="com.jeremyworboys.expressionengine.highlighter.ExpressionEngineSyntaxHighlighterFactory"/>
+
+        <php.typeProvider2 implementation="com.jeremyworboys.expressionengine.type.LoadClassTypeProvider"/>
     </extensions>
 
     <actions>
