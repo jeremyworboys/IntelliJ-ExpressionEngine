@@ -31,4 +31,10 @@ public class ExpressionEngineAddon {
         return PhpIndex.getInstance(directory.getProject())
             .getClassByName(ExpressionEngineAddonClassUtil.getModuleClassName(name));
     }
+
+    @Nullable
+    public PhpClass getPluginClass() {
+        return PhpIndex.getInstance(directory.getProject())
+            .getClassByName(ExpressionEngineAddonClassUtil.getPluginClassName(name));
+    }
 }
