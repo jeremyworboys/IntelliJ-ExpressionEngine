@@ -54,11 +54,20 @@ public class PhpElementsUtil {
         }
 
         for (PsiElement element : root.getChildren()) {
+            // Found an element matching pattern - don't recurse
             if (pattern.accepts(element)) {
                 results.add((T) element);
                 continue;
             }
-            // TODO: Recurse into called methods
+            // Recurse into method calls from this root
+            if (isMethodReference().accepts(element)) {
+                PsiElement method = ((MethodReference) element).resolve();
+                if (method != null) {
+                    results.addAll(getLogicalDescendantOf(method, pattern));
+                    continue;
+                }
+            }
+            // Recurse over children of this element
             if (element.getChildren().length > 0) {
                 results.addAll(getLogicalDescendantOf(element, pattern));
             }
