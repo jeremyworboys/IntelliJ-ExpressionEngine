@@ -16,6 +16,7 @@ public class ExpressionEngineAddonClassUtil {
 
     @NotNull
     public static String getFieldTypeClassName(@NotNull String addonName) {
+        // TODO: Field types aren't necessarily named after their addon
         return StringUtil.capitalize(addonName) + "_ft";
     }
 
