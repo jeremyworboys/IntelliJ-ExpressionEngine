@@ -2,6 +2,7 @@ package com.jeremyworboys.expressionengine.annotator.annotations;
 
 import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.Annotator;
+import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.jeremyworboys.expressionengine.pattern.ModuleTagPatterns;
 import com.jeremyworboys.expressionengine.psi.ExpressionEngineModuleOpenTag;
@@ -29,7 +30,8 @@ public class UndefinedModuleParametersAnnotator implements Annotator {
         String paramName = tagParameter.getTagParamName();
         String moduleName = moduleOpenTag.getModuleName();
 
-        ModuleMethod moduleMethod = new ModuleIndex(element.getProject()).getModuleMethod(moduleName);
+        Project project = element.getProject();
+        ModuleMethod moduleMethod = ModuleIndex.getInstance(project).getModuleMethod(moduleName);
         if (moduleMethod == null) {
             return;
         }

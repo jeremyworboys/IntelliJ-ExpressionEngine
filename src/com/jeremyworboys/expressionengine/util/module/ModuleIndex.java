@@ -13,10 +13,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ModuleIndex {
+    private static Map<Project, ModuleIndex> instances = new HashMap<>();
     private final Project project;
 
-    public ModuleIndex(@NotNull Project project) {
+    private ModuleIndex(@NotNull Project project) {
         this.project = project;
+    }
+
+    public static ModuleIndex getInstance(@NotNull Project project) {
+        if (!instances.containsKey(project)) {
+            instances.put(project, new ModuleIndex(project));
+        }
+        return instances.get(project);
     }
 
     @NotNull
