@@ -8,8 +8,8 @@ import com.jetbrains.php.lang.psi.elements.Method;
 import com.jetbrains.php.lang.psi.elements.PhpClass;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ModuleIndex {
     private final Project project;
@@ -19,23 +19,22 @@ public class ModuleIndex {
     }
 
     @NotNull
-    public List<ModuleMethod> getMethods() {
-        List<ModuleMethod> moduleMethods = new ArrayList<>();
+    public Map<String, ModuleMethod> getMethods() {
+        Map<String, ModuleMethod> moduleMethods = new HashMap<>();
         ExpressionEngineAddonUtil expressionEngineAddonUtil = new ExpressionEngineAddonUtil(project);
 
         for (ExpressionEngineAddon expressionEngineAddon : expressionEngineAddonUtil.getAddons()) {
-            moduleMethods.addAll(getAddonModuleMethods(expressionEngineAddon));
+            moduleMethods.putAll(getAddonModuleMethods(expressionEngineAddon));
         }
 
         return moduleMethods;
     }
 
     @NotNull
-    private List<ModuleMethod> getAddonModuleMethods(ExpressionEngineAddon expressionEngineAddon) {
-        List<ModuleMethod> methods = new ArrayList<>();
+    private Map<String, ModuleMethod> getAddonModuleMethods(ExpressionEngineAddon expressionEngineAddon) {
+        Map<String, ModuleMethod> methods = new HashMap<>();
         String moduleName = StringUtil.toLowerCase(expressionEngineAddon.getName());
         PhpClass moduleClass = expressionEngineAddon.getModuleClass();
-        boolean hasShortTagMethod = false;
 
         if (moduleClass != null) {
             // Add all public methods
@@ -43,18 +42,20 @@ public class ModuleIndex {
                 if (isViableModuleMethod(method)) {
                     String methodName = StringUtil.toLowerCase(method.getName());
                     if (methodName.equals(moduleName)) {
-                        methods.add(new ModuleMethod("exp:" + moduleName, method));
-                        hasShortTagMethod = true;
+                        String tagName = "exp:" + moduleName;
+                        methods.put(tagName, new ModuleMethod(tagName, method));
                     }
-                    methods.add(new ModuleMethod("exp:" + moduleName + ':' + methodName, method));
+                    String tagName = "exp:" + moduleName + ':' + methodName;
+                    methods.put(tagName, new ModuleMethod(tagName, method));
                 }
             }
 
             // Add constructor if a method doesn't share the same name as the module
-            if (!hasShortTagMethod) {
+            String tagName = "exp:" + moduleName;
+            if (!methods.containsKey(tagName)) {
                 Method moduleConstructor = moduleClass.getConstructor();
                 if (moduleConstructor != null && isViableModuleMethod(moduleConstructor)) {
-                    methods.add(new ModuleMethod("exp:" + moduleName, moduleConstructor));
+                    methods.put(tagName, new ModuleMethod(tagName, moduleConstructor));
                 }
             }
         }
