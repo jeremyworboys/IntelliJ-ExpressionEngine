@@ -53,6 +53,8 @@ public class PhpElementsUtil {
     }
 
     @NotNull
+    // This is used primarily to find usages of TMPL->fetch_param() for annotating module params
+    // TODO: I haven't found any other plugins that do this so consider if it is actually a good idea
     private static <T extends PsiElement> List<T> getLogicalDescendantOf(@Nullable PsiElement root, @NotNull ElementPattern<PsiElement> pattern, @NotNull Collection<PsiElement> visited) {
         List<T> results = new ArrayList<>();
 
