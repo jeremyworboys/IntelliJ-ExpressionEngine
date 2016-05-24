@@ -7,6 +7,7 @@ import com.jeremyworboys.expressionengine.util.dict.ExpressionEngineAddon;
 import com.jetbrains.php.lang.psi.elements.Method;
 import com.jetbrains.php.lang.psi.elements.PhpClass;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,6 +29,11 @@ public class ModuleIndex {
         }
 
         return moduleMethods;
+    }
+
+    @Nullable
+    public ModuleMethod getModuleMethod(String tagName) {
+        return getMethods().get(tagName);
     }
 
     @NotNull
