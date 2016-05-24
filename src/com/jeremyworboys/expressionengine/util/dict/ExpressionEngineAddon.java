@@ -4,21 +4,21 @@ import com.intellij.psi.PsiDirectory;
 import org.jetbrains.annotations.NotNull;
 
 public class ExpressionEngineAddon {
-    private final String addonName;
-    private final PsiDirectory addonDirectory;
+    private final String name;
+    private final PsiDirectory directory;
 
-    public ExpressionEngineAddon(PsiDirectory addonDirectory) {
-        this.addonName = addonDirectory.getName();
-        this.addonDirectory = addonDirectory;
+    public ExpressionEngineAddon(PsiDirectory directory) {
+        this.name = directory.getName();
+        this.directory = directory;
     }
 
     @NotNull
-    public String getAddonName() {
-        return addonName;
+    public String getName() {
+        return name;
     }
 
     @NotNull
-    public PsiDirectory getAddonDirectory() {
-        return addonDirectory;
+    public PsiDirectory getDirectory() {
+        return directory;
     }
 }
