@@ -5,6 +5,7 @@ import com.intellij.util.containers.OrderedSet;
 import com.jeremyworboys.expressionengine.util.PhpElementsUtil;
 import com.jetbrains.php.lang.psi.elements.Method;
 import com.jetbrains.php.lang.psi.elements.MethodReference;
+import com.jetbrains.php.lang.psi.elements.PhpClass;
 import com.jetbrains.php.lang.psi.elements.StringLiteralExpression;
 import org.jetbrains.annotations.NotNull;
 
@@ -12,11 +13,13 @@ import java.util.List;
 
 public class ModuleMethod {
     private final String tagName;
-    private final Method method;
+    private final PhpClass phpClass;
+    private final Method phpMethod;
 
-    public ModuleMethod(String tagName, Method method) {
+    public ModuleMethod(String tagName, PhpClass phpClass, Method phpMethod) {
         this.tagName = tagName;
-        this.method = method;
+        this.phpClass = phpClass;
+        this.phpMethod = phpMethod;
     }
 
     @NotNull

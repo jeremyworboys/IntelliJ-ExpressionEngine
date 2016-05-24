@@ -49,10 +49,10 @@ public class ModuleIndex {
                     String methodName = StringUtil.toLowerCase(method.getName());
                     if (methodName.equals(moduleName)) {
                         String tagName = "exp:" + moduleName;
-                        methods.put(tagName, new ModuleMethod(tagName, method));
+                        methods.put(tagName, new ModuleMethod(tagName, moduleClass, method));
                     }
                     String tagName = "exp:" + moduleName + ':' + methodName;
-                    methods.put(tagName, new ModuleMethod(tagName, method));
+                    methods.put(tagName, new ModuleMethod(tagName, moduleClass, method));
                 }
             }
 
@@ -61,7 +61,7 @@ public class ModuleIndex {
             if (!methods.containsKey(tagName)) {
                 Method moduleConstructor = moduleClass.getConstructor();
                 if (moduleConstructor != null && isViableModuleConstructor(moduleConstructor)) {
-                    methods.put(tagName, new ModuleMethod(tagName, moduleConstructor));
+                    methods.put(tagName, new ModuleMethod(tagName, moduleClass, moduleConstructor));
                 }
             }
         }
