@@ -70,7 +70,6 @@ public class SingletonTypeProvider implements PhpTypeProvider2 {
             return phpClasses;
         }
 
-        System.out.println(signature);
         return null;
     }
 
