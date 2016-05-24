@@ -1,5 +1,6 @@
 package com.jeremyworboys.expressionengine.util.module;
 
+import com.intellij.patterns.PsiElementPattern;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.containers.OrderedSet;
 import com.jeremyworboys.expressionengine.util.PhpElementsUtil;
@@ -9,6 +10,7 @@ import com.jetbrains.php.lang.psi.elements.PhpClass;
 import com.jetbrains.php.lang.psi.elements.StringLiteralExpression;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ModuleMethod {
@@ -25,8 +27,12 @@ public class ModuleMethod {
     @NotNull
     public List<String> getParameterNames() {
         List<String> parameterNames = new OrderedSet<>();
-        List<MethodReference> fetchParamMethodCalls = PhpElementsUtil
-            .getLogicalDescendantOf(method, PhpElementsUtil.isMethodReferenceWithFirstStringNamed("fetch_param"));
+        PsiElementPattern.Capture<PsiElement> fetchParamMethodPattern = PhpElementsUtil
+            .isMethodReferenceWithFirstStringNamed("fetch_param");
+
+        List<MethodReference> fetchParamMethodCalls = new ArrayList<>();
+        fetchParamMethodCalls.addAll(PhpElementsUtil.getLogicalDescendantOf(phpClass.getOwnConstructor(), fetchParamMethodPattern));
+        fetchParamMethodCalls.addAll(PhpElementsUtil.getLogicalDescendantOf(phpMethod, fetchParamMethodPattern));
 
         for (MethodReference fetchParamMethodCall : fetchParamMethodCalls) {
             PsiElement[] parameters = fetchParamMethodCall.getParameters();
