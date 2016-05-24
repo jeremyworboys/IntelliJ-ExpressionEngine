@@ -9,8 +9,8 @@ import org.jetbrains.annotations.NotNull;
 public class UndefinedModuleParametersAnnotator implements Annotator {
     @Override
     public void annotate(@NotNull PsiElement element, @NotNull AnnotationHolder holder) {
-        // Skip all elements that couldn't be a template reference
-        if (!ModuleTagPatterns.getModuleOpenTagPattern().accepts(element)) {
+        // Skip all elements aren't tag params of a module
+        if (!ModuleTagPatterns.getModuleTagParamPattern().accepts(element)) {
             return;
         }
 

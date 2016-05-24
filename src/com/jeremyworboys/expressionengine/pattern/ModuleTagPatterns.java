@@ -11,4 +11,11 @@ public class ModuleTagPatterns {
     public static ElementPattern<PsiElement> getModuleOpenTagPattern() {
         return PlatformPatterns.psiElement(ExpressionEngineTypes.MODULE_OPEN_TAG);
     }
+
+    @NotNull
+    public static ElementPattern<PsiElement> getModuleTagParamPattern() {
+        return PlatformPatterns
+            .psiElement(ExpressionEngineTypes.TAG_PARAM)
+            .withTreeParent(getModuleOpenTagPattern());
+    }
 }
