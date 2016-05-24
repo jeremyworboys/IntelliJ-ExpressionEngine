@@ -2,22 +2,20 @@ package com.jeremyworboys.expressionengine.util;
 
 import com.intellij.patterns.PsiElementPattern;
 import com.intellij.psi.PsiElement;
-import com.intellij.util.containers.OrderedSet;
 import com.jetbrains.php.lang.psi.elements.Method;
 import com.jetbrains.php.lang.psi.elements.MethodReference;
 import com.jetbrains.php.lang.psi.elements.PhpClass;
 import com.jetbrains.php.lang.psi.elements.StringLiteralExpression;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public abstract class TagMethodBase {
     private final String tagName;
     private final PhpClass phpClass;
     private final Method phpMethod;
 
-    public TagMethodBase(@NotNull  String tagName, @NotNull  PhpClass phpClass, @NotNull  Method phpMethod) {
+    public TagMethodBase(@NotNull String tagName, @NotNull PhpClass phpClass, @NotNull Method phpMethod) {
         this.tagName = tagName;
         this.phpClass = phpClass;
         this.phpMethod = phpMethod;
@@ -39,8 +37,13 @@ public abstract class TagMethodBase {
     }
 
     @NotNull
-    public List<String> getParameterNames() {
-        List<String> parameterNames = new OrderedSet<>();
+    public Collection<String> getParameterNames() {
+        return getParameterNamesImpl().keySet();
+    }
+
+    @NotNull
+    private Map<String, MethodReference> getParameterNamesImpl() {
+        Map<String, MethodReference> parameterNames = new HashMap<>();
         PsiElementPattern.Capture<PsiElement> fetchParamMethodPattern = PhpElementsUtil
             .isMethodReferenceWithFirstStringNamed("fetch_param");
 
@@ -50,7 +53,8 @@ public abstract class TagMethodBase {
 
         for (MethodReference fetchParamMethodCall : fetchParamMethodCalls) {
             PsiElement[] parameters = fetchParamMethodCall.getParameters();
-            parameterNames.add(((StringLiteralExpression) parameters[0]).getContents());
+            String paramName = ((StringLiteralExpression) parameters[0]).getContents();
+            parameterNames.putIfAbsent(paramName, fetchParamMethodCall);
         }
 
         return parameterNames;
