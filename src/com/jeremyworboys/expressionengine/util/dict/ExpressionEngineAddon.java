@@ -1,24 +1,24 @@
 package com.jeremyworboys.expressionengine.util.dict;
 
-import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.PsiDirectory;
+import org.jetbrains.annotations.NotNull;
 
 public class ExpressionEngineAddon {
     private final String addonName;
-    private final VirtualFile addonDirectory;
+    private final PsiDirectory addonDirectory;
 
-    public ExpressionEngineAddon(VirtualFile addonDirectory) {
-        if (!addonDirectory.isDirectory()) {
-            throw new IllegalArgumentException("Add-on directory must be a directory.");
-        }
+    public ExpressionEngineAddon(PsiDirectory addonDirectory) {
         this.addonName = addonDirectory.getName();
         this.addonDirectory = addonDirectory;
     }
 
+    @NotNull
     public String getAddonName() {
         return addonName;
     }
 
-    public VirtualFile getAddonDirectory() {
+    @NotNull
+    public PsiDirectory getAddonDirectory() {
         return addonDirectory;
     }
 }
