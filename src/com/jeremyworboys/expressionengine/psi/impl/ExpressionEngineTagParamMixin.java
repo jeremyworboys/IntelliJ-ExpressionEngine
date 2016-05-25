@@ -25,7 +25,7 @@ public abstract class ExpressionEngineTagParamMixin extends ASTWrapperPsiElement
     @Nullable
     @Override
     public ExpressionEngineModuleOpenTag getModuleOpenTag() {
-        for (PsiElement cur = getParent(); cur.getParent() != null; cur = cur.getParent()) {
+        for (PsiElement cur = getParent(); cur.getNode() != null; cur = cur.getParent()) {
             if (cur.getNode().getElementType() == ExpressionEngineTypes.MODULE_OPEN_TAG) {
                 return (ExpressionEngineModuleOpenTag) cur;
             }
