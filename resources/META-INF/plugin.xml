@@ -32,6 +32,7 @@
         <annotator language="ExpressionEngine" implementationClass="com.jeremyworboys.expressionengine.annotator.ExpressionEngineAnnotator"/>
         <lang.commenter language="ExpressionEngine" implementationClass="com.jeremyworboys.expressionengine.commenter.ExpressionEngineCommenter"/>
         <lang.foldingBuilder language="ExpressionEngine" implementationClass="com.jeremyworboys.expressionengine.folding.ModuleFoldingBuilder"/>
+        <lang.foldingBuilder language="ExpressionEngine" implementationClass="com.jeremyworboys.expressionengine.folding.VariableFoldingBuilder"/>
         <lang.foldingBuilder language="ExpressionEngine" implementationClass="com.jeremyworboys.expressionengine.folding.ConditionalFoldingBuilder"/>
         <lang.parserDefinition language="ExpressionEngine" implementationClass="com.jeremyworboys.expressionengine.parser.ExpressionEngineParserDefinition"/>
         <lang.psiStructureViewFactory language="ExpressionEngine" implementationClass="com.jeremyworboys.expressionengine.structureView.ExpressionEngineStructureViewFactory"/>
