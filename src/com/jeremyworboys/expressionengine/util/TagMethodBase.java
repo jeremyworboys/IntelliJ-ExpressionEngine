@@ -49,6 +49,7 @@ public abstract class TagMethodBase {
 
     @NotNull
     private Map<String, MethodReference> getParameterNamesImpl() {
+        // TODO: This is picking up channel="" from channel_form for {exp:channel:entries}
         Map<String, MethodReference> parameterNames = new HashMap<>();
         PsiElementPattern.Capture<PsiElement> fetchParamMethodPattern = PhpElementsUtil
             .isMethodReferenceWithFirstStringNamed("fetch_param");
