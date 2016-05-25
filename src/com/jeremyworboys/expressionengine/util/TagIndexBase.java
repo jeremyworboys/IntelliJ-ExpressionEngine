@@ -21,7 +21,7 @@ public abstract class TagIndexBase<M extends TagMethodBase> {
     @NotNull
     public Map<String, M> getMethods() {
         Map<String, M> tagMethods = new HashMap<>();
-        ExpressionEngineAddonUtil expressionEngineAddonUtil = new ExpressionEngineAddonUtil(project);
+        ExpressionEngineAddonUtil expressionEngineAddonUtil = ExpressionEngineAddonUtil.getInstance(project);
 
         for (ExpressionEngineAddon expressionEngineAddon : expressionEngineAddonUtil.getAddons()) {
             tagMethods.putAll(getAddonMethods(expressionEngineAddon));

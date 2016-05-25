@@ -12,7 +12,7 @@ import com.jeremyworboys.expressionengine.util.module.ModuleIndex;
 import com.jeremyworboys.expressionengine.util.plugin.PluginIndex;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
+import java.util.Collection;
 
 public class UndefinedModuleParametersAnnotator implements Annotator {
     @Override
@@ -40,7 +40,7 @@ public class UndefinedModuleParametersAnnotator implements Annotator {
             }
         }
 
-        List<String> tagParameterNames = tagMethod.getParameterNames();
+        Collection<String> tagParameterNames = tagMethod.getParameterNames();
         for (String tagParameterName : tagParameterNames) {
             if (tagParameterName.equalsIgnoreCase(paramName)) {
                 return;

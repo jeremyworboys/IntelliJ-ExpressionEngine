@@ -13,20 +13,30 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ExpressionEngineAddonUtil {
     private static final Pattern addonFilePathPattern = Pattern.compile(".*/(.+?)/(acc|ext|ft|mcp|mod|pi|tab|upd)\\.(\\1)\\.php$");
+    private static Map<Project, ExpressionEngineAddonUtil> instances = new HashMap<>();
 
     private final Project project;
     private final PhpIndex phpIndex;
     private HashMap<String, ExpressionEngineAddon> expressionEngineAddons;
 
-    public ExpressionEngineAddonUtil(@NotNull Project project) {
+    private ExpressionEngineAddonUtil(@NotNull Project project) {
         this.project = project;
         this.phpIndex = PhpIndex.getInstance(project);
         this.loadAddons();
+    }
+
+    @NotNull
+    public static ExpressionEngineAddonUtil getInstance(@NotNull Project project) {
+        if (!instances.containsKey(project)) {
+            instances.put(project, new ExpressionEngineAddonUtil(project));
+        }
+        return instances.get(project);
     }
 
     private void loadAddons() {
