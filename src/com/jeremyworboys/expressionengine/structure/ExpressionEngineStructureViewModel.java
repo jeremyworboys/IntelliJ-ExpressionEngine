@@ -5,6 +5,7 @@ import com.intellij.ide.structureView.StructureViewModelBase;
 import com.intellij.ide.structureView.StructureViewTreeElement;
 import com.intellij.ide.util.treeView.smartTree.Sorter;
 import com.intellij.psi.PsiFile;
+import com.jeremyworboys.expressionengine.psi.ExpressionEngineFile;
 import org.jetbrains.annotations.NotNull;
 
 public class ExpressionEngineStructureViewModel extends StructureViewModelBase implements StructureViewModel.ElementInfoProvider {
@@ -25,6 +26,6 @@ public class ExpressionEngineStructureViewModel extends StructureViewModelBase i
 
     @Override
     public boolean isAlwaysLeaf(StructureViewTreeElement element) {
-        return false;
+        return element instanceof ExpressionEngineFile;
     }
 }
