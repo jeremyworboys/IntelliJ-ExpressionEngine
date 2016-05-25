@@ -1,5 +1,7 @@
 {
   parserClass="com.jeremyworboys.expressionengine.parser.ExpressionEngineParser"
+  parserUtilClass="com.jeremyworboys.expressionengine.parser.ExpressionEngineParserUtil"
+
   psiPackage="com.jeremyworboys.expressionengine.psi"
   psiImplPackage="com.jeremyworboys.expressionengine.psi.impl"
   psiClassPrefix="ExpressionEngine"
