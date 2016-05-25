@@ -54,8 +54,11 @@ stylesheet_tag ::= T_LD T_STYLESHEET T_EQUAL tag_param_value T_RD {pin=2}
 preload_replace_tag ::= T_LD T_PRELOAD_REPLACE T_COLON T_PARAM_NAME T_EQUAL tag_param_value T_RD {pin=2}
 
 // Variables
-private variable_tag ::= parametric_variable | variable | variable_close_tag
-variable ::= T_LD T_VARIABLE_NAME tag_params T_RD {pin=2}
+private variable_tag ::= parametric_variable | variable
+variable ::= <<checkPairVariable true>> variable_pair | <<checkPairVariable false>> variable_single
+private variable_pair   ::= variable_open_tag statement* variable_close_tag {pin=1}
+private variable_single ::= variable_open_tag
+variable_open_tag  ::= T_LD T_VARIABLE_NAME tag_params T_RD {pin=2}
 variable_close_tag ::= T_LD T_SLASH T_VARIABLE_NAME T_RD {pin=3}
 parametric_variable ::= T_LD T_VARIABLE_NAME T_EQUAL tag_param_value T_RD {pin=3}
 
