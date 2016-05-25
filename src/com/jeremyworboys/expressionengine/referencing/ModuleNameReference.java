@@ -44,7 +44,7 @@ public class ModuleNameReference extends PsiReferenceBase<PsiElement> {
     @NotNull
     @Override
     public Object[] getVariants() {
-        List<LookupElement> variants = new ArrayList<LookupElement>();
+        List<LookupElement> variants = new ArrayList<>();
 
         Map<String, ModuleMethod> moduleMethods = moduleIndex().getMethods();
         for (String tagName : moduleMethods.keySet()) {

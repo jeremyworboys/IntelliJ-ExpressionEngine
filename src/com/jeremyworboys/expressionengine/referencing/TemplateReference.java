@@ -33,7 +33,7 @@ public class TemplateReference extends PsiReferenceBase.Poly<PsiElement> {
     public ResolveResult[] multiResolve(boolean incompleteCode) {
         String templatePath = ExpressionEngineUtil.toTemplatePath(getValue());
 
-        List<ResolveResult> results = new ArrayList<ResolveResult>();
+        List<ResolveResult> results = new ArrayList<>();
         List<ExpressionEngineFile> templateFiles = templateFilesFinder.getTemplateFilesWithPath(templatePath);
         for (ExpressionEngineFile templateFile : templateFiles) {
             results.add(new PsiElementResolveResult(templateFile));
@@ -66,7 +66,7 @@ public class TemplateReference extends PsiReferenceBase.Poly<PsiElement> {
     @NotNull
     @Override
     public Object[] getVariants() {
-        List<LookupElement> variants = new ArrayList<LookupElement>();
+        List<LookupElement> variants = new ArrayList<>();
         List<ExpressionEngineFile> templateFiles = templateFilesFinder.getTemplateFiles();
         for (ExpressionEngineFile templateFile : templateFiles) {
             variants.add(new TemplateReferenceLookupElement(templateFile));
