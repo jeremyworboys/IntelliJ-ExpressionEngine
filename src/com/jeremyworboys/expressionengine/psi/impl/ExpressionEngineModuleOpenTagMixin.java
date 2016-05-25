@@ -15,6 +15,7 @@ public abstract class ExpressionEngineModuleOpenTagMixin extends ASTWrapperPsiEl
         super(node);
     }
 
+    @NotNull
     @Override
     public String getModuleName() {
         return this.getNode().findChildByType(ExpressionEngineTypes.T_MODULE_NAME).getText();

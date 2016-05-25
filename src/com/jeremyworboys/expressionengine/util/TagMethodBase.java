@@ -50,6 +50,8 @@ public abstract class TagMethodBase {
     @NotNull
     private Map<String, MethodReference> getParameterNamesImpl() {
         // TODO: This is picking up channel="" from channel_form for {exp:channel:entries}
+        // TODO: This is not recognising calls to fetch_param with variable as first arg (e.g. {exp:ce_cache:it seconds=""})
+        // TODO: This is not recognising calls to fetch_param with dynamic first arg (e.g. {exp:channel:entries search:field=""})
         Map<String, MethodReference> parameterNames = new HashMap<>();
         PsiElementPattern.Capture<PsiElement> fetchParamMethodPattern = PhpElementsUtil
             .isMethodReferenceWithFirstStringNamed("fetch_param");
