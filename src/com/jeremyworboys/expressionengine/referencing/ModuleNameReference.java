@@ -28,12 +28,12 @@ public class ModuleNameReference extends PsiReferenceBase<PsiElement> {
     @Nullable
     @Override
     public PsiElement resolve() {
-        ModuleMethod moduleMethod = ModuleIndex.getInstance(element.getProject()).getMethod(element.getModuleName());
+        ModuleMethod moduleMethod = moduleIndex().getMethod(element.getModuleName());
         if (moduleMethod != null) {
             return moduleMethod.getPhpMethod();
         }
 
-        PluginMethod pluginMethod = PluginIndex.getInstance(element.getProject()).getMethod(element.getModuleName());
+        PluginMethod pluginMethod = pluginIndex().getMethod(element.getModuleName());
         if (pluginMethod != null) {
             return pluginMethod.getPhpMethod();
         }
@@ -46,16 +46,26 @@ public class ModuleNameReference extends PsiReferenceBase<PsiElement> {
     public Object[] getVariants() {
         List<LookupElement> variants = new ArrayList<LookupElement>();
 
-        Map<String, ModuleMethod> moduleMethods = ModuleIndex.getInstance(element.getProject()).getMethods();
+        Map<String, ModuleMethod> moduleMethods = moduleIndex().getMethods();
         for (String tagName : moduleMethods.keySet()) {
             variants.add(LookupElementBuilder.create(tagName));
         }
 
-        Map<String, PluginMethod> pluginMethods = PluginIndex.getInstance(element.getProject()).getMethods();
+        Map<String, PluginMethod> pluginMethods = pluginIndex().getMethods();
         for (String tagName : pluginMethods.keySet()) {
             variants.add(LookupElementBuilder.create(tagName));
         }
 
         return variants.toArray();
+    }
+
+    @NotNull
+    private PluginIndex pluginIndex() {
+        return PluginIndex.getInstance(element.getProject());
+    }
+
+    @NotNull
+    private ModuleIndex moduleIndex() {
+        return ModuleIndex.getInstance(element.getProject());
     }
 }
