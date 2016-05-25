@@ -116,4 +116,4 @@ unary_not_expr   ::= T_OP_NOT expr
 unary_plus_expr  ::= T_OP_ADD expr
 unary_minus_expr ::= T_OP_SUB expr
 paren_expr       ::= T_LP expr T_RP
-literal_expr     ::= number_literal | string_literal | boolean_literal | T_VARIABLE_NAME
+literal_expr     ::= number_literal | string_literal | boolean_literal | T_VARIABLE_NAME | variable_single

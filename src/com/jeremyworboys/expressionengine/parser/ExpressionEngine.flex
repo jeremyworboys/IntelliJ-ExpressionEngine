@@ -153,6 +153,7 @@ VARIABLE_NAME={IDENTIFIER} (":" {IDENTIFIER})*
 }
 
 <IN_EE_EXPRESSION> {
+  {LD}                                 { pushState(IN_EE_TAG); return T_LD; }
   {RD}                                 { yypushback(1); popState(); }
   // Parens
   "("                                  { return T_LP; }
