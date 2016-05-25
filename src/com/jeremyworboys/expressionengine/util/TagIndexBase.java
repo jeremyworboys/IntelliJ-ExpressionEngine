@@ -4,6 +4,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.jeremyworboys.expressionengine.util.dict.ExpressionEngineAddon;
 import com.jetbrains.php.lang.psi.elements.Method;
+import com.jetbrains.php.lang.psi.elements.Parameter;
 import com.jetbrains.php.lang.psi.elements.PhpClass;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -77,11 +78,24 @@ public abstract class TagIndexBase<M extends TagMethodBase> {
     private boolean isViableTagMethod(@NotNull Method method) {
         return method.getAccess().isPublic()
             && !method.getName().startsWith("_")
-            && method.getParameters().length == 0;
+            && hasOnlyOptionalParameters(method);
+
     }
 
     private boolean isViableTagConstructor(@NotNull Method method) {
         return method.getAccess().isPublic()
-            && method.getParameters().length == 0;
+            && hasOnlyOptionalParameters(method);
+
+    }
+
+    private boolean hasOnlyOptionalParameters(@NotNull Method method) {
+        Parameter[] parameters = method.getParameters();
+        for (Parameter parameter : parameters) {
+            if (!parameter.isOptional()) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
