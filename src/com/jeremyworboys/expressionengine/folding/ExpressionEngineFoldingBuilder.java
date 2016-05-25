@@ -5,12 +5,10 @@ import com.intellij.lang.folding.FoldingBuilderEx;
 import com.intellij.lang.folding.FoldingDescriptor;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.FoldingGroup;
-import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
+import com.jeremyworboys.expressionengine.folding.descriptor.ModuleFoldingDescriptor;
 import com.jeremyworboys.expressionengine.psi.ExpressionEngineModule;
-import com.jeremyworboys.expressionengine.psi.ExpressionEngineModuleCloseTag;
-import com.jeremyworboys.expressionengine.psi.ExpressionEngineModuleOpenTag;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,17 +25,8 @@ public class ExpressionEngineFoldingBuilder extends FoldingBuilderEx {
 
         Collection<ExpressionEngineModule> moduleElements = PsiTreeUtil.findChildrenOfType(root, ExpressionEngineModule.class);
         for (ExpressionEngineModule moduleElement : moduleElements) {
-            ExpressionEngineModuleOpenTag openTag = moduleElement.getModuleOpenTag();
-            ExpressionEngineModuleCloseTag closeTag = moduleElement.getModuleCloseTag();
-            if (closeTag != null) {
-                TextRange textRange = new TextRange(moduleElement.getTextRange().getStartOffset() + 1, moduleElement.getTextRange().getEndOffset() - 1);
-                descriptors.add(new FoldingDescriptor(moduleElement.getNode(), textRange, group) {
-                    @Nullable
-                    @Override
-                    public String getPlaceholderText() {
-                        return openTag.getModuleName();
-                    }
-                });
+            if (moduleElement.getModuleCloseTag() != null) {
+                descriptors.add(new ModuleFoldingDescriptor(moduleElement, group));
             }
         }
 
