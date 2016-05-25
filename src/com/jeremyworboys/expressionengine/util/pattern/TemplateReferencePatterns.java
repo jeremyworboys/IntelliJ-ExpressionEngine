@@ -1,4 +1,4 @@
-package com.jeremyworboys.expressionengine.pattern;
+package com.jeremyworboys.expressionengine.util.pattern;
 
 import com.intellij.patterns.ElementPattern;
 import com.intellij.patterns.PlatformPatterns;

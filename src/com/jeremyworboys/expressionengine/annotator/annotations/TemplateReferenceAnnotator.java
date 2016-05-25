@@ -4,7 +4,7 @@ import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.Annotator;
 import com.intellij.psi.PsiElement;
 import com.jeremyworboys.expressionengine.annotator.fix.CreateTemplateFix;
-import com.jeremyworboys.expressionengine.pattern.TemplateReferencePatterns;
+import com.jeremyworboys.expressionengine.util.pattern.TemplateReferencePatterns;
 import com.jeremyworboys.expressionengine.psi.ExpressionEngineFile;
 import com.jeremyworboys.expressionengine.util.ExpressionEngineUtil;
 import com.jeremyworboys.expressionengine.util.TemplateFilesFinder;
