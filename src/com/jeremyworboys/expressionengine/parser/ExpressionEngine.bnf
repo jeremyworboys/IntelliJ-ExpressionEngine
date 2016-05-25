@@ -12,6 +12,8 @@
   tokenTypeClass="com.jeremyworboys.expressionengine.psi.ExpressionEngineTokenType"
 
   extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+  name(".*expr")='expression'
   extends(".*expr")=expr
 }
 
