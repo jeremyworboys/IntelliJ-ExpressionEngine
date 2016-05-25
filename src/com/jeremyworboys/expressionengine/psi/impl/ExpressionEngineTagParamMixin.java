@@ -19,7 +19,9 @@ public abstract class ExpressionEngineTagParamMixin extends ASTWrapperPsiElement
 
     @Override
     public String getTagParamName() {
-        return this.getNode().findChildByType(ExpressionEngineTypes.T_PARAM_NAME).getText();
+        ASTNode paramName = this.getNode().findChildByType(ExpressionEngineTypes.T_PARAM_NAME);
+        assert paramName != null;
+        return paramName.getText();
     }
 
     @Nullable

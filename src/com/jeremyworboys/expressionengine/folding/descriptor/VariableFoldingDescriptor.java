@@ -2,8 +2,9 @@ package com.jeremyworboys.expressionengine.folding.descriptor;
 
 import com.intellij.lang.folding.FoldingDescriptor;
 import com.intellij.openapi.util.text.StringUtil;
-import com.jeremyworboys.expressionengine.psi.ExpressionEngineVariable;
 import com.jeremyworboys.expressionengine.psi.ExpressionEngineTagParam;
+import com.jeremyworboys.expressionengine.psi.ExpressionEngineTagParamValue;
+import com.jeremyworboys.expressionengine.psi.ExpressionEngineVariable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,7 +27,9 @@ public class VariableFoldingDescriptor extends FoldingDescriptor {
 
         List<String> variableParameters = new ArrayList<>();
         for (ExpressionEngineTagParam param : element.getVariableOpenTag().getTagParamList()) {
-            variableParameters.add(param.getTagParamName() + "=" + param.getTagParamValue().getText());
+            ExpressionEngineTagParamValue tagParamValue = param.getTagParamValue();
+            assert tagParamValue != null;
+            variableParameters.add(param.getTagParamName() + "=" + tagParamValue.getText());
         }
 
         return "{" + variableName + " " + StringUtil.join(variableParameters, " ") + " ...}";

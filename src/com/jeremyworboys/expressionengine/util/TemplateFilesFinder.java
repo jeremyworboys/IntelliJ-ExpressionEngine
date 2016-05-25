@@ -16,11 +16,15 @@ import java.util.Collection;
 import java.util.List;
 
 public class TemplateFilesFinder {
-    private static String templatePathPattern = "(.+/|^)(.+)\\.group/(.+)\\.(html|css)$";
+    private static final String templatePathPattern = "(.+/|^)(.+)\\.group/(.+)\\.(html|css)$";
     private final Project project;
 
     public TemplateFilesFinder(@NotNull Project project) {
         this.project = project;
+    }
+
+    private static boolean isMatchingTemplateName(VirtualFile virtualFile, String templatePath) {
+        return templatePath != null && virtualFile.getPath().endsWith(templatePath);
     }
 
     @NotNull
@@ -68,13 +72,5 @@ public class TemplateFilesFinder {
         }
 
         return result;
-    }
-
-    private static boolean isMatchingTemplateName(VirtualFile virtualFile, String templatePath) {
-        if (templatePath != null) {
-            return virtualFile.getPath().endsWith(templatePath);
-        }
-
-        return false;
     }
 }

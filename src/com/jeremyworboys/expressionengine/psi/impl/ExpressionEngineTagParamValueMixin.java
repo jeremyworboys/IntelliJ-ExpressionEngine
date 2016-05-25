@@ -52,7 +52,7 @@ public abstract class ExpressionEngineTagParamValueMixin extends ASTWrapperPsiEl
     @Override
     @NotNull
     public PsiReference[] getReferences() {
-        List<PsiReference> references = new ArrayList<PsiReference>();
+        List<PsiReference> references = new ArrayList<>();
         IElementType type = this.getNode().getFirstChildNode().getElementType();
 
         if (type == ExpressionEngineTypes.PATH_LITERAL) {

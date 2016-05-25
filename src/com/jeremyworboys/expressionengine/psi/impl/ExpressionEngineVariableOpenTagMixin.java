@@ -14,6 +14,8 @@ public abstract class ExpressionEngineVariableOpenTagMixin extends ASTWrapperPsi
     @NotNull
     @Override
     public String getVariableName() {
-        return this.getNode().findChildByType(ExpressionEngineTypes.T_VARIABLE_NAME).getText();
+        ASTNode variableName = this.getNode().findChildByType(ExpressionEngineTypes.T_VARIABLE_NAME);
+        assert variableName != null;
+        return variableName.getText();
     }
 }

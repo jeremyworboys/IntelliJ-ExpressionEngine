@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 
 public class ExpressionEngineAddonUtil {
     private static final Pattern addonFilePathPattern = Pattern.compile(".*/(.+?)/(acc|ext|ft|mcp|mod|pi|tab|upd)\\.(\\1)\\.php$");
-    private static Map<Project, ExpressionEngineAddonUtil> instances = new HashMap<>();
+    private static final Map<Project, ExpressionEngineAddonUtil> instances = new HashMap<>();
 
     private final Project project;
     private final PhpIndex phpIndex;

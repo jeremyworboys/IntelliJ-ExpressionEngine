@@ -38,23 +38,20 @@ public class CreateTemplateFix extends BaseIntentionAction {
 
     @Override
     public void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
-        ApplicationManager.getApplication().runWriteAction(new Runnable() {
-            @Override
-            public void run() {
-                PsiDirectory targetDirectory = ExpressionEngineUtil.getTemplateDirectory(file);
-                if (targetDirectory == null) {
-                    HintManager.getInstance().showErrorHint(editor, "Can not find a target dir");
-                    return;
-                }
-
-                if (templatePath == null) {
-                    HintManager.getInstance().showErrorHint(editor, "Invalid template name");
-                    return;
-                }
-
-                TemplateFileFactory templateFileFactory = new TemplateFileFactory(project);
-                templateFileFactory.createAndOpenFile(targetDirectory.getVirtualFile(), templatePath);
+        ApplicationManager.getApplication().runWriteAction(() -> {
+            PsiDirectory targetDirectory = ExpressionEngineUtil.getTemplateDirectory(file);
+            if (targetDirectory == null) {
+                HintManager.getInstance().showErrorHint(editor, "Can not find a target dir");
+                return;
             }
+
+            if (templatePath == null) {
+                HintManager.getInstance().showErrorHint(editor, "Invalid template name");
+                return;
+            }
+
+            TemplateFileFactory templateFileFactory = new TemplateFileFactory(project);
+            templateFileFactory.createAndOpenFile(targetDirectory.getVirtualFile(), templatePath);
         });
     }
 }

@@ -9,7 +9,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ExpressionEngineUtil {
-    private static String templatePathPattern = "(.+/|^)(.+)\\.group/(.+)\\.(html|css)$";
+    private static final String templatePathPattern = "(.+/|^)(.+)\\.group/(.+)\\.(html|css)$";
 
     @Nullable
     public static PsiDirectory getTemplateDirectory(@NotNull PsiFile file) {
@@ -33,7 +33,7 @@ public class ExpressionEngineUtil {
 
     @Nullable
     public static String toTemplatePath(String templateName, String extension) {
-        String[] parts = templateName.split("\\/");
+        String[] parts = templateName.split("/");
 
         if (parts.length == 2) {
             return parts[0] + ".group/" + parts[1] + "." + extension;

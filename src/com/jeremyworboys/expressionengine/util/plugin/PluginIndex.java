@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PluginIndex extends TagIndexBase<PluginMethod> {
-    private static Map<Project, PluginIndex> instances = new HashMap<>();
+    private static final Map<Project, PluginIndex> instances = new HashMap<>();
 
     private PluginIndex(@NotNull Project project) {
         super(project);

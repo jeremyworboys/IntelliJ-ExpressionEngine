@@ -61,27 +61,27 @@ public class ExpressionEngineSyntaxHighlighter extends SyntaxHighlighterBase {
         }
     }
 
-    private static boolean isPartOfComment(IElementType tokenType) {
+    private boolean isPartOfComment(IElementType tokenType) {
         return tokenType.equals(ExpressionEngineTypes.T_COMMENT);
     }
 
-    private static boolean isPartOfNumber(IElementType tokenType) {
+    private boolean isPartOfNumber(IElementType tokenType) {
         return tokenType.equals(ExpressionEngineTypes.T_NUMBER_LITERAL);
     }
 
-    private static boolean isPartOfString(IElementType tokenType) {
+    private boolean isPartOfString(IElementType tokenType) {
         return tokenType.equals(ExpressionEngineTypes.T_PATH_LITERAL)
             || tokenType.equals(ExpressionEngineTypes.T_STRING_CONTENT)
             || tokenType.equals(ExpressionEngineTypes.T_STRING_START)
             || tokenType.equals(ExpressionEngineTypes.T_STRING_END);
     }
 
-    private static boolean isBoolean(IElementType tokenType) {
+    private boolean isBoolean(IElementType tokenType) {
         return tokenType.equals(ExpressionEngineTypes.T_TRUE)
             || tokenType.equals(ExpressionEngineTypes.T_FALSE);
     }
 
-    private static boolean isPartOfTag(IElementType tokenType) {
+    private boolean isPartOfTag(IElementType tokenType) {
         return tokenType.equals(ExpressionEngineTypes.T_LD)
             || tokenType.equals(ExpressionEngineTypes.T_RD)
             || tokenType.equals(ExpressionEngineTypes.T_COLON)
@@ -102,7 +102,7 @@ public class ExpressionEngineSyntaxHighlighter extends SyntaxHighlighterBase {
             || tokenType.equals(ExpressionEngineTypes.T_ELSE);
     }
 
-    private static boolean isPartOfTagParam(IElementType tokenType) {
+    private boolean isPartOfTagParam(IElementType tokenType) {
         return tokenType.equals(ExpressionEngineTypes.T_PARAM_NAME)
             || tokenType.equals(ExpressionEngineTypes.T_EQUAL);
     }
@@ -131,7 +131,7 @@ public class ExpressionEngineSyntaxHighlighter extends SyntaxHighlighterBase {
             || tokenType.equals(ExpressionEngineTypes.T_OP_XOR);
     }
 
-    private static boolean isParentheses(IElementType tokenType) {
+    private boolean isParentheses(IElementType tokenType) {
         return tokenType.equals(ExpressionEngineTypes.T_LP)
             || tokenType.equals(ExpressionEngineTypes.T_RP);
     }

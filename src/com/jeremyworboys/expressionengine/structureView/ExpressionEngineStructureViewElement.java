@@ -23,6 +23,25 @@ public class ExpressionEngineStructureViewElement extends PsiTreeElementBase<Psi
         this.element = element;
     }
 
+    private static void collectChildren(@NotNull List<StructureViewTreeElement> result, @NotNull PsiElement root) {
+        PsiElement[] children = root.getChildren();
+        if (children.length == 0) {
+            return;
+        }
+
+        for (PsiElement child : children) {
+            if (child instanceof ExpressionEngineFile) {
+                result.add(new ExpressionEngineStructureViewElement(child));
+            }
+            if (child instanceof ExpressionEngineModule) {
+                result.add(new ExpressionEngineStructureViewModule((ExpressionEngineModule) child));
+            }
+            if (child instanceof ExpressionEngineConditional) {
+                result.add(new ExpressionEngineStructureViewConditional((ExpressionEngineConditional) child));
+            }
+        }
+    }
+
     @NotNull
     @Override
     public Collection<StructureViewTreeElement> getChildrenBase() {
@@ -43,24 +62,5 @@ public class ExpressionEngineStructureViewElement extends PsiTreeElementBase<Psi
         }
 
         return (element != null) ? element.getText() : null;
-    }
-
-    private static void collectChildren(@NotNull List<StructureViewTreeElement> result, @NotNull PsiElement root) {
-        PsiElement[] children = root.getChildren();
-        if (children.length == 0) {
-            return;
-        }
-
-        for (PsiElement child : children) {
-            if (child instanceof ExpressionEngineFile) {
-                result.add(new ExpressionEngineStructureViewElement(child));
-            }
-            if (child instanceof ExpressionEngineModule) {
-                result.add(new ExpressionEngineStructureViewModule((ExpressionEngineModule) child));
-            }
-            if (child instanceof ExpressionEngineConditional) {
-                result.add(new ExpressionEngineStructureViewConditional((ExpressionEngineConditional) child));
-            }
-        }
     }
 }

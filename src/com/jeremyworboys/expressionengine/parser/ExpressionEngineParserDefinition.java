@@ -23,7 +23,7 @@ public class ExpressionEngineParserDefinition implements ParserDefinition {
     public static final TokenSet COMMENTS = TokenSet.create(ExpressionEngineTypes.COMMENT);
 
     public static final IFileElementType FILE =
-        new IFileElementType(Language.<ExpressionEngineLanguage>findInstance(ExpressionEngineLanguage.class));
+        new IFileElementType(Language.findInstance(ExpressionEngineLanguage.class));
 
     @NotNull
     @Override

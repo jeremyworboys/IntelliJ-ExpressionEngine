@@ -4,11 +4,11 @@ import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.Annotator;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
-import com.jeremyworboys.expressionengine.util.pattern.ModuleTagPatterns;
 import com.jeremyworboys.expressionengine.psi.ExpressionEngineModuleOpenTag;
 import com.jeremyworboys.expressionengine.psi.ExpressionEngineTagParam;
 import com.jeremyworboys.expressionengine.util.TagMethodBase;
 import com.jeremyworboys.expressionengine.util.module.ModuleIndex;
+import com.jeremyworboys.expressionengine.util.pattern.ModuleTagPatterns;
 import com.jeremyworboys.expressionengine.util.plugin.PluginIndex;
 import org.jetbrains.annotations.NotNull;
 

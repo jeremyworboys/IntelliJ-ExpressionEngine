@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ModuleIndex extends TagIndexBase<ModuleMethod> {
-    private static Map<Project, ModuleIndex> instances = new HashMap<>();
+    private static final Map<Project, ModuleIndex> instances = new HashMap<>();
 
     private ModuleIndex(@NotNull Project project) {
         super(project);

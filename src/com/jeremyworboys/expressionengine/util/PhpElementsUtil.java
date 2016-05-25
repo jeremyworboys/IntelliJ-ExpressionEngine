@@ -30,7 +30,9 @@ public class PhpElementsUtil {
             .with(new PatternCondition<PsiElement>("withName") {
                 @Override
                 public boolean accepts(@NotNull PsiElement psiElement, ProcessingContext context) {
-                    return ((MethodReference) psiElement).getName().equals(name);
+                    String elementName = ((MethodReference) psiElement).getName();
+                    assert elementName != null;
+                    return elementName.equals(name);
                 }
             });
     }
@@ -70,6 +72,7 @@ public class PhpElementsUtil {
             visited.add(element);
             // Found an element matching pattern - don't recurse
             if (pattern.accepts(element)) {
+                //noinspection unchecked
                 results.add((T) element);
                 continue;
             }

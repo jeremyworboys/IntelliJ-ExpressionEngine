@@ -7,9 +7,9 @@ import org.jetbrains.annotations.Nullable;
 public interface ExpressionEngineModuleElement extends PsiElement {
     boolean isPairModule();
 
-    @Nullable
-    ExpressionEngineModuleCloseTag getModuleCloseTag();
-
     @NotNull
     ExpressionEngineModuleOpenTag getModuleOpenTag();
+
+    @Nullable
+    ExpressionEngineModuleCloseTag getModuleCloseTag();
 }
