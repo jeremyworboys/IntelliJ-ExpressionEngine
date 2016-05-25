@@ -60,7 +60,9 @@ variable_close_tag ::= T_LD T_SLASH T_VARIABLE_NAME T_RD {pin=3}
 parametric_variable ::= T_LD T_VARIABLE_NAME T_EQUAL tag_param_value T_RD {pin=3}
 
 // Modules
-module ::= module_open_tag (statement* module_close_tag)? {pin=1}
+module ::= <<checkPairModule true>> module_pair | <<checkPairModule false>> module_single
+private module_pair   ::= module_open_tag statement* module_close_tag {pin=1}
+private module_single ::= module_open_tag
 module_open_tag  ::= T_LD T_MODULE_NAME tag_params T_RD {
   pin=2
   mixin="com.jeremyworboys.expressionengine.psi.impl.ExpressionEngineModuleOpenTagMixin"
