@@ -1,5 +1,7 @@
 package com.jeremyworboys.expressionengine.referencing;
 
+import com.intellij.codeInsight.lookup.LookupElement;
+import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReferenceBase;
@@ -10,6 +12,10 @@ import com.jeremyworboys.expressionengine.util.plugin.PluginIndex;
 import com.jeremyworboys.expressionengine.util.plugin.PluginMethod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class ModuleNameReference extends PsiReferenceBase<PsiElement> {
     private final ExpressionEngineModuleOpenTag element;
@@ -38,7 +44,18 @@ public class ModuleNameReference extends PsiReferenceBase<PsiElement> {
     @NotNull
     @Override
     public Object[] getVariants() {
-        // TODO: Module method variants
-        return new Object[0];
+        List<LookupElement> variants = new ArrayList<LookupElement>();
+
+        Map<String, ModuleMethod> moduleMethods = ModuleIndex.getInstance(element.getProject()).getMethods();
+        for (String tagName : moduleMethods.keySet()) {
+            variants.add(LookupElementBuilder.create(tagName));
+        }
+
+        Map<String, PluginMethod> pluginMethods = PluginIndex.getInstance(element.getProject()).getMethods();
+        for (String tagName : pluginMethods.keySet()) {
+            variants.add(LookupElementBuilder.create(tagName));
+        }
+
+        return variants.toArray();
     }
 }
