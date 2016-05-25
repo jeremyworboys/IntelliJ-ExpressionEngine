@@ -1,7 +1,6 @@
 package com.jeremyworboys.expressionengine.folding.descriptor;
 
 import com.intellij.lang.folding.FoldingDescriptor;
-import com.intellij.openapi.editor.FoldingGroup;
 import com.intellij.openapi.util.TextRange;
 import com.jeremyworboys.expressionengine.psi.ExpressionEngineModule;
 import org.jetbrains.annotations.NotNull;
@@ -11,8 +10,8 @@ public class ModuleFoldingDescriptor extends FoldingDescriptor {
     @NotNull
     private final ExpressionEngineModule element;
 
-    public ModuleFoldingDescriptor(@NotNull ExpressionEngineModule element, @Nullable FoldingGroup group) {
-        super(element.getNode(), getTextRange(element), group);
+    public ModuleFoldingDescriptor(@NotNull ExpressionEngineModule element) {
+        super(element, getTextRange(element));
         this.element = element;
     }
 

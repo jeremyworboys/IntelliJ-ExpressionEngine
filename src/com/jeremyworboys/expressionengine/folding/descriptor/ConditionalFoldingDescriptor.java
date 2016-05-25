@@ -1,7 +1,6 @@
 package com.jeremyworboys.expressionengine.folding.descriptor;
 
 import com.intellij.lang.folding.FoldingDescriptor;
-import com.intellij.openapi.editor.FoldingGroup;
 import com.intellij.openapi.util.TextRange;
 import com.jeremyworboys.expressionengine.psi.ExpressionEngineConditional;
 import com.jeremyworboys.expressionengine.psi.ExpressionEngineExpr;
@@ -12,8 +11,8 @@ public class ConditionalFoldingDescriptor extends FoldingDescriptor {
     @NotNull
     private final ExpressionEngineConditional element;
 
-    public ConditionalFoldingDescriptor(@NotNull ExpressionEngineConditional element, @Nullable FoldingGroup group) {
-        super(element.getNode(), getTextRange(element), group);
+    public ConditionalFoldingDescriptor(@NotNull ExpressionEngineConditional element) {
+        super(element, getTextRange(element));
         this.element = element;
     }
 

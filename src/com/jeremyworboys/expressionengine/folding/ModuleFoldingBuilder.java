@@ -4,7 +4,6 @@ import com.intellij.lang.ASTNode;
 import com.intellij.lang.folding.FoldingBuilderEx;
 import com.intellij.lang.folding.FoldingDescriptor;
 import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.FoldingGroup;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.jeremyworboys.expressionengine.folding.descriptor.ModuleFoldingDescriptor;
@@ -20,13 +19,12 @@ public class ModuleFoldingBuilder extends FoldingBuilderEx {
     @NotNull
     @Override
     public FoldingDescriptor[] buildFoldRegions(@NotNull PsiElement root, @NotNull Document document, boolean quick) {
-        FoldingGroup group = FoldingGroup.newGroup("expressionengine");
         List<FoldingDescriptor> descriptors = new ArrayList<>();
 
         Collection<ExpressionEngineModule> moduleElements = PsiTreeUtil.findChildrenOfType(root, ExpressionEngineModule.class);
         for (ExpressionEngineModule moduleElement : moduleElements) {
             if (moduleElement.getModuleCloseTag() != null) {
-                descriptors.add(new ModuleFoldingDescriptor(moduleElement, group));
+                descriptors.add(new ModuleFoldingDescriptor(moduleElement));
             }
         }
 

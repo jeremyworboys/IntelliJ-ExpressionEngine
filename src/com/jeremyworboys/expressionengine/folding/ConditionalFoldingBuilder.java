@@ -20,13 +20,12 @@ public class ConditionalFoldingBuilder extends FoldingBuilderEx {
     @NotNull
     @Override
     public FoldingDescriptor[] buildFoldRegions(@NotNull PsiElement root, @NotNull Document document, boolean quick) {
-        FoldingGroup group = FoldingGroup.newGroup("expressionengine");
         List<FoldingDescriptor> descriptors = new ArrayList<>();
 
         Collection<ExpressionEngineConditional> conditionals = PsiTreeUtil.findChildrenOfType(root, ExpressionEngineConditional.class);
         for (ExpressionEngineConditional conditional : conditionals) {
             if (conditional.getConditionalEndif() != null) {
-                descriptors.add(new ConditionalFoldingDescriptor(conditional, group));
+                descriptors.add(new ConditionalFoldingDescriptor(conditional));
             }
         }
 
