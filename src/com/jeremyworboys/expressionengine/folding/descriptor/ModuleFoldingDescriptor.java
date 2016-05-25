@@ -1,28 +1,34 @@
 package com.jeremyworboys.expressionengine.folding.descriptor;
 
 import com.intellij.lang.folding.FoldingDescriptor;
-import com.intellij.openapi.util.TextRange;
+import com.intellij.openapi.util.text.StringUtil;
 import com.jeremyworboys.expressionengine.psi.ExpressionEngineModule;
+import com.jeremyworboys.expressionengine.psi.ExpressionEngineTagParam;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ModuleFoldingDescriptor extends FoldingDescriptor {
     @NotNull
     private final ExpressionEngineModule element;
 
     public ModuleFoldingDescriptor(@NotNull ExpressionEngineModule element) {
-        super(element, getTextRange(element));
+        super(element, element.getTextRange());
         this.element = element;
-    }
-
-    @NotNull
-    private static TextRange getTextRange(@NotNull ExpressionEngineModule element) {
-        return new TextRange(element.getTextRange().getStartOffset() + 1, element.getTextRange().getEndOffset() - 1);
     }
 
     @Nullable
     @Override
     public String getPlaceholderText() {
-        return element.getModuleOpenTag().getModuleName();
+        String moduleName = element.getModuleOpenTag().getModuleName();
+
+        List<String> moduleParameters = new ArrayList<>();
+        for (ExpressionEngineTagParam param : element.getModuleOpenTag().getTagParamList()) {
+            moduleParameters.add(param.getTagParamName() + "=" + param.getTagParamValue().getText());
+        }
+
+        return "{" + moduleName + " " + StringUtil.join(moduleParameters, " ") + " ...}";
     }
 }
