@@ -23,7 +23,7 @@ public class ModuleFoldingBuilder extends FoldingBuilderEx {
 
         Collection<ExpressionEngineModule> moduleElements = PsiTreeUtil.findChildrenOfType(root, ExpressionEngineModule.class);
         for (ExpressionEngineModule moduleElement : moduleElements) {
-            if (moduleElement.getModuleCloseTag() != null) {
+            if (moduleElement.isPairModule()) {
                 descriptors.add(new ModuleFoldingDescriptor(moduleElement));
             }
         }
