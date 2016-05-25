@@ -1,4 +1,4 @@
-package com.jeremyworboys.expressionengine.structure;
+package com.jeremyworboys.expressionengine.structureView;
 
 import com.intellij.ide.structureView.StructureViewBuilder;
 import com.intellij.ide.structureView.StructureViewModel;

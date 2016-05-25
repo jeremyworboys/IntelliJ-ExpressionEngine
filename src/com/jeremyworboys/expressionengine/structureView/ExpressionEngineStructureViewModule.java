@@ -1,4 +1,4 @@
-package com.jeremyworboys.expressionengine.structure;
+package com.jeremyworboys.expressionengine.structureView;
 
 import com.intellij.util.PlatformIcons;
 import com.jeremyworboys.expressionengine.psi.ExpressionEngineModule;

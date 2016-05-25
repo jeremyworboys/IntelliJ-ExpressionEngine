@@ -1,4 +1,4 @@
-package com.jeremyworboys.expressionengine.structure;
+package com.jeremyworboys.expressionengine.structureView;
 
 import com.jeremyworboys.expressionengine.psi.ExpressionEngineConditional;
 import com.jeremyworboys.expressionengine.psi.ExpressionEngineExpr;

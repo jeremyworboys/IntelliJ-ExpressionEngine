@@ -1,4 +1,4 @@
-package com.jeremyworboys.expressionengine.structure;
+package com.jeremyworboys.expressionengine.structureView;
 
 import com.intellij.ide.structureView.StructureViewTreeElement;
 import com.intellij.ide.structureView.impl.common.PsiTreeElementBase;
