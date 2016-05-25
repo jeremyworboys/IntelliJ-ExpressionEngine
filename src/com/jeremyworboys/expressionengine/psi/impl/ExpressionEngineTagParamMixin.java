@@ -37,6 +37,6 @@ public abstract class ExpressionEngineTagParamMixin extends ASTWrapperPsiElement
     @Override
     public PsiReference getReference() {
         TextRange textRange = new TextRange(0, getTagParamName().length());
-        return new ModuleParamNameReference((ExpressionEngineTagParamElement) this, textRange);
+        return new ModuleParamNameReference(this, textRange);
     }
 }
