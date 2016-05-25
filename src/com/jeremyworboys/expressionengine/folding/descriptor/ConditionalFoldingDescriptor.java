@@ -1,7 +1,6 @@
 package com.jeremyworboys.expressionengine.folding.descriptor;
 
 import com.intellij.lang.folding.FoldingDescriptor;
-import com.intellij.openapi.util.TextRange;
 import com.jeremyworboys.expressionengine.psi.ExpressionEngineConditional;
 import com.jeremyworboys.expressionengine.psi.ExpressionEngineExpr;
 import org.jetbrains.annotations.NotNull;
@@ -12,13 +11,8 @@ public class ConditionalFoldingDescriptor extends FoldingDescriptor {
     private final ExpressionEngineConditional element;
 
     public ConditionalFoldingDescriptor(@NotNull ExpressionEngineConditional element) {
-        super(element, getTextRange(element));
+        super(element, element.getTextRange());
         this.element = element;
-    }
-
-    @NotNull
-    private static TextRange getTextRange(@NotNull ExpressionEngineConditional element) {
-        return new TextRange(element.getTextRange().getStartOffset() + 4, element.getTextRange().getEndOffset() - 1);
     }
 
     @Nullable
@@ -34,6 +28,6 @@ public class ConditionalFoldingDescriptor extends FoldingDescriptor {
             return null;
         }
 
-        return expressionText.replaceAll("\\s+", " ");
+        return "{if " + expressionText.replaceAll("\\n\\s+", " ") + " ...}";
     }
 }

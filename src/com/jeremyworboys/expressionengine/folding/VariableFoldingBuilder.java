@@ -6,8 +6,8 @@ import com.intellij.lang.folding.FoldingDescriptor;
 import com.intellij.openapi.editor.Document;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.jeremyworboys.expressionengine.folding.descriptor.ModuleFoldingDescriptor;
-import com.jeremyworboys.expressionengine.psi.ExpressionEngineModule;
+import com.jeremyworboys.expressionengine.folding.descriptor.VariableFoldingDescriptor;
+import com.jeremyworboys.expressionengine.psi.ExpressionEngineVariable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -15,16 +15,16 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class ModuleFoldingBuilder extends FoldingBuilderEx {
+public class VariableFoldingBuilder extends FoldingBuilderEx {
     @NotNull
     @Override
     public FoldingDescriptor[] buildFoldRegions(@NotNull PsiElement root, @NotNull Document document, boolean quick) {
         List<FoldingDescriptor> descriptors = new ArrayList<>();
 
-        Collection<ExpressionEngineModule> moduleElements = PsiTreeUtil.findChildrenOfType(root, ExpressionEngineModule.class);
-        for (ExpressionEngineModule moduleElement : moduleElements) {
-            if (moduleElement.isPairModule()) {
-                descriptors.add(new ModuleFoldingDescriptor(moduleElement));
+        Collection<ExpressionEngineVariable> variableElements = PsiTreeUtil.findChildrenOfType(root, ExpressionEngineVariable.class);
+        for (ExpressionEngineVariable variableElement : variableElements) {
+            if (variableElement.isPairVariable()) {
+                descriptors.add(new VariableFoldingDescriptor(variableElement));
             }
         }
 

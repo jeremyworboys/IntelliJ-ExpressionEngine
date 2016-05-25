@@ -1,5 +1,7 @@
 {
   parserClass="com.jeremyworboys.expressionengine.parser.ExpressionEngineParser"
+  parserUtilClass="com.jeremyworboys.expressionengine.parser.ExpressionEngineParserUtil"
+
   psiPackage="com.jeremyworboys.expressionengine.psi"
   psiImplPackage="com.jeremyworboys.expressionengine.psi.impl"
   psiClassPrefix="ExpressionEngine"
@@ -10,6 +12,8 @@
   tokenTypeClass="com.jeremyworboys.expressionengine.psi.ExpressionEngineTokenType"
 
   extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+  name(".*expr")='expression'
   extends(".*expr")=expr
 }
 
@@ -52,13 +56,28 @@ stylesheet_tag ::= T_LD T_STYLESHEET T_EQUAL tag_param_value T_RD {pin=2}
 preload_replace_tag ::= T_LD T_PRELOAD_REPLACE T_COLON T_PARAM_NAME T_EQUAL tag_param_value T_RD {pin=2}
 
 // Variables
-private variable_tag ::= parametric_variable | variable | variable_close_tag
-variable ::= T_LD T_VARIABLE_NAME tag_params T_RD {pin=2}
+private variable_tag ::= parametric_variable | variable
+variable ::= <<isPairVariable true>> variable_pair | <<isPairVariable false>> variable_single{
+  mixin="com.jeremyworboys.expressionengine.psi.impl.ExpressionEngineVariableMixin"
+  implements="com.jeremyworboys.expressionengine.psi.ExpressionEngineVariableElement"
+}
+private variable_pair   ::= variable_open_tag statement* variable_close_tag {pin=1}
+private variable_single ::= variable_open_tag
+variable_open_tag  ::= T_LD T_VARIABLE_NAME tag_params T_RD {
+  pin=2
+  mixin="com.jeremyworboys.expressionengine.psi.impl.ExpressionEngineVariableOpenTagMixin"
+  implements="com.jeremyworboys.expressionengine.psi.ExpressionEngineVariableOpenTagElement"
+}
 variable_close_tag ::= T_LD T_SLASH T_VARIABLE_NAME T_RD {pin=3}
 parametric_variable ::= T_LD T_VARIABLE_NAME T_EQUAL tag_param_value T_RD {pin=3}
 
 // Modules
-module ::= module_open_tag (statement* module_close_tag)? {pin=1}
+module ::= <<isPairModule true>> module_pair | <<isPairModule false>> module_single {
+  mixin="com.jeremyworboys.expressionengine.psi.impl.ExpressionEngineModuleMixin"
+  implements="com.jeremyworboys.expressionengine.psi.ExpressionEngineModuleElement"
+}
+private module_pair   ::= module_open_tag statement* module_close_tag {pin=1}
+private module_single ::= module_open_tag
 module_open_tag  ::= T_LD T_MODULE_NAME tag_params T_RD {
   pin=2
   mixin="com.jeremyworboys.expressionengine.psi.impl.ExpressionEngineModuleOpenTagMixin"
@@ -107,4 +126,4 @@ unary_not_expr   ::= T_OP_NOT expr
 unary_plus_expr  ::= T_OP_ADD expr
 unary_minus_expr ::= T_OP_SUB expr
 paren_expr       ::= T_LP expr T_RP
-literal_expr     ::= number_literal | string_literal | boolean_literal | T_VARIABLE_NAME
+literal_expr     ::= number_literal | string_literal | boolean_literal | T_VARIABLE_NAME | variable_single
