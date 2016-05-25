@@ -4,6 +4,7 @@ import com.intellij.ide.structureView.StructureViewTreeElement;
 import com.intellij.ide.util.treeView.smartTree.SortableTreeElement;
 import com.intellij.ide.util.treeView.smartTree.TreeElement;
 import com.intellij.navigation.ItemPresentation;
+import com.intellij.navigation.NavigationItem;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 
@@ -16,7 +17,7 @@ public class ExpressionEngineStructureViewElement implements StructureViewTreeEl
 
     @Override
     public Object getValue() {
-        return null;
+        return element;
     }
 
     @NotNull
@@ -39,16 +40,26 @@ public class ExpressionEngineStructureViewElement implements StructureViewTreeEl
 
     @Override
     public void navigate(boolean requestFocus) {
-
+        if (element instanceof NavigationItem) {
+            ((NavigationItem) element).navigate(requestFocus);
+        }
     }
 
     @Override
     public boolean canNavigate() {
+        if (element instanceof NavigationItem) {
+            ((NavigationItem) element).canNavigate();
+        }
+
         return false;
     }
 
     @Override
     public boolean canNavigateToSource() {
+        if (element instanceof NavigationItem) {
+            ((NavigationItem) element).canNavigateToSource();
+        }
+
         return false;
     }
 }
