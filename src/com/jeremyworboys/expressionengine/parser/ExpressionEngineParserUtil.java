@@ -7,15 +7,15 @@ import com.intellij.psi.tree.IElementType;
 import static com.jeremyworboys.expressionengine.psi.ExpressionEngineTypes.*;
 
 public class ExpressionEngineParserUtil extends GeneratedParserUtilBase {
-    public static boolean checkPairVariable(PsiBuilder builder, int level, boolean pair) {
-        return checkPairTag(T_VARIABLE_NAME, builder, pair);
+    public static boolean isPairVariable(PsiBuilder builder, int level, boolean pair) {
+        return isPairTag(T_VARIABLE_NAME, builder, pair);
     }
 
-    public static boolean checkPairModule(PsiBuilder builder, int level, boolean pair) {
-        return checkPairTag(T_MODULE_NAME, builder, pair);
+    public static boolean isPairModule(PsiBuilder builder, int level, boolean pair) {
+        return isPairTag(T_MODULE_NAME, builder, pair);
     }
 
-    private static boolean checkPairTag(IElementType tagNameType, PsiBuilder builder, boolean pair) {
+    private static boolean isPairTag(IElementType tagNameType, PsiBuilder builder, boolean pair) {
         if (builder.getTokenType() != T_LD) {
             return false;
         }

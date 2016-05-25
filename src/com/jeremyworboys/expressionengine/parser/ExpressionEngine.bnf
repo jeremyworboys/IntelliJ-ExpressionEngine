@@ -55,7 +55,7 @@ preload_replace_tag ::= T_LD T_PRELOAD_REPLACE T_COLON T_PARAM_NAME T_EQUAL tag_
 
 // Variables
 private variable_tag ::= parametric_variable | variable
-variable ::= <<checkPairVariable true>> variable_pair | <<checkPairVariable false>> variable_single
+variable ::= <<isPairVariable true>> variable_pair | <<isPairVariable false>> variable_single
 private variable_pair   ::= variable_open_tag statement* variable_close_tag {pin=1}
 private variable_single ::= variable_open_tag
 variable_open_tag  ::= T_LD T_VARIABLE_NAME tag_params T_RD {pin=2}
@@ -63,7 +63,7 @@ variable_close_tag ::= T_LD T_SLASH T_VARIABLE_NAME T_RD {pin=3}
 parametric_variable ::= T_LD T_VARIABLE_NAME T_EQUAL tag_param_value T_RD {pin=3}
 
 // Modules
-module ::= <<checkPairModule true>> module_pair | <<checkPairModule false>> module_single
+module ::= <<isPairModule true>> module_pair | <<isPairModule false>> module_single
 private module_pair   ::= module_open_tag statement* module_close_tag {pin=1}
 private module_single ::= module_open_tag
 module_open_tag  ::= T_LD T_MODULE_NAME tag_params T_RD {
