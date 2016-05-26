@@ -27,7 +27,7 @@ string_literal ::= T_STRING_START T_STRING_CONTENT* T_STRING_END
 boolean_literal ::= T_TRUE | T_FALSE
 
 // Comments
-comment ::= T_COMMENT
+comment ::= T_COMMENT_START T_COMMENT* T_COMMENT_END {pin=1}
 
 // Tag params
 private tag_params ::= (tag_param | variable_tag_param | conditional_tag_param | comment)*

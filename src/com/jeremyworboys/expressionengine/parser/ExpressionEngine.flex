@@ -77,11 +77,15 @@ IDENTIFIER=[a-zA-Z_][a-zA-Z0-9_-]*
 SINGLE_QUOTE="\'"
 DOUBLE_QUOTE="\""
 
-COMMENT="{!--" ~"--}"
+COMMENT_OPEN="{!--"
+COMMENT_END="--}"
+COMMENT={COMMENT_OPEN} ~ {COMMENT_END}
+
 MODULE_NAME="exp:" {IDENTIFIER} (":" {IDENTIFIER})?
 VARIABLE_NAME={IDENTIFIER} (":" {IDENTIFIER})*
 
 // States
+%state IN_EE_COMMENT
 %state IN_EE_TAG
 %state IN_EE_TAG_PARAMS
 %state IN_EE_PRELOAD_REPLACE
@@ -92,7 +96,7 @@ VARIABLE_NAME={IDENTIFIER} (":" {IDENTIFIER})*
 %%
 
 {WHITE_SPACE}                          { return TokenType.WHITE_SPACE; }
-{COMMENT}                              { return T_COMMENT; }
+{COMMENT}                              { yypushback(yylength() - 4); pushState(IN_EE_COMMENT); return T_COMMENT_START; }
 {LD}{WHITE_SPACE}                      { return T_CONTENT; }
 {LD}{RD}                               { return T_CONTENT; }
 {LD}{DOUBLE_QUOTE}                     { return T_CONTENT; }
@@ -101,6 +105,11 @@ VARIABLE_NAME={IDENTIFIER} (":" {IDENTIFIER})*
 <YYINITIAL> {
   {LD}                                 { pushState(IN_EE_TAG); return T_LD; }
   !([^]*"{"[^]*)                       { return determineContentToken(); }
+}
+
+<IN_EE_COMMENT> {
+  {COMMENT_END}                      { popState(); return T_COMMENT_END; }
+  ~ {COMMENT_END}                    { yypushback(3); return T_COMMENT; }
 }
 
 <IN_EE_TAG> {
