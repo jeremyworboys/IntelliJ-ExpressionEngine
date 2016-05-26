@@ -62,7 +62,9 @@ public class ExpressionEngineSyntaxHighlighter extends SyntaxHighlighterBase {
     }
 
     private boolean isPartOfComment(IElementType tokenType) {
-        return tokenType.equals(ExpressionEngineTypes.T_COMMENT);
+        return tokenType.equals(ExpressionEngineTypes.T_COMMENT)
+            || tokenType.equals(ExpressionEngineTypes.T_COMMENT_START)
+            || tokenType.equals(ExpressionEngineTypes.T_COMMENT_END);
     }
 
     private boolean isPartOfNumber(IElementType tokenType) {
