@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 public class ExpressionEngineParserDefinition implements ParserDefinition {
     public static final TokenSet STRING_LITERALS = TokenSet.EMPTY;
     public static final TokenSet WHITE_SPACES = TokenSet.create(TokenType.WHITE_SPACE);
-    public static final TokenSet COMMENTS = TokenSet.create(ExpressionEngineTypes.COMMENT);
+    public static final TokenSet COMMENTS = TokenSet.create(ExpressionEngineTypes.T_COMMENT_START, ExpressionEngineTypes.T_COMMENT, ExpressionEngineTypes.T_COMMENT_END);
 
     public static final IFileElementType FILE =
         new IFileElementType(Language.findInstance(ExpressionEngineLanguage.class));
