@@ -48,6 +48,6 @@ public class UndefinedModuleParametersAnnotator implements Annotator {
         }
 
         // First child is T_PARAM_NAME
-        holder.createWarningAnnotation(tagParameter.getFirstChild(), "Unknown Parameter Name");
+        holder.createWeakWarningAnnotation(tagParameter.getFirstChild(), "Unknown Parameter Name");
     }
 }
