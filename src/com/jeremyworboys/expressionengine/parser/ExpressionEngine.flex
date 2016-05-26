@@ -108,8 +108,8 @@ VARIABLE_NAME={IDENTIFIER} (":" {IDENTIFIER})*
 }
 
 <IN_EE_COMMENT> {
-  {COMMENT_END}                      { popState(); return T_COMMENT_END; }
-  ~ {COMMENT_END}                    { yypushback(3); return T_COMMENT; }
+  {COMMENT_END}                        { popState(); return T_COMMENT_END; }
+  ~ {COMMENT_END}                      { yypushback(3); return T_COMMENT; }
 }
 
 <IN_EE_TAG> {
