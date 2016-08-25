@@ -41,8 +41,8 @@ public class ExpressionEngineProjectSettingsForm implements Configurable {
         this.updateSettingsPanelEnabled();
 
         // Setup path browser
-        this.systemPathField.addBrowseFolderListener(project, createBrowseFolderListener(project), false);
-        this.templatesPathField.addBrowseFolderListener(project, createBrowseFolderListener(project), false);
+        this.systemPathField.addBrowseFolderListener(project, createSystemPathBrowser(project), false);
+        this.templatesPathField.addBrowseFolderListener(project, createTemplatesPathBrowser(project), false);
 
         // Setup validation
         this.facetErrorPanel = new FacetErrorPanel();
@@ -96,13 +96,23 @@ public class ExpressionEngineProjectSettingsForm implements Configurable {
     }
 
     @NotNull
-    private BrowseFolderActionListener<JTextField> createBrowseFolderListener(@NotNull final Project project) {
+    private BrowseFolderActionListener<JTextField> createSystemPathBrowser(@NotNull final Project project) {
         String title = "Select ExpressionEngine system directory";
         String description = "Select ExpressionEngine system root directory";
         FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
         TextComponentAccessor<JTextField> accessor = TextComponentAccessor.TEXT_FIELD_WHOLE_TEXT;
 
         return new BrowseFolderActionListener<>(title, description, this.systemPathField, project, descriptor, accessor);
+    }
+
+    @NotNull
+    private BrowseFolderActionListener<JTextField> createTemplatesPathBrowser(@NotNull final Project project) {
+        String title = "Select ExpressionEngine templates directory";
+        String description = "Select ExpressionEngine templates root directory";
+        FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
+        TextComponentAccessor<JTextField> accessor = TextComponentAccessor.TEXT_FIELD_WHOLE_TEXT;
+
+        return new BrowseFolderActionListener<>(title, description, this.templatesPathField, project, descriptor, accessor);
     }
 
     @NotNull
