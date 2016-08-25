@@ -29,29 +29,31 @@ public class ContainerFile {
     }
 
     public boolean exists(@NotNull Project project) {
-        if (!FileUtil.isAbsolute(this.path)) {
-            return VfsUtil.findRelativeFile(this.path, project.getBaseDir()) != null;
+        if (!FileUtil.isAbsolute(path)) {
+            return VfsUtil.findRelativeFile(path, project.getBaseDir()) != null;
         }
 
-        return new File(this.path).exists();
+        return new File(path).exists();
     }
 
     @Nullable
-    public File getFile(Project project) {
-        if (!FileUtil.isAbsolute(this.path)) {
-            VirtualFile virtualFile = VfsUtil.findRelativeFile(this.path, project.getBaseDir());
-            if (virtualFile == null) {
-                return null;
-            }
-
-            return VfsUtil.virtualToIoFile(virtualFile);
+    public String getRelativePath(Project project) {
+        VirtualFile virtualFile = this.getVirtualFile();
+        if (virtualFile == null) {
+            return null;
         }
 
-        File file = new File(this.path);
+        return VfsUtil.getRelativePath(virtualFile, project.getBaseDir(), '/');
+    }
+
+    @Nullable
+    private VirtualFile getVirtualFile() {
+        File file = new File(path);
+
         if (!file.exists()) {
             return null;
         }
 
-        return file;
+        return VfsUtil.findFileByIoFile(file, true);
     }
 }
