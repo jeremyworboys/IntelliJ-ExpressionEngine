@@ -13,6 +13,7 @@ import javax.swing.*;
 public class ExpressionEngineProjectSettingsForm implements Configurable {
 
     private final ExpressionEngineSettings settings;
+    private ExpressionEngineProjectSettingsPanel settingsPanel;
 
     private JPanel mainPanel;
     private JPanel settingsPlaceholder;
@@ -20,6 +21,8 @@ public class ExpressionEngineProjectSettingsForm implements Configurable {
 
     public ExpressionEngineProjectSettingsForm(@NotNull final Project project) {
         this.settings = ExpressionEngineSettings.getInstance(project);
+        this.settingsPanel = new ExpressionEngineProjectSettingsPanel();
+        this.settingsPlaceholder.add(this.settingsPanel.getMainPanel(), "Center");
     }
 
     @Nls
