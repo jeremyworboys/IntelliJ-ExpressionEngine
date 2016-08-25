@@ -1,6 +1,7 @@
 package com.jeremyworboys.expressionengine.ui;
 
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Comparing;
 import com.jeremyworboys.expressionengine.ExpressionEngineSettings;
 import org.jetbrains.annotations.NotNull;
 
@@ -22,14 +23,14 @@ public class ExpressionEngineProjectSettingsPanel extends JPanel {
     }
 
     public boolean isModified() {
-        return false;
+        return !Comparing.strEqual(systemPathField.getText(), settings.systemPath);
     }
 
     public void apply() {
-
+        settings.systemPath = systemPathField.getText();
     }
 
     public void reset() {
-
+        systemPathField.setText(settings.systemPath);
     }
 }
