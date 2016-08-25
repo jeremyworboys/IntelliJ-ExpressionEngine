@@ -11,12 +11,8 @@ public class ExpressionEngineSettings implements PersistentStateComponent<Expres
 
     public boolean pluginEnabled = false;
 
-    protected Project project;
-
     public static ExpressionEngineSettings getInstance(Project project) {
-        ExpressionEngineSettings settings = ServiceManager.getService(project, ExpressionEngineSettings.class);
-        settings.project = project;
-        return settings;
+        return ServiceManager.getService(project, ExpressionEngineSettings.class);
     }
 
     @Override
