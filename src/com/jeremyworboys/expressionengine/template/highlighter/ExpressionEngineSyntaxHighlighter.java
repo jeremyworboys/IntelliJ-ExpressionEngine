@@ -1,4 +1,4 @@
-package com.jeremyworboys.expressionengine.highlighter;
+package com.jeremyworboys.expressionengine.template.highlighter;
 
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.editor.colors.TextAttributesKey;

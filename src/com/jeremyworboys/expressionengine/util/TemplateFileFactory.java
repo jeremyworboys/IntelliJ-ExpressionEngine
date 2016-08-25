@@ -6,7 +6,7 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.psi.codeStyle.CodeStyleManager;
-import com.jeremyworboys.expressionengine.ExpressionEngineFileType;
+import com.jeremyworboys.expressionengine.template.ExpressionEngineFileType;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

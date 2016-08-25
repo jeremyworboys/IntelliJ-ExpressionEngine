@@ -37,8 +37,8 @@
         <!-- Project services -->
         <projectService serviceImplementation="com.jeremyworboys.expressionengine.ExpressionEngineSettings"/>
 
-        <fileTypeFactory implementation="com.jeremyworboys.expressionengine.ExpressionEngineFileTypeFactory"/>
-        <colorSettingsPage implementation="com.jeremyworboys.expressionengine.highlighter.ExpressionEngineColorSettingsPage" />
+        <fileTypeFactory implementation="com.jeremyworboys.expressionengine.template.ExpressionEngineFileTypeFactory"/>
+        <colorSettingsPage implementation="com.jeremyworboys.expressionengine.template.highlighter.ExpressionEngineColorSettingsPage" />
         <annotator language="ExpressionEngine" implementationClass="com.jeremyworboys.expressionengine.annotator.ExpressionEngineAnnotator"/>
         <lang.commenter language="ExpressionEngine" implementationClass="com.jeremyworboys.expressionengine.commenter.ExpressionEngineCommenter"/>
         <lang.foldingBuilder language="ExpressionEngine" implementationClass="com.jeremyworboys.expressionengine.folding.ModuleFoldingBuilder"/>
@@ -46,7 +46,7 @@
         <lang.foldingBuilder language="ExpressionEngine" implementationClass="com.jeremyworboys.expressionengine.folding.ConditionalFoldingBuilder"/>
         <lang.parserDefinition language="ExpressionEngine" implementationClass="com.jeremyworboys.expressionengine.parser.ExpressionEngineParserDefinition"/>
         <lang.psiStructureViewFactory language="ExpressionEngine" implementationClass="com.jeremyworboys.expressionengine.structureView.ExpressionEngineStructureViewFactory"/>
-        <lang.syntaxHighlighterFactory language="ExpressionEngine" implementationClass="com.jeremyworboys.expressionengine.highlighter.ExpressionEngineSyntaxHighlighterFactory"/>
+        <lang.syntaxHighlighterFactory language="ExpressionEngine" implementationClass="com.jeremyworboys.expressionengine.template.highlighter.ExpressionEngineSyntaxHighlighterFactory"/>
 
         <php.typeProvider2 implementation="com.jeremyworboys.expressionengine.type.SingletonTypeProvider"/>
         <php.typeProvider2 implementation="com.jeremyworboys.expressionengine.type.LoadClassTypeProvider"/>

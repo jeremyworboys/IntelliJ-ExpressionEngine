@@ -1,4 +1,4 @@
-package com.jeremyworboys.expressionengine;
+package com.jeremyworboys.expressionengine.template;
 
 import com.intellij.lang.Language;
 import com.intellij.openapi.fileTypes.LanguageFileType;

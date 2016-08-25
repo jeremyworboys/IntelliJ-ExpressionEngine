@@ -7,7 +7,7 @@ import com.intellij.psi.search.FileTypeIndex;
 import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.indexing.FileBasedIndex;
-import com.jeremyworboys.expressionengine.ExpressionEngineFileType;
+import com.jeremyworboys.expressionengine.template.ExpressionEngineFileType;
 import com.jeremyworboys.expressionengine.psi.ExpressionEngineFile;
 import org.jetbrains.annotations.NotNull;
 

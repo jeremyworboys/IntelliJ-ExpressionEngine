@@ -3,8 +3,8 @@ package com.jeremyworboys.expressionengine.psi;
 import com.intellij.extapi.psi.PsiFileBase;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.psi.FileViewProvider;
-import com.jeremyworboys.expressionengine.ExpressionEngineFileType;
-import com.jeremyworboys.expressionengine.ExpressionEngineLanguage;
+import com.jeremyworboys.expressionengine.template.ExpressionEngineFileType;
+import com.jeremyworboys.expressionengine.template.ExpressionEngineLanguage;
 import com.jeremyworboys.expressionengine.icons.ExpressionEngineIcons;
 import org.jetbrains.annotations.NotNull;
 
