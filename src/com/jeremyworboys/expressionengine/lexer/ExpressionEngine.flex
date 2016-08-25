@@ -1,4 +1,4 @@
-package com.jeremyworboys.expressionengine.parser;
+package com.jeremyworboys.expressionengine.lexer;
 
 import com.intellij.lexer.FlexLexer;
 import com.intellij.openapi.util.text.StringUtil;

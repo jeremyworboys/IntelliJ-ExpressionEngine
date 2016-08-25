@@ -2,14 +2,15 @@ package com.jeremyworboys.expressionengine;
 
 import com.intellij.openapi.fileTypes.FileTypeConsumer;
 import com.intellij.openapi.fileTypes.FileTypeFactory;
-import com.intellij.openapi.util.text.StringUtil;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.jps.model.fileTypes.FileNameMatcherFactory;
 
 public class ExpressionEngineFileTypeFactory extends FileTypeFactory {
     @Override
     public void createFileTypes(@NotNull FileTypeConsumer fileTypeConsumer) {
         fileTypeConsumer.consume(
             ExpressionEngineFileType.INSTANCE,
-            StringUtil.join(ExpressionEngineFileType.INSTANCE.getExtensions(), FileTypeConsumer.EXTENSION_DELIMITER));
+            // TODO: See if this can be used to limit files to template path
+            FileNameMatcherFactory.getInstance().createMatcher("*." + ExpressionEngineFileType.INSTANCE.getDefaultExtension()));
     }
 }
