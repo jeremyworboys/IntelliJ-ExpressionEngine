@@ -26,7 +26,14 @@
     <depends>com.intellij.modules.platform</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <!-- Add your extensions here -->
+        <!-- User interface -->
+        <projectConfigurable instance="com.jeremyworboys.expressionengine.ui.ExpressionEngineProjectSettingsForm"
+                             id="ExpressionEngine.SettingsForm"
+                             displayName="ExpressionEngine"
+                             nonDefaultProject="true"
+                             parentId="reference.webide.settings.project.settings.php"
+                             groupWeight="10"/>
+
         <fileTypeFactory implementation="com.jeremyworboys.expressionengine.ExpressionEngineFileTypeFactory"/>
         <colorSettingsPage implementation="com.jeremyworboys.expressionengine.highlighter.ExpressionEngineColorSettingsPage" />
         <annotator language="ExpressionEngine" implementationClass="com.jeremyworboys.expressionengine.annotator.ExpressionEngineAnnotator"/>

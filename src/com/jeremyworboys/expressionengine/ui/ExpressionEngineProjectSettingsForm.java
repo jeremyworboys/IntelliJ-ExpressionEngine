@@ -24,7 +24,7 @@ public class ExpressionEngineProjectSettingsForm implements Configurable {
     @Nls
     @Override
     public String getDisplayName() {
-        return "ExpressionEngine Plugin";
+        return "ExpressionEngine";
     }
 
     @Nullable
