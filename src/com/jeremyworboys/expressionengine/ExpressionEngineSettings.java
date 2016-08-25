@@ -10,6 +10,7 @@ import com.intellij.util.xmlb.XmlSerializerUtil;
 public class ExpressionEngineSettings implements PersistentStateComponent<ExpressionEngineSettings> {
 
     public boolean pluginEnabled = false;
+    public String systemPath;
 
     public static ExpressionEngineSettings getInstance(Project project) {
         return ServiceManager.getService(project, ExpressionEngineSettings.class);
