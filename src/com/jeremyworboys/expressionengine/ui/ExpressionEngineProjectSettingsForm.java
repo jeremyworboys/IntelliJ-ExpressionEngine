@@ -25,6 +25,7 @@ public class ExpressionEngineProjectSettingsForm implements Configurable {
 
     private JPanel mainPanel;
     private JPanel settingsPanel;
+    private JPanel errorPanel;
     private JCheckBox enabledCheckbox;
     private TextFieldWithBrowseButton systemPathField;
 
