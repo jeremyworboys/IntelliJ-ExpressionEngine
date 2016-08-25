@@ -1,6 +1,7 @@
 package com.jeremyworboys.expressionengine.ui;
 
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.openapi.util.Comparing;
 import com.jeremyworboys.expressionengine.ExpressionEngineSettings;
 import org.jetbrains.annotations.NotNull;
@@ -12,7 +13,7 @@ public class ExpressionEngineProjectSettingsPanel extends JPanel {
     private final ExpressionEngineSettings settings;
 
     private JPanel mainPanel;
-    private JTextField systemPathField;
+    private TextFieldWithBrowseButton systemPathField;
 
     public ExpressionEngineProjectSettingsPanel(@NotNull final Project project) {
         this.settings = ExpressionEngineSettings.getInstance(project);
