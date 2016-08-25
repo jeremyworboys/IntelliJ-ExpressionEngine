@@ -8,7 +8,7 @@ import com.jeremyworboys.expressionengine.psi.ExpressionEngineModuleOpenTag;
 import com.jeremyworboys.expressionengine.psi.ExpressionEngineTagParam;
 import com.jeremyworboys.expressionengine.util.TagMethodBase;
 import com.jeremyworboys.expressionengine.util.module.ModuleIndex;
-import com.jeremyworboys.expressionengine.util.pattern.ModuleTagPatterns;
+import com.jeremyworboys.expressionengine.annotator.annotations.util.ModuleTagPatterns;
 import com.jeremyworboys.expressionengine.util.plugin.PluginIndex;
 import org.jetbrains.annotations.NotNull;
 
