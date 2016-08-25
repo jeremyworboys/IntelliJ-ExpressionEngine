@@ -63,6 +63,7 @@
         <lang.psiStructureViewFactory language="ExpressionEngine" implementationClass="com.jeremyworboys.expressionengine.structureView.ExpressionEngineStructureViewFactory"/>
 
         <!-- PHP Type providers -->
+        <php.typeProvider2 implementation="com.jeremyworboys.expressionengine.type.ExpressionEngine3TypeProvider"/>
         <php.typeProvider2 implementation="com.jeremyworboys.expressionengine.type.SingletonTypeProvider"/>
         <php.typeProvider2 implementation="com.jeremyworboys.expressionengine.type.LoadClassTypeProvider"/>
     </extensions>
