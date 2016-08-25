@@ -1,8 +1,14 @@
 package com.jeremyworboys.expressionengine.ui;
 
+import com.intellij.openapi.fileChooser.FileChooserDescriptor;
+import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.ComponentWithBrowseButton.BrowseFolderActionListener;
+import com.intellij.openapi.ui.TextComponentAccessor;
+import com.intellij.openapi.ui.TextFieldWithBrowseButton;
+import com.intellij.openapi.util.Comparing;
 import com.intellij.util.ui.UIUtil;
 import com.jeremyworboys.expressionengine.ExpressionEngineSettings;
 import org.jetbrains.annotations.Nls;
@@ -16,16 +22,18 @@ import java.awt.event.ActionListener;
 public class ExpressionEngineProjectSettingsForm implements Configurable {
 
     private final ExpressionEngineSettings settings;
-    private ExpressionEngineProjectSettingsPanel settingsPanel;
 
     private JPanel mainPanel;
-    private JPanel settingsPlaceholder;
+    private JPanel settingsPanel;
     private JCheckBox enabledCheckbox;
+    private TextFieldWithBrowseButton systemPathField;
 
     public ExpressionEngineProjectSettingsForm(@NotNull final Project project) {
         this.settings = ExpressionEngineSettings.getInstance(project);
-        this.settingsPanel = new ExpressionEngineProjectSettingsPanel(project);
-        this.settingsPlaceholder.add(this.settingsPanel.getMainPanel(), "Center");
+
+        BrowseFolderActionListener<JTextField> browseFolderListener = createBrowseFolderListener(project);
+        this.systemPathField.addBrowseFolderListener(project, browseFolderListener, false);
+
         this.enabledCheckbox.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 ExpressionEngineProjectSettingsForm.this.updateSettingsPanelEnabled();
@@ -55,20 +63,20 @@ public class ExpressionEngineProjectSettingsForm implements Configurable {
     @Override
     public boolean isModified() {
         return enabledCheckbox.isSelected() != settings.pluginEnabled
-            || settingsPanel.isModified();
+            || !Comparing.strEqual(systemPathField.getText(), settings.systemPath);
 
     }
 
     @Override
     public void apply() throws ConfigurationException {
         settings.pluginEnabled = enabledCheckbox.isSelected();
-        settingsPanel.apply();
+        settings.systemPath = systemPathField.getText();
     }
 
     @Override
     public void reset() {
         enabledCheckbox.setSelected(settings.pluginEnabled);
-        settingsPanel.reset();
+        systemPathField.setText(settings.systemPath);
         this.updateSettingsPanelEnabled();
     }
 
@@ -77,7 +85,17 @@ public class ExpressionEngineProjectSettingsForm implements Configurable {
 
     }
 
+    @NotNull
+    private BrowseFolderActionListener<JTextField> createBrowseFolderListener(@NotNull final Project project) {
+        String title = "Select ExpressionEngine system directory";
+        String description = "Select ExpressionEngine system root directory";
+        FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
+        TextComponentAccessor<JTextField> accessor = TextComponentAccessor.TEXT_FIELD_WHOLE_TEXT;
+
+        return new BrowseFolderActionListener<>(title, description, this.systemPathField, project, descriptor, accessor);
+    }
+
     private void updateSettingsPanelEnabled() {
-        UIUtil.setEnabled(this.settingsPanel.getMainPanel(), this.enabledCheckbox.isSelected(), true);
+        UIUtil.setEnabled(this.settingsPanel, this.enabledCheckbox.isSelected(), true);
     }
 }
