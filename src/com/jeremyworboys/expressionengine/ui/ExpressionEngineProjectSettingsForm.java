@@ -12,14 +12,14 @@ import javax.swing.*;
 
 public class ExpressionEngineProjectSettingsForm implements Configurable {
 
-    private final Project project;
+    private final ExpressionEngineSettings settings;
 
     private JPanel panel;
     private JPanel settingsPlaceholder;
     private JCheckBox enabled;
 
     public ExpressionEngineProjectSettingsForm(@NotNull final Project project) {
-        this.project = project;
+        this.settings = ExpressionEngineSettings.getInstance(project);
     }
 
     @Nls
@@ -42,25 +42,21 @@ public class ExpressionEngineProjectSettingsForm implements Configurable {
 
     @Override
     public boolean isModified() {
-        return !enabled.isSelected() == getSettings().pluginEnabled;
+        return !enabled.isSelected() == settings.pluginEnabled;
     }
 
     @Override
     public void apply() throws ConfigurationException {
-        getSettings().pluginEnabled = enabled.isSelected();
+        settings.pluginEnabled = enabled.isSelected();
     }
 
     @Override
     public void reset() {
-        enabled.setSelected(getSettings().pluginEnabled);
+        enabled.setSelected(settings.pluginEnabled);
     }
 
     @Override
     public void disposeUIResources() {
 
-    }
-
-    private ExpressionEngineSettings getSettings() {
-        return ExpressionEngineSettings.getInstance(project);
     }
 }
