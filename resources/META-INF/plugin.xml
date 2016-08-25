@@ -42,6 +42,12 @@
         <php.typeProvider2 implementation="com.jeremyworboys.expressionengine.type.LoadClassTypeProvider"/>
     </extensions>
 
+    <project-components>
+        <component>
+            <implementation-class>com.jeremyworboys.expressionengine.ExpressionEngineProjectComponent</implementation-class>
+        </component>
+    </project-components>
+
     <actions>
         <!-- Add your actions here -->
     </actions>
