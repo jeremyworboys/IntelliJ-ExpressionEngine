@@ -34,6 +34,9 @@
                              parentId="reference.webide.settings.project.settings.php"
                              groupWeight="10"/>
 
+        <!-- Project services -->
+        <projectService serviceImplementation="com.jeremyworboys.expressionengine.ExpressionEngineSettings"/>
+
         <fileTypeFactory implementation="com.jeremyworboys.expressionengine.ExpressionEngineFileTypeFactory"/>
         <colorSettingsPage implementation="com.jeremyworboys.expressionengine.highlighter.ExpressionEngineColorSettingsPage" />
         <annotator language="ExpressionEngine" implementationClass="com.jeremyworboys.expressionengine.annotator.ExpressionEngineAnnotator"/>
