@@ -1,4 +1,4 @@
-package com.jeremyworboys.expressionengine.template.highlighter;
+package com.jeremyworboys.expressionengine.highlighter;
 
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
@@ -8,8 +8,8 @@ import com.intellij.openapi.options.colors.ColorDescriptor;
 import com.intellij.openapi.options.colors.ColorSettingsPage;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ResourceUtil;
-import com.jeremyworboys.expressionengine.template.ExpressionEngineFileType;
-import com.jeremyworboys.expressionengine.template.ExpressionEngineLanguage;
+import com.jeremyworboys.expressionengine.ExpressionEngineFileType;
+import com.jeremyworboys.expressionengine.ExpressionEngineLanguage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

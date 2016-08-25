@@ -1,4 +1,4 @@
-package com.jeremyworboys.expressionengine.template.highlighter;
+package com.jeremyworboys.expressionengine.highlighter;
 
 import com.intellij.lang.StdLanguages;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;

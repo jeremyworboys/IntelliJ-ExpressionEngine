@@ -1,8 +1,8 @@
-package com.jeremyworboys.expressionengine.template;
+package com.jeremyworboys.expressionengine;
 
 import com.intellij.openapi.fileTypes.FileTypeEditorHighlighterProviders;
 import com.intellij.openapi.fileTypes.LanguageFileType;
-import com.jeremyworboys.expressionengine.template.highlighter.ExpressionEngineEditorHighlighter;
+import com.jeremyworboys.expressionengine.highlighter.ExpressionEngineEditorHighlighter;
 import com.jeremyworboys.expressionengine.icons.ExpressionEngineIcons;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

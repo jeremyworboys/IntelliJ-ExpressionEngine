@@ -1,4 +1,4 @@
-package com.jeremyworboys.expressionengine.template;
+package com.jeremyworboys.expressionengine;
 
 import com.intellij.openapi.fileTypes.FileTypeConsumer;
 import com.intellij.openapi.fileTypes.FileTypeFactory;

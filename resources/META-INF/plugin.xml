@@ -38,12 +38,12 @@
         <projectService serviceImplementation="com.jeremyworboys.expressionengine.ExpressionEngineSettings"/>
 
         <!-- Language factories -->
-        <fileTypeFactory implementation="com.jeremyworboys.expressionengine.template.ExpressionEngineFileTypeFactory"/>
-        <lang.fileViewProviderFactory language="ExpressionEngine" implementationClass="com.jeremyworboys.expressionengine.template.ExpressionEngineFileViewProviderFactory"/>
+        <fileTypeFactory implementation="com.jeremyworboys.expressionengine.ExpressionEngineFileTypeFactory"/>
+        <lang.fileViewProviderFactory language="ExpressionEngine" implementationClass="com.jeremyworboys.expressionengine.ExpressionEngineFileViewProviderFactory"/>
 
         <!-- Syntax highlighting -->
-        <colorSettingsPage implementation="com.jeremyworboys.expressionengine.template.highlighter.ExpressionEngineColorSettingsPage" />
-        <lang.syntaxHighlighterFactory language="ExpressionEngine" implementationClass="com.jeremyworboys.expressionengine.template.highlighter.ExpressionEngineSyntaxHighlighterFactory"/>
+        <colorSettingsPage implementation="com.jeremyworboys.expressionengine.highlighter.ExpressionEngineColorSettingsPage" />
+        <lang.syntaxHighlighterFactory language="ExpressionEngine" implementationClass="com.jeremyworboys.expressionengine.highlighter.ExpressionEngineSyntaxHighlighterFactory"/>
 
         <annotator language="ExpressionEngine" implementationClass="com.jeremyworboys.expressionengine.annotator.ExpressionEngineAnnotator"/>
         <lang.commenter language="ExpressionEngine" implementationClass="com.jeremyworboys.expressionengine.commenter.ExpressionEngineCommenter"/>

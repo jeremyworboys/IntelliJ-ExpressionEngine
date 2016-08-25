@@ -2,7 +2,7 @@ package com.jeremyworboys.expressionengine.psi;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFileFactory;
-import com.jeremyworboys.expressionengine.template.ExpressionEngineFileType;
+import com.jeremyworboys.expressionengine.ExpressionEngineFileType;
 import org.jetbrains.annotations.NotNull;
 
 public class ExpressionEngineElementFactory {
