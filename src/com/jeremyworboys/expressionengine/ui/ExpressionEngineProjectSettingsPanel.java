@@ -11,6 +11,7 @@ public class ExpressionEngineProjectSettingsPanel extends JPanel {
     private final ExpressionEngineSettings settings;
 
     private JPanel mainPanel;
+    private JTextField systemPathField;
 
     public ExpressionEngineProjectSettingsPanel(@NotNull final Project project) {
         this.settings = ExpressionEngineSettings.getInstance(project);
