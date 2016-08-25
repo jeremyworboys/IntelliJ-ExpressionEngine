@@ -42,7 +42,7 @@ public class ExpressionEngineProjectSettingsForm implements Configurable {
 
     @Override
     public boolean isModified() {
-        return !getSettings().pluginEnabled == enabled.isSelected();
+        return !enabled.isSelected() == getSettings().pluginEnabled;
     }
 
     @Override
