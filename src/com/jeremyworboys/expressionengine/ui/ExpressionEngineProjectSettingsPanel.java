@@ -1,6 +1,10 @@
 package com.jeremyworboys.expressionengine.ui;
 
+import com.intellij.openapi.fileChooser.FileChooserDescriptor;
+import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.ComponentWithBrowseButton.BrowseFolderActionListener;
+import com.intellij.openapi.ui.TextComponentAccessor;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.openapi.util.Comparing;
 import com.jeremyworboys.expressionengine.ExpressionEngineSettings;
@@ -17,8 +21,12 @@ public class ExpressionEngineProjectSettingsPanel extends JPanel {
 
     public ExpressionEngineProjectSettingsPanel(@NotNull final Project project) {
         this.settings = ExpressionEngineSettings.getInstance(project);
+
+        BrowseFolderActionListener<JTextField> browseFolderListener = createBrowseFolderListener(project);
+        this.systemPathField.addBrowseFolderListener(project, browseFolderListener, false);
     }
 
+    @NotNull
     public JComponent getMainPanel() {
         return this.mainPanel;
     }
@@ -33,5 +41,15 @@ public class ExpressionEngineProjectSettingsPanel extends JPanel {
 
     public void reset() {
         systemPathField.setText(settings.systemPath);
+    }
+
+    @NotNull
+    private BrowseFolderActionListener<JTextField> createBrowseFolderListener(@NotNull final Project project) {
+        String title = "Select ExpressionEngine system directory";
+        String description = "Select ExpressionEngine system root directory";
+        FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
+        TextComponentAccessor<JTextField> accessor = TextComponentAccessor.TEXT_FIELD_WHOLE_TEXT;
+
+        return new BrowseFolderActionListener<>(title, description, this.systemPathField, project, descriptor, accessor);
     }
 }
