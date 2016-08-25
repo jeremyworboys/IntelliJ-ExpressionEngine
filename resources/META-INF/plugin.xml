@@ -34,6 +34,12 @@
                              parentId="reference.webide.settings.project.settings.php"
                              groupWeight="10"/>
 
+        <projectConfigurable instance="com.jeremyworboys.expressionengine.ui.ContainerSettingsForm"
+                             id="ExpressionEngine.ContainerSettingsForm"
+                             displayName="Container"
+                             nonDefaultProject="true"
+                             parentId="ExpressionEngine.SettingsForm"/>
+
         <!-- Project services -->
         <projectService serviceImplementation="com.jeremyworboys.expressionengine.ExpressionEngineSettings"/>
 
