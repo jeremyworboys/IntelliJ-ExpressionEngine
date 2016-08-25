@@ -17,7 +17,7 @@ public class ExpressionEngineProjectSettingsForm implements Configurable {
 
     private JPanel mainPanel;
     private JPanel settingsPlaceholder;
-    private JCheckBox enabled;
+    private JCheckBox enabledCheckbox;
 
     public ExpressionEngineProjectSettingsForm(@NotNull final Project project) {
         this.settings = ExpressionEngineSettings.getInstance(project);
@@ -45,17 +45,17 @@ public class ExpressionEngineProjectSettingsForm implements Configurable {
 
     @Override
     public boolean isModified() {
-        return !enabled.isSelected() == settings.pluginEnabled;
+        return !enabledCheckbox.isSelected() == settings.pluginEnabled;
     }
 
     @Override
     public void apply() throws ConfigurationException {
-        settings.pluginEnabled = enabled.isSelected();
+        settings.pluginEnabled = enabledCheckbox.isSelected();
     }
 
     @Override
     public void reset() {
-        enabled.setSelected(settings.pluginEnabled);
+        enabledCheckbox.setSelected(settings.pluginEnabled);
     }
 
     @Override
