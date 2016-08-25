@@ -47,6 +47,8 @@ public class ExpressionEngine3TypeProvider implements PhpTypeProvider2 {
     @Override
     public Collection<? extends PhpNamedElement> getBySignature(String signature, Project project) {
         // TODO: Build index of services and lookup class name
+        // Look at how sf2 plugin locates service.xml files?
+        // Match app.setup.php and addon.setup.php within system path
         return null;
     }
 }
