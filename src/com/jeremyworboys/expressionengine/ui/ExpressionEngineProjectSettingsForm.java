@@ -14,6 +14,7 @@ import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.util.ui.UIUtil;
 import com.jeremyworboys.expressionengine.ExpressionEngineSettings;
+import com.jeremyworboys.expressionengine.util.SettingsUtil;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -45,7 +46,7 @@ public class ExpressionEngineProjectSettingsForm implements Configurable {
         this.facetErrorPanel = new FacetErrorPanel();
         this.facetErrorPanel.getValidatorsManager().registerValidator(this.createSystemPathValidator(), this.systemPathField.getTextField());
         this.facetErrorPanel.getValidatorsManager().validate();
-        this.errorPanel.add(this.facetErrorPanel.getComponent(), "Center");
+        this.errorPanel.add(this.facetErrorPanel.getComponent());
     }
 
     @Nls
@@ -106,9 +107,24 @@ public class ExpressionEngineProjectSettingsForm implements Configurable {
         return new FacetEditorValidator() {
             @NotNull
             public ValidationResult check() {
-                return ValidationResult.OK;
+                String result = ExpressionEngineProjectSettingsForm.this.getValidationMessage();
+                if (result != null) {
+                    return new ValidationResult(result);
+                } else {
+                    return ValidationResult.OK;
+                }
             }
         };
+    }
+
+    @Nullable
+    private String getValidationMessage() {
+        if (!this.enabledCheckbox.isSelected()) {
+            return null;
+        } else {
+            String result = SettingsUtil.validateSystemPath(this.systemPathField.getText());
+            return result != null ? result : null;
+        }
     }
 
     private void updateSettingsPanelEnabled() {
