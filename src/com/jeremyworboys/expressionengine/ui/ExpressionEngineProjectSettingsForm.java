@@ -73,7 +73,8 @@ public class ExpressionEngineProjectSettingsForm implements Configurable {
     @Override
     public boolean isModified() {
         return enabledCheckbox.isSelected() != settings.pluginEnabled
-            || !Comparing.strEqual(systemPathField.getText(), settings.systemPath);
+            || !Comparing.strEqual(systemPathField.getText(), settings.systemPath)
+            || !Comparing.strEqual(templatesPathField.getText(), settings.templatesPath);
 
     }
 
@@ -81,12 +82,14 @@ public class ExpressionEngineProjectSettingsForm implements Configurable {
     public void apply() throws ConfigurationException {
         settings.pluginEnabled = enabledCheckbox.isSelected();
         settings.systemPath = systemPathField.getText();
+        settings.templatesPath = templatesPathField.getText();
     }
 
     @Override
     public void reset() {
         enabledCheckbox.setSelected(settings.pluginEnabled);
         systemPathField.setText(settings.systemPath);
+        templatesPathField.setText(settings.templatesPath);
         this.updateSettingsPanelEnabled();
     }
 
