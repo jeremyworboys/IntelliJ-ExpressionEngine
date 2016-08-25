@@ -77,7 +77,7 @@ public class ExpressionEngineProjectSettingsForm implements Configurable {
 
     }
 
-    protected void updateSettingsPanelEnabled() {
+    private void updateSettingsPanelEnabled() {
         UIUtil.setEnabled(this.settingsPanel.getMainPanel(), this.enabledCheckbox.isSelected(), true);
     }
 }
