@@ -10,6 +10,7 @@ public class ExpressionEngineFileTypeFactory extends FileTypeFactory {
     public void createFileTypes(@NotNull FileTypeConsumer fileTypeConsumer) {
         fileTypeConsumer.consume(
             ExpressionEngineFileType.INSTANCE,
+            // TODO: See if this can be used to limit files to template path
             FileNameMatcherFactory.getInstance().createMatcher("*." + ExpressionEngineFileType.INSTANCE.getDefaultExtension()));
     }
 }
