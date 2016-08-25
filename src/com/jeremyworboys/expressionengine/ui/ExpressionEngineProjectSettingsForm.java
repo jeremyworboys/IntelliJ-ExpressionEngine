@@ -54,17 +54,22 @@ public class ExpressionEngineProjectSettingsForm implements Configurable {
 
     @Override
     public boolean isModified() {
-        return !enabledCheckbox.isSelected() == settings.pluginEnabled;
+        return enabledCheckbox.isSelected() != settings.pluginEnabled
+            || settingsPanel.isModified();
+
     }
 
     @Override
     public void apply() throws ConfigurationException {
         settings.pluginEnabled = enabledCheckbox.isSelected();
+        settingsPanel.apply();
     }
 
     @Override
     public void reset() {
         enabledCheckbox.setSelected(settings.pluginEnabled);
+        settingsPanel.reset();
+        this.updateSettingsPanelEnabled();
     }
 
     @Override

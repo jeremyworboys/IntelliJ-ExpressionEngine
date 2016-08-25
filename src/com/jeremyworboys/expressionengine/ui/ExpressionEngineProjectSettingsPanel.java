@@ -19,4 +19,16 @@ public class ExpressionEngineProjectSettingsPanel extends JPanel {
     public JComponent getMainPanel() {
         return this.mainPanel;
     }
+
+    public boolean isModified() {
+        return false;
+    }
+
+    public void apply() {
+
+    }
+
+    public void reset() {
+
+    }
 }
