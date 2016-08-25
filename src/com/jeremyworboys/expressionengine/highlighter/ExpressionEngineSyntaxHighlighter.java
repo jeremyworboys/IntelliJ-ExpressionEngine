@@ -4,7 +4,7 @@ import com.intellij.lexer.Lexer;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterBase;
 import com.intellij.psi.tree.IElementType;
-import com.jeremyworboys.expressionengine.parser.ExpressionEngineLexerAdapter;
+import com.jeremyworboys.expressionengine.lexer.ExpressionEngineLexerAdapter;
 import com.jeremyworboys.expressionengine.psi.ExpressionEngineTokenSets;
 import org.jetbrains.annotations.NotNull;
 
