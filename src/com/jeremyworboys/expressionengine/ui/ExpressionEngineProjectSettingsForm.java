@@ -3,6 +3,7 @@ package com.jeremyworboys.expressionengine.ui;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
+import com.intellij.util.ui.UIUtil;
 import com.jeremyworboys.expressionengine.ExpressionEngineSettings;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
@@ -23,6 +24,7 @@ public class ExpressionEngineProjectSettingsForm implements Configurable {
         this.settings = ExpressionEngineSettings.getInstance(project);
         this.settingsPanel = new ExpressionEngineProjectSettingsPanel();
         this.settingsPlaceholder.add(this.settingsPanel.getMainPanel(), "Center");
+        this.updateSettingsPanelEnabled();
     }
 
     @Nls
@@ -61,5 +63,9 @@ public class ExpressionEngineProjectSettingsForm implements Configurable {
     @Override
     public void disposeUIResources() {
 
+    }
+
+    protected void updateSettingsPanelEnabled() {
+        UIUtil.setEnabled(this.settingsPanel.getMainPanel(), this.enabledCheckbox.isSelected(), true);
     }
 }
