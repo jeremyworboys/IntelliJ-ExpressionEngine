@@ -1,5 +1,8 @@
 package com.jeremyworboys.expressionengine.ui;
 
+import com.intellij.facet.impl.ui.FacetErrorPanel;
+import com.intellij.facet.ui.FacetEditorValidator;
+import com.intellij.facet.ui.ValidationResult;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.options.Configurable;
@@ -26,6 +29,7 @@ public class ExpressionEngineProjectSettingsForm implements Configurable {
     private JPanel errorPanel;
     private JCheckBox enabledCheckbox;
     private TextFieldWithBrowseButton systemPathField;
+    private FacetErrorPanel facetErrorPanel;
 
     public ExpressionEngineProjectSettingsForm(@NotNull final Project project) {
         this.settings = ExpressionEngineSettings.getInstance(project);
@@ -36,6 +40,12 @@ public class ExpressionEngineProjectSettingsForm implements Configurable {
 
         // Setup path browser
         this.systemPathField.addBrowseFolderListener(project, createBrowseFolderListener(project), false);
+
+        // Setup validation
+        this.facetErrorPanel = new FacetErrorPanel();
+        this.facetErrorPanel.getValidatorsManager().registerValidator(this.createSystemPathValidator(), this.systemPathField.getTextField());
+        this.facetErrorPanel.getValidatorsManager().validate();
+        this.errorPanel.add(this.facetErrorPanel.getComponent(), "Center");
     }
 
     @Nls
@@ -91,7 +101,21 @@ public class ExpressionEngineProjectSettingsForm implements Configurable {
         return new BrowseFolderActionListener<>(title, description, this.systemPathField, project, descriptor, accessor);
     }
 
+    @NotNull
+    private FacetEditorValidator createSystemPathValidator() {
+        return new FacetEditorValidator() {
+            @NotNull
+            public ValidationResult check() {
+                return ValidationResult.OK;
+            }
+        };
+    }
+
     private void updateSettingsPanelEnabled() {
         UIUtil.setEnabled(this.settingsPanel, this.enabledCheckbox.isSelected(), true);
+
+        if (this.facetErrorPanel != null) {
+            this.facetErrorPanel.getValidatorsManager().validate();
+        }
     }
 }
