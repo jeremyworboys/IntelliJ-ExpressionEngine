@@ -16,8 +16,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class ExpressionEngineProjectSettingsForm implements Configurable {
 
@@ -32,15 +30,12 @@ public class ExpressionEngineProjectSettingsForm implements Configurable {
     public ExpressionEngineProjectSettingsForm(@NotNull final Project project) {
         this.settings = ExpressionEngineSettings.getInstance(project);
 
-        BrowseFolderActionListener<JTextField> browseFolderListener = createBrowseFolderListener(project);
-        this.systemPathField.addBrowseFolderListener(project, browseFolderListener, false);
-
-        this.enabledCheckbox.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                ExpressionEngineProjectSettingsForm.this.updateSettingsPanelEnabled();
-            }
-        });
+        // Setup enabled checkbox
+        this.enabledCheckbox.addActionListener(e -> ExpressionEngineProjectSettingsForm.this.updateSettingsPanelEnabled());
         this.updateSettingsPanelEnabled();
+
+        // Setup path browser
+        this.systemPathField.addBrowseFolderListener(project, createBrowseFolderListener(project), false);
     }
 
     @Nls
