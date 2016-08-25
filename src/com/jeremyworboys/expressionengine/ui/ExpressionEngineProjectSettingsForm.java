@@ -14,7 +14,7 @@ public class ExpressionEngineProjectSettingsForm implements Configurable {
 
     private final ExpressionEngineSettings settings;
 
-    private JPanel panel;
+    private JPanel mainPanel;
     private JPanel settingsPlaceholder;
     private JCheckBox enabled;
 
@@ -37,7 +37,7 @@ public class ExpressionEngineProjectSettingsForm implements Configurable {
     @Nullable
     @Override
     public JComponent createComponent() {
-        return panel;
+        return mainPanel;
     }
 
     @Override
