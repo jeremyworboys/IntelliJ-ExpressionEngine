@@ -15,6 +15,7 @@ public class ExpressionEngineProjectSettingsForm implements Configurable {
     private final Project project;
 
     private JPanel panel;
+    private JPanel settingsPanel;
     private JCheckBox enabled;
 
     public ExpressionEngineProjectSettingsForm(@NotNull final Project project) {
