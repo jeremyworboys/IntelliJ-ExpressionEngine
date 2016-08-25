@@ -14,12 +14,12 @@ import java.util.Map;
 
 public class ExpressionEngineColorSettingsPage implements ColorSettingsPage {
     private static final AttributesDescriptor[] DESCRIPTORS = new AttributesDescriptor[]{
-        new AttributesDescriptor("Comment", ExpressionEngineSyntaxHighlighter.COMMENT),
-        new AttributesDescriptor("Number", ExpressionEngineSyntaxHighlighter.NUMBER),
-        new AttributesDescriptor("Operator", ExpressionEngineSyntaxHighlighter.OPERATOR),
-        new AttributesDescriptor("String", ExpressionEngineSyntaxHighlighter.STRING),
-        new AttributesDescriptor("Tag", ExpressionEngineSyntaxHighlighter.TAG),
-        new AttributesDescriptor("Tag Parameter", ExpressionEngineSyntaxHighlighter.TAG_PARAM),
+        new AttributesDescriptor("Comment", ExpressionEngineHighlighter.COMMENT),
+        new AttributesDescriptor("Number", ExpressionEngineHighlighter.NUMBER),
+        new AttributesDescriptor("Operator", ExpressionEngineHighlighter.OPERATOR),
+        new AttributesDescriptor("String", ExpressionEngineHighlighter.STRING),
+        new AttributesDescriptor("Tag", ExpressionEngineHighlighter.TAG),
+        new AttributesDescriptor("Tag Parameter", ExpressionEngineHighlighter.TAG_PARAM),
     };
 
     @Nullable
