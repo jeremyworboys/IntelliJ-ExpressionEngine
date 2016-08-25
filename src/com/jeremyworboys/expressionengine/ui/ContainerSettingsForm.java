@@ -3,6 +3,9 @@ package com.jeremyworboys.expressionengine.ui;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
+import com.intellij.util.ui.ListTableModel;
+import com.jeremyworboys.expressionengine.container.ContainerFile;
+import javafx.scene.control.TableView;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -16,6 +19,9 @@ public class ContainerSettingsForm implements Configurable {
     private JPanel mainPanel;
     private JPanel listViewPanel;
     private JButton resetButton;
+
+    private TableView<ContainerFile> tableView;
+    private ListTableModel<ContainerFile> tableViewModel;
 
     public ContainerSettingsForm(@NotNull Project project) {
         this.project = project;
