@@ -57,7 +57,7 @@ preload_replace_tag ::= T_LD T_PRELOAD_REPLACE T_COLON T_PARAM_NAME T_EQUAL tag_
 
 // Variables
 private variable_tag ::= parametric_variable | variable
-variable ::= <<isPairVariable true>> variable_pair | <<isPairVariable false>> variable_single{
+variable ::= <<isPairVariable 1>> variable_pair | <<isPairVariable 0>> variable_single{
   mixin="com.jeremyworboys.expressionengine.psi.impl.ExpressionEngineVariableMixin"
   implements="com.jeremyworboys.expressionengine.psi.ExpressionEngineVariableElement"
 }
@@ -72,7 +72,7 @@ variable_close_tag ::= T_LD T_SLASH T_VARIABLE_NAME T_RD {pin=3}
 parametric_variable ::= T_LD T_VARIABLE_NAME T_EQUAL tag_param_value T_RD {pin=3}
 
 // Modules
-module ::= <<isPairModule true>> module_pair | <<isPairModule false>> module_single {
+module ::= <<isPairModule 1>> module_pair | <<isPairModule 0>> module_single {
   mixin="com.jeremyworboys.expressionengine.psi.impl.ExpressionEngineModuleMixin"
   implements="com.jeremyworboys.expressionengine.psi.ExpressionEngineModuleElement"
 }
