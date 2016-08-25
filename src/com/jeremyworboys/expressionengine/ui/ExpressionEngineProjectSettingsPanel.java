@@ -1,4 +1,6 @@
 package com.jeremyworboys.expressionengine.ui;
 
-public class ExpressionEngineProjectSettingsPanel {
+import javax.swing.*;
+
+public class ExpressionEngineProjectSettingsPanel extends JPanel {
 }
