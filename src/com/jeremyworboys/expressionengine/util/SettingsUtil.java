@@ -20,12 +20,32 @@ public class SettingsUtil {
         return isTemplatesPathValid(path) ? null : "Please specify a valid ExpressionEngine templates directory.";
     }
 
-    private static boolean isSystemPathValid(String path) {
+    public static boolean isSystemPathValid(String path) {
         if (!StringUtil.isEmptyOrSpaces(path)) {
             VirtualFile file = LocalFileSystem.getInstance().findFileByPath(path);
             if (file != null && file.isDirectory()) {
                 return isSystemPathValidVersion2(file)
                     || isSystemPathValidVersion3(file);
+            }
+        }
+        return false;
+    }
+
+    public static boolean isSystemPathValidVersion2(String path) {
+        if (!StringUtil.isEmptyOrSpaces(path)) {
+            VirtualFile file = LocalFileSystem.getInstance().findFileByPath(path);
+            if (file != null && file.isDirectory()) {
+                return isSystemPathValidVersion2(file);
+            }
+        }
+        return false;
+    }
+
+    public static boolean isSystemPathValidVersion3(String path) {
+        if (!StringUtil.isEmptyOrSpaces(path)) {
+            VirtualFile file = LocalFileSystem.getInstance().findFileByPath(path);
+            if (file != null && file.isDirectory()) {
+                return isSystemPathValidVersion3(file);
             }
         }
         return false;
