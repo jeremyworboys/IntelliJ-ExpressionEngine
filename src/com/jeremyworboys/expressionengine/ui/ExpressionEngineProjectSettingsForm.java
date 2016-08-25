@@ -47,6 +47,7 @@ public class ExpressionEngineProjectSettingsForm implements Configurable {
         // Setup validation
         this.facetErrorPanel = new FacetErrorPanel();
         this.facetErrorPanel.getValidatorsManager().registerValidator(this.createSystemPathValidator(), this.systemPathField.getTextField());
+        this.facetErrorPanel.getValidatorsManager().registerValidator(this.createTemplatesPathValidator(), this.templatesPathField.getTextField());
         this.facetErrorPanel.getValidatorsManager().validate();
         this.errorPanel.add(this.facetErrorPanel.getComponent());
     }
@@ -109,7 +110,22 @@ public class ExpressionEngineProjectSettingsForm implements Configurable {
         return new FacetEditorValidator() {
             @NotNull
             public ValidationResult check() {
-                String result = ExpressionEngineProjectSettingsForm.this.getValidationMessage();
+                String result = ExpressionEngineProjectSettingsForm.this.getSystemPathValidationMessage();
+                if (result != null) {
+                    return new ValidationResult(result);
+                } else {
+                    return ValidationResult.OK;
+                }
+            }
+        };
+    }
+
+    @NotNull
+    private FacetEditorValidator createTemplatesPathValidator() {
+        return new FacetEditorValidator() {
+            @NotNull
+            public ValidationResult check() {
+                String result = ExpressionEngineProjectSettingsForm.this.getTemplatesPathValidationMessage();
                 if (result != null) {
                     return new ValidationResult(result);
                 } else {
@@ -120,11 +136,21 @@ public class ExpressionEngineProjectSettingsForm implements Configurable {
     }
 
     @Nullable
-    private String getValidationMessage() {
+    private String getSystemPathValidationMessage() {
         if (!this.enabledCheckbox.isSelected()) {
             return null;
         } else {
             String result = SettingsUtil.validateSystemPath(this.systemPathField.getText());
+            return result != null ? result : null;
+        }
+    }
+
+    @Nullable
+    private String getTemplatesPathValidationMessage() {
+        if (!this.enabledCheckbox.isSelected()) {
+            return null;
+        } else {
+            String result = SettingsUtil.validateTemplatesPath(this.templatesPathField.getText());
             return result != null ? result : null;
         }
     }

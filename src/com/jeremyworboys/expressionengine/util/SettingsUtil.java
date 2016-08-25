@@ -15,6 +15,11 @@ public class SettingsUtil {
         return isSystemPathValid(path) ? null : "Please specify a valid ExpressionEngine system directory.";
     }
 
+    @Nullable
+    public static String validateTemplatesPath(String path) {
+        return isTemplatesPathValid(path) ? null : "Please specify a valid ExpressionEngine templates directory.";
+    }
+
     private static boolean isSystemPathValid(String path) {
         if (!StringUtil.isEmptyOrSpaces(path)) {
             VirtualFile file = LocalFileSystem.getInstance().findFileByPath(path);
@@ -34,5 +39,13 @@ public class SettingsUtil {
     private static boolean isSystemPathValidVersion3(VirtualFile file) {
         return VfsUtil.findRelativeFile(file, "ee", "EllisLab") != null
             && VfsUtil.findRelativeFile(file, "user") != null;
+    }
+
+    private static boolean isTemplatesPathValid(String path) {
+        if (!StringUtil.isEmptyOrSpaces(path)) {
+            VirtualFile file = LocalFileSystem.getInstance().findFileByPath(path);
+            return file != null && file.isDirectory();
+        }
+        return false;
     }
 }
