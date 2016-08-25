@@ -6,6 +6,9 @@ import com.intellij.util.xmlb.XmlSerializerUtil;
 
 @State(name = "ExpressionEngineSettings")
 public class ExpressionEngineSettings implements PersistentStateComponent<ExpressionEngineSettings> {
+
+    public boolean pluginEnabled = false;
+
     @Override
     public ExpressionEngineSettings getState() {
         return this;
