@@ -39,6 +39,7 @@
 
         <!-- Language factories -->
         <fileTypeFactory implementation="com.jeremyworboys.expressionengine.template.ExpressionEngineFileTypeFactory"/>
+        <lang.fileViewProviderFactory language="ExpressionEngine" implementationClass="com.jeremyworboys.expressionengine.template.ExpressionEngineFileViewProviderFactory"/>
 
         <!-- Syntax highlighting -->
         <colorSettingsPage implementation="com.jeremyworboys.expressionengine.template.highlighter.ExpressionEngineColorSettingsPage" />
