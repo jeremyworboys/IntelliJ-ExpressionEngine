@@ -10,6 +10,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class ExpressionEngineProjectSettingsForm implements Configurable {
 
@@ -24,6 +26,11 @@ public class ExpressionEngineProjectSettingsForm implements Configurable {
         this.settings = ExpressionEngineSettings.getInstance(project);
         this.settingsPanel = new ExpressionEngineProjectSettingsPanel();
         this.settingsPlaceholder.add(this.settingsPanel.getMainPanel(), "Center");
+        this.enabledCheckbox.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                ExpressionEngineProjectSettingsForm.this.updateSettingsPanelEnabled();
+            }
+        });
         this.updateSettingsPanelEnabled();
     }
 
