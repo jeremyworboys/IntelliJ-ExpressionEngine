@@ -24,7 +24,7 @@ public class ExpressionEngineProjectSettingsForm implements Configurable {
 
     public ExpressionEngineProjectSettingsForm(@NotNull final Project project) {
         this.settings = ExpressionEngineSettings.getInstance(project);
-        this.settingsPanel = new ExpressionEngineProjectSettingsPanel();
+        this.settingsPanel = new ExpressionEngineProjectSettingsPanel(project);
         this.settingsPlaceholder.add(this.settingsPanel.getMainPanel(), "Center");
         this.enabledCheckbox.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
