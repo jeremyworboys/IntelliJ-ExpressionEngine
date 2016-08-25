@@ -30,6 +30,7 @@ public class ExpressionEngineProjectSettingsForm implements Configurable {
     private JPanel errorPanel;
     private JCheckBox enabledCheckbox;
     private TextFieldWithBrowseButton systemPathField;
+    private TextFieldWithBrowseButton templatesPathField;
     private FacetErrorPanel facetErrorPanel;
 
     public ExpressionEngineProjectSettingsForm(@NotNull final Project project) {
@@ -41,6 +42,7 @@ public class ExpressionEngineProjectSettingsForm implements Configurable {
 
         // Setup path browser
         this.systemPathField.addBrowseFolderListener(project, createBrowseFolderListener(project), false);
+        this.templatesPathField.addBrowseFolderListener(project, createBrowseFolderListener(project), false);
 
         // Setup validation
         this.facetErrorPanel = new FacetErrorPanel();
