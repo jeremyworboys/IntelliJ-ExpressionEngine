@@ -19,4 +19,6 @@ public class ExpressionEngineProjectComponent extends AbstractProjectComponent {
     public static boolean isEnabled(@Nullable PsiElement psiElement) {
         return psiElement != null && isEnabled(psiElement.getProject());
     }
+
+    // TODO: Offer integration setup (see: WordPress plugin)
 }
