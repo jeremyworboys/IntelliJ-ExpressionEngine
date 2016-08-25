@@ -18,7 +18,10 @@
 }
 
 expressionEngineFile ::= statement*
-private statement ::= module | conditional | special_tag | variable_tag | comment | T_CONTENT
+private statement ::= module | conditional | special_tag | variable_tag | comment | outer_content
+
+// HTML content
+outer_content ::= T_CONTENT
 
 // Literals
 path_literal ::= T_PATH_LITERAL
