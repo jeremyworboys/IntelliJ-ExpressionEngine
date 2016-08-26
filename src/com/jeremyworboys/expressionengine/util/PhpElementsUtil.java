@@ -1,5 +1,6 @@
 package com.jeremyworboys.expressionengine.util;
 
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.patterns.ElementPattern;
 import com.intellij.patterns.PatternCondition;
 import com.intellij.patterns.PlatformPatterns;
@@ -10,9 +11,7 @@ import com.intellij.util.ProcessingContext;
 import com.intellij.util.containers.OrderedSet;
 import com.jetbrains.php.lang.parser.PhpElementTypes;
 import com.jetbrains.php.lang.psi.PhpFile;
-import com.jetbrains.php.lang.psi.elements.ArrayCreationExpression;
-import com.jetbrains.php.lang.psi.elements.MethodReference;
-import com.jetbrains.php.lang.psi.elements.PhpReturn;
+import com.jetbrains.php.lang.psi.elements.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -101,10 +100,25 @@ public class PhpElementsUtil {
     public static ArrayCreationExpression getReturnedArrayFromFile(PhpFile phpFile) {
         Collection<PhpReturn> phpReturns = PsiTreeUtil.findChildrenOfType(phpFile, PhpReturn.class);
         for (PhpReturn phpReturn : phpReturns) {
+            // TODO: What about if this is returning an array in a variable
             if (phpReturn.getArgument() instanceof ArrayCreationExpression) {
                 return (ArrayCreationExpression) phpReturn.getArgument();
             }
         }
+        return null;
+    }
+
+    @Nullable
+    public static PsiElement getValueOfKeyInArray(ArrayCreationExpression phpArray, String key) {
+        for (ArrayHashElement phpArrayElement : phpArray.getHashElements()) {
+            if (phpArrayElement.getKey() instanceof StringLiteralExpression) {
+                StringLiteralExpression phpArrayElementKey = (StringLiteralExpression) phpArrayElement.getKey();
+                if (phpArrayElementKey != null && StringUtil.equals(key ,phpArrayElementKey.getContents())) {
+                    return phpArrayElement.getValue();
+                }
+            }
+        }
+
         return null;
     }
 }

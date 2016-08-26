@@ -1,7 +1,6 @@
 package com.jeremyworboys.expressionengine.container;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -77,61 +76,43 @@ public class ContainerHelper {
                 String namespacePrefix = "";
 
                 // Loop through *.setup.php to find namespace
-                for (ArrayHashElement phpArrayElement : phpArray.getHashElements()) {
-                    StringLiteralExpression phpArrayElementKey = (StringLiteralExpression) phpArrayElement.getKey();
-                    PsiElement phpArrayElementValue = phpArrayElement.getValue();
-                    // Find an entry with key "services" and an array value
-                    if (phpArrayElementKey != null
-                        && "namespace".equals(phpArrayElementKey.getContents())
-                        && phpArrayElementValue instanceof StringLiteralExpression) {
-                        StringLiteralExpression namespaceElement = (StringLiteralExpression) phpArrayElementValue;
-                        namespacePrefix = StringUtil.trimStart(StringUtil.trimEnd(namespaceElement.getContents(), "\\"), "\\");
-                    }
+                PsiElement namespaceValue = PhpElementsUtil.getValueOfKeyInArray(phpArray, "namespace");
+                if (namespaceValue instanceof StringLiteralExpression) {
+                    String namespaceValueString = ((StringLiteralExpression) namespaceValue).getContents();
+                    namespacePrefix = namespaceValueString.replaceAll("^\\|\\$", "");
                 }
 
                 // Loop through *.setup.php to find services
-                for (ArrayHashElement phpArrayElement : phpArray.getHashElements()) {
-                    StringLiteralExpression phpArrayElementKey = (StringLiteralExpression) phpArrayElement.getKey();
-                    PsiElement phpArrayElementValue = phpArrayElement.getValue();
-                    // TODO: Locate "namespace" key and prepend to string services
-                    // Find an entry with key "services" and an array value
-                    if (phpArrayElementKey != null
-                        && "services".equals(phpArrayElementKey.getContents())
-                        && phpArrayElementValue instanceof ArrayCreationExpression) {
-                        ArrayCreationExpression servicesArray = (ArrayCreationExpression) phpArrayElementValue;
-                        // Loop through services array
-                        for (ArrayHashElement servicesArrayElement : servicesArray.getHashElements()) {
-                            PsiElement serviceKey = servicesArrayElement.getKey();
-                            PsiElement serviceValue = servicesArrayElement.getValue();
-                            if (serviceKey instanceof StringLiteralExpression && serviceValue != null) {
-                                String serviceName = ((StringLiteralExpression) serviceKey).getContents();
-                                String serviceClassName = "";
+                PsiElement servicesValue = PhpElementsUtil.getValueOfKeyInArray(phpArray, "services");
+                if (servicesValue instanceof ArrayCreationExpression) {
+                    ArrayCreationExpression servicesArray = (ArrayCreationExpression) servicesValue;
+                    // Loop through services array
+                    for (ArrayHashElement servicesArrayElement : servicesArray.getHashElements()) {
+                        PsiElement serviceKey = servicesArrayElement.getKey();
+                        PsiElement serviceValue = servicesArrayElement.getValue();
+                        if (serviceKey instanceof StringLiteralExpression && serviceValue != null) {
+                            String serviceName = ((StringLiteralExpression) serviceKey).getContents();
+                            String serviceClassName = "";
 
-                                // Is service a closure
-                                if (serviceValue.getFirstChild() instanceof Function) {
-                                    PhpType serviceReturnType = ((Function) serviceValue.getFirstChild()).getLocalType(true);
-                                    if (!serviceReturnType.isEmpty()) {
-                                        serviceClassName = serviceReturnType.toStringResolved();
-                                    }
+                            // Is service a closure
+                            if (serviceValue.getFirstChild() instanceof Function) {
+                                PhpType serviceReturnType = ((Function) serviceValue.getFirstChild()).getLocalType(true);
+                                if (!serviceReturnType.isEmpty()) {
+                                    serviceClassName = serviceReturnType.toStringResolved();
                                 }
+                            }
 
-                                // Is service a string
-                                else if (serviceValue instanceof StringLiteralExpression) {
-                                    String rawServiceClassName = ((StringLiteralExpression) serviceValue).getContents();
-                                    if (rawServiceClassName.startsWith("\\")) {
-                                        serviceClassName = rawServiceClassName;
-                                    } else {
-                                        serviceClassName = namespacePrefix + "\\" + rawServiceClassName;
-                                    }
-                                }
+                            // Is service a string
+                            else if (serviceValue instanceof StringLiteralExpression) {
+                                serviceClassName = namespacePrefix + "\\" + ((StringLiteralExpression) serviceValue).getContents();
+                            }
 
-                                // Create service entry
-                                if (StringUtils.isNotBlank(serviceName) && StringUtils.isNotBlank(serviceClassName)) {
-                                    SerializableService serializableService = new SerializableService(serviceName);
-                                    serializableService.setClassName(serviceClassName);
+                            // Create service entry
+                            if (StringUtils.isNotBlank(serviceName) && StringUtils.isNotBlank(serviceClassName)) {
+                                SerializableService serializableService = new SerializableService(serviceName);
+                                serializableService.setClassName(serviceClassName);
 
-                                    services.add(serializableService);
-                                }
+                                services.add(serializableService);
                             }
                         }
                     }
