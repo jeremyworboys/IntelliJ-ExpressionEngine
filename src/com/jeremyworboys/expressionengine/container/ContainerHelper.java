@@ -64,6 +64,8 @@ public class ContainerHelper {
     public static List<ServiceSerializable> getServicesInFile(PsiFile psiFile) {
         final List<ServiceSerializable> services = new ArrayList<>();
 
+        // TODO: This could be cleaned up and optimized
+        // Use sf2 plugin ServiceContainerUtil::getServicesInFile() as a reference
         if (psiFile instanceof PhpFile) {
             ArrayCreationExpression phpArray = PhpElementsUtil.getReturnedArrayFromFile((PhpFile) psiFile);
             if (phpArray != null) {
