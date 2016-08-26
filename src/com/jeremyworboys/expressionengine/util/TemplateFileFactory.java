@@ -2,17 +2,16 @@ package com.jeremyworboys.expressionengine.util;
 
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.jeremyworboys.expressionengine.ExpressionEngineFileType;
-import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 public class TemplateFileFactory {
     private final Project project;
@@ -41,7 +40,7 @@ public class TemplateFileFactory {
     @Nullable
     public VirtualFile createFile(@NotNull VirtualFile targetDirectory, @NotNull String fileNameWithPath, @NotNull String contents) {
         String[] fileNameSegments = fileNameWithPath.split("/");
-        String pathString = StringUtils.join(Arrays.copyOf(fileNameSegments, fileNameSegments.length - 1), "/");
+        String pathString = StringUtil.join(fileNameSegments, 0, fileNameSegments.length - 1, "/");
 
         VirtualFile existingFile = VfsUtil.findRelativeFile(targetDirectory, fileNameSegments);
         if (existingFile != null) {
