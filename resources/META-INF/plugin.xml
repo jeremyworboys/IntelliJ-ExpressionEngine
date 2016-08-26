@@ -34,25 +34,45 @@
                              parentId="reference.webide.settings.project.settings.php"
                              groupWeight="10"/>
 
+        <projectConfigurable instance="com.jeremyworboys.expressionengine.ui.ContainerSettingsForm"
+                             id="ExpressionEngine.ContainerSettingsForm"
+                             displayName="Container"
+                             nonDefaultProject="true"
+                             parentId="ExpressionEngine.SettingsForm"/>
+
         <!-- Project services -->
         <projectService serviceImplementation="com.jeremyworboys.expressionengine.ExpressionEngineSettings"/>
+
+        <!-- File indices -->
+        <fileBasedIndex implementation="com.jeremyworboys.expressionengine.stubs.indexes.ServicesDefinitionStubIndex"/>
 
         <!-- Language factories -->
         <fileTypeFactory implementation="com.jeremyworboys.expressionengine.ExpressionEngineFileTypeFactory"/>
         <lang.fileViewProviderFactory language="ExpressionEngine" implementationClass="com.jeremyworboys.expressionengine.ExpressionEngineFileViewProviderFactory"/>
 
+        <!-- Template parser -->
+        <lang.parserDefinition language="ExpressionEngine" implementationClass="com.jeremyworboys.expressionengine.parser.ExpressionEngineParserDefinition"/>
+
         <!-- Syntax highlighting -->
         <colorSettingsPage implementation="com.jeremyworboys.expressionengine.highlighter.ExpressionEngineColorSettingsPage" />
         <lang.syntaxHighlighterFactory language="ExpressionEngine" implementationClass="com.jeremyworboys.expressionengine.highlighter.ExpressionEngineSyntaxHighlighterFactory"/>
 
+        <!-- Annotations -->
         <annotator language="ExpressionEngine" implementationClass="com.jeremyworboys.expressionengine.annotator.ExpressionEngineAnnotator"/>
+
+        <!-- Commenting -->
         <lang.commenter language="ExpressionEngine" implementationClass="com.jeremyworboys.expressionengine.commenter.ExpressionEngineCommenter"/>
+
+        <!-- Code folding -->
         <lang.foldingBuilder language="ExpressionEngine" implementationClass="com.jeremyworboys.expressionengine.folding.ModuleFoldingBuilder"/>
         <lang.foldingBuilder language="ExpressionEngine" implementationClass="com.jeremyworboys.expressionengine.folding.VariableFoldingBuilder"/>
         <lang.foldingBuilder language="ExpressionEngine" implementationClass="com.jeremyworboys.expressionengine.folding.ConditionalFoldingBuilder"/>
-        <lang.parserDefinition language="ExpressionEngine" implementationClass="com.jeremyworboys.expressionengine.parser.ExpressionEngineParserDefinition"/>
+
+        <!-- Structure view -->
         <lang.psiStructureViewFactory language="ExpressionEngine" implementationClass="com.jeremyworboys.expressionengine.structureView.ExpressionEngineStructureViewFactory"/>
 
+        <!-- PHP Type providers -->
+        <php.typeProvider2 implementation="com.jeremyworboys.expressionengine.container.ContainerTypeProvider"/>
         <php.typeProvider2 implementation="com.jeremyworboys.expressionengine.type.SingletonTypeProvider"/>
         <php.typeProvider2 implementation="com.jeremyworboys.expressionengine.type.LoadClassTypeProvider"/>
     </extensions>

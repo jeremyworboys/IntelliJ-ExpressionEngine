@@ -5,10 +5,14 @@ import com.intellij.patterns.PatternCondition;
 import com.intellij.patterns.PlatformPatterns;
 import com.intellij.patterns.PsiElementPattern;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.ProcessingContext;
 import com.intellij.util.containers.OrderedSet;
 import com.jetbrains.php.lang.parser.PhpElementTypes;
+import com.jetbrains.php.lang.psi.PhpFile;
+import com.jetbrains.php.lang.psi.elements.ArrayCreationExpression;
 import com.jetbrains.php.lang.psi.elements.MethodReference;
+import com.jetbrains.php.lang.psi.elements.PhpReturn;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -91,5 +95,16 @@ public class PhpElementsUtil {
         }
 
         return results;
+    }
+
+    @Nullable
+    public static ArrayCreationExpression getReturnedArrayFromFile(PhpFile phpFile) {
+        Collection<PhpReturn> phpReturns = PsiTreeUtil.findChildrenOfType(phpFile, PhpReturn.class);
+        for (PhpReturn phpReturn : phpReturns) {
+            if (phpReturn.getArgument() instanceof ArrayCreationExpression) {
+                return (ArrayCreationExpression) phpReturn.getArgument();
+            }
+        }
+        return null;
     }
 }
