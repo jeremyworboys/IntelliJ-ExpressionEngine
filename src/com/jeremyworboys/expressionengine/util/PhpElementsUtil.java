@@ -1,18 +1,24 @@
 package com.jeremyworboys.expressionengine.util;
 
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.patterns.ElementPattern;
 import com.intellij.patterns.PatternCondition;
 import com.intellij.patterns.PlatformPatterns;
 import com.intellij.patterns.PsiElementPattern;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiReference;
+import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.ProcessingContext;
 import com.intellij.util.containers.OrderedSet;
 import com.jetbrains.php.lang.parser.PhpElementTypes;
-import com.jetbrains.php.lang.psi.elements.MethodReference;
+import com.jetbrains.php.lang.psi.PhpFile;
+import com.jetbrains.php.lang.psi.elements.*;
+import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -23,29 +29,41 @@ public class PhpElementsUtil {
     }
 
     @NotNull
-    public static PsiElementPattern.Capture<PsiElement> isMethodReferenceNamed(String name) {
+    public static PsiElementPattern.Capture<PsiElement> isMethodReferenceNamed(String... methodName) {
         return PhpElementsUtil
             .isMethodReference()
             //.withName(name) <- This doesn't work, so it is handled below
             .with(new PatternCondition<PsiElement>("withName") {
                 @Override
                 public boolean accepts(@NotNull PsiElement psiElement, ProcessingContext context) {
-                    String elementName = ((MethodReference) psiElement).getName();
-                    assert elementName != null;
-                    return elementName.equals(name);
+                    String methodRefName = ((MethodReference) psiElement).getName();
+                    return methodRefName != null && Arrays.asList(methodName).contains(methodRefName);
                 }
             });
     }
 
     @NotNull
-    public static PsiElementPattern.Capture<PsiElement> isMethodReferenceWithFirstStringNamed(String name) {
+    public static PsiElementPattern.Capture<PsiElement> isMethodReferenceWithFirstStringNamed(String... methodName) {
         return PhpElementsUtil
-            .isMethodReferenceNamed(name)
+            .isMethodReferenceNamed(methodName)
             .withChild(PlatformPatterns
                 .psiElement(PhpElementTypes.PARAMETER_LIST)
                 .withFirstChild(PlatformPatterns
                     .psiElement(PhpElementTypes.STRING)
                 )
+            );
+    }
+
+    public static PsiElementPattern.Capture<PsiElement> isMethodWithFirstStringOrFieldReference(String... methodName) {
+        return PhpElementsUtil
+            .isMethodReferenceNamed(methodName)
+            .withChild(PlatformPatterns
+                .psiElement(PhpElementTypes.PARAMETER_LIST)
+                .withFirstChild(PlatformPatterns.or(
+                    PlatformPatterns.psiElement(PhpElementTypes.STRING),
+                    PlatformPatterns.psiElement(PhpElementTypes.FIELD_REFERENCE),
+                    PlatformPatterns.psiElement(PhpElementTypes.CLASS_CONSTANT_REFERENCE)
+                ))
             );
     }
 
@@ -91,5 +109,81 @@ public class PhpElementsUtil {
         }
 
         return results;
+    }
+
+    @Nullable
+    public static ArrayCreationExpression getReturnedArrayFromFile(PhpFile phpFile) {
+        Collection<PhpReturn> phpReturns = PsiTreeUtil.findChildrenOfType(phpFile, PhpReturn.class);
+        for (PhpReturn phpReturn : phpReturns) {
+            // TODO: What about if this is returning an array in a variable
+            if (phpReturn.getArgument() instanceof ArrayCreationExpression) {
+                return (ArrayCreationExpression) phpReturn.getArgument();
+            }
+        }
+        return null;
+    }
+
+    @Nullable
+    public static PhpPsiElement getValueOfKeyInArray(ArrayCreationExpression phpArray, String key) {
+        for (ArrayHashElement phpArrayElement : phpArray.getHashElements()) {
+            if (phpArrayElement.getKey() instanceof StringLiteralExpression) {
+                StringLiteralExpression phpArrayElementKey = (StringLiteralExpression) phpArrayElement.getKey();
+                if (phpArrayElementKey != null && StringUtil.equals(key, phpArrayElementKey.getContents())) {
+                    return phpArrayElement.getValue();
+                }
+            }
+        }
+
+        return null;
+    }
+
+    @Nullable
+    public static String getStringValue(@Nullable PsiElement psiElement) {
+        return getStringValue(psiElement, 0);
+    }
+
+    @Nullable
+    private static String getStringValue(@Nullable PsiElement psiElement, int depth) {
+
+        if (psiElement == null || ++depth > 5) {
+            return null;
+        }
+
+        if (psiElement instanceof StringLiteralExpression) {
+            String resolvedString = ((StringLiteralExpression) psiElement).getContents();
+            if (StringUtils.isEmpty(resolvedString)) {
+                return null;
+            }
+
+            return resolvedString;
+        }
+
+        if (psiElement instanceof Field) {
+            return getStringValue(((Field) psiElement).getDefaultValue(), depth);
+        }
+
+        if (psiElement instanceof PhpReference) {
+
+            PsiReference psiReference = psiElement.getReference();
+            if (psiReference == null) {
+                return null;
+            }
+
+            PsiElement ref = psiReference.resolve();
+            if (ref instanceof PhpReference) {
+                return getStringValue(psiElement, depth);
+            }
+
+            if (ref instanceof Field) {
+                PsiElement resolved = ((Field) ref).getDefaultValue();
+
+                if (resolved instanceof StringLiteralExpression) {
+                    return ((StringLiteralExpression) resolved).getContents();
+                }
+            }
+
+        }
+
+        return null;
     }
 }

@@ -2,54 +2,42 @@ package com.jeremyworboys.expressionengine.highlighter;
 
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
+import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory;
 import com.intellij.openapi.options.colors.AttributesDescriptor;
 import com.intellij.openapi.options.colors.ColorDescriptor;
 import com.intellij.openapi.options.colors.ColorSettingsPage;
-import com.jeremyworboys.expressionengine.icons.ExpressionEngineIcons;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.util.ResourceUtil;
+import com.jeremyworboys.expressionengine.ExpressionEngineFileType;
+import com.jeremyworboys.expressionengine.ExpressionEngineLanguage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.io.IOException;
 import java.util.Map;
 
 public class ExpressionEngineColorSettingsPage implements ColorSettingsPage {
-    private static final AttributesDescriptor[] DESCRIPTORS = new AttributesDescriptor[]{
-        new AttributesDescriptor("Comment", ExpressionEngineSyntaxHighlighter.COMMENT),
-        new AttributesDescriptor("Number", ExpressionEngineSyntaxHighlighter.NUMBER),
-        new AttributesDescriptor("Operator", ExpressionEngineSyntaxHighlighter.OPERATOR),
-        new AttributesDescriptor("String", ExpressionEngineSyntaxHighlighter.STRING),
-        new AttributesDescriptor("Tag", ExpressionEngineSyntaxHighlighter.TAG),
-        new AttributesDescriptor("Tag Parameter", ExpressionEngineSyntaxHighlighter.TAG_PARAM),
-    };
+    private static final SyntaxHighlighter SYNTAX_HIGHLIGHTER;
+    private static final AttributesDescriptor[] DESCRIPTORS;
+    private static final String DEMO_TEXT;
 
     @Nullable
     @Override
     public Icon getIcon() {
-        return ExpressionEngineIcons.FILE;
+        return ExpressionEngineFileType.INSTANCE.getIcon();
     }
 
     @NotNull
     @Override
     public SyntaxHighlighter getHighlighter() {
-        return new ExpressionEngineSyntaxHighlighter();
+        return SYNTAX_HIGHLIGHTER;
     }
 
     @NotNull
     @Override
     public String getDemoText() {
-        // TODO: Load from external file
-        return "{!-- this is a comment --}\n" +
-            "{exp:channel:entries channel=\"homepage\" limit=1 dynamic=\"off\" require_entry=\"yes\"}\n" +
-            "    {if no_results}{redirect=\"404\"}{/if}\n" +
-            "    <div class=\"home-content\">\n" +
-            "        <h1>{home_content_title}</h1>\n" +
-            "        {if home_content_intro != \"\"}" +
-            "            <p class=\"home-content-intro\">{home_content_intro}</p>\n" +
-            "        {/if}" +
-            "        <p>{home_content_body}</p>\n" +
-            "        <a href=\"{home_button_location}\" class=\"btn btn-brand\">{home_button_text}</a>\n" +
-            "    </div>\n" +
-            "{/exp:channel:entries}";
+        return DEMO_TEXT;
     }
 
     @Nullable
@@ -75,5 +63,24 @@ public class ExpressionEngineColorSettingsPage implements ColorSettingsPage {
     @Override
     public String getDisplayName() {
         return "ExpressionEngine";
+    }
+
+    static {
+        SYNTAX_HIGHLIGHTER = SyntaxHighlighterFactory.getSyntaxHighlighter(ExpressionEngineLanguage.INSTANCE, null, null);
+        DESCRIPTORS = new AttributesDescriptor[]{
+            new AttributesDescriptor("Comment", ExpressionEngineHighlighter.COMMENT),
+            new AttributesDescriptor("Number", ExpressionEngineHighlighter.NUMBER),
+            new AttributesDescriptor("Operator", ExpressionEngineHighlighter.OPERATOR),
+            new AttributesDescriptor("String", ExpressionEngineHighlighter.STRING),
+            new AttributesDescriptor("Tag", ExpressionEngineHighlighter.TAG),
+            new AttributesDescriptor("Tag Parameter", ExpressionEngineHighlighter.TAG_PARAM),
+        };
+
+        try {
+            String e = ResourceUtil.loadText(ExpressionEngineColorSettingsPage.class.getResource("/template/sample_text.html"));
+            DEMO_TEXT = StringUtil.convertLineSeparators(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

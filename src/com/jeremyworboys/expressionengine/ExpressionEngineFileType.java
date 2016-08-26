@@ -4,7 +4,6 @@ import com.intellij.openapi.fileTypes.FileTypeEditorHighlighterProviders;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.jeremyworboys.expressionengine.highlighter.ExpressionEngineEditorHighlighter;
 import com.jeremyworboys.expressionengine.icons.ExpressionEngineIcons;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -42,10 +41,5 @@ public class ExpressionEngineFileType extends LanguageFileType {
     @Override
     public Icon getIcon() {
         return ExpressionEngineIcons.FILE;
-    }
-
-    @NonNls
-    public String[] getExtensions() {
-        return new String[]{getDefaultExtension(), "css"};
     }
 }

@@ -1,4 +1,4 @@
-package com.jeremyworboys.expressionengine.util.pattern;
+package com.jeremyworboys.expressionengine.annotator.annotations.util;
 
 import com.intellij.patterns.ElementPattern;
 import com.intellij.patterns.PlatformPatterns;
