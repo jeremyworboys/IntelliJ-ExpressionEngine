@@ -8,6 +8,9 @@ public interface Service {
     @NotNull
     String getId();
 
+    @NotNull
+    String getPrefix();
+
     @Nullable
     String getClassName();
 }

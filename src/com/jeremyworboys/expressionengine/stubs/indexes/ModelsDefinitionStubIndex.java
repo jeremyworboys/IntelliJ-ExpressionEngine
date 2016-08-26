@@ -15,7 +15,7 @@ public class ModelsDefinitionStubIndex extends SetupFileStubIndex<ModelSerializa
 
     @Override
     protected void buildIndex(FileContent inputData, Map<String, ModelSerializable> index) {
-        List<ModelSerializable> modelsInFile = ContainerHelper.getModelsInFile(inputData.getPsiFile());
+        List<ModelSerializable> modelsInFile = ContainerHelper.getModelsInFile(inputData.getPsiFile(), getServicePrefix(inputData));
         for (ModelSerializable model : modelsInFile) {
             index.put(model.getId(), model);
         }

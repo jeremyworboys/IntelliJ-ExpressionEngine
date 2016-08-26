@@ -15,7 +15,7 @@ public class ServicesDefinitionStubIndex extends SetupFileStubIndex<ServiceSeria
 
     @Override
     protected void buildIndex(FileContent inputData, Map<String, ServiceSerializable> index) {
-        List<ServiceSerializable> servicesInFile = ContainerHelper.getServicesInFile(inputData.getPsiFile());
+        List<ServiceSerializable> servicesInFile = ContainerHelper.getServicesInFile(inputData.getPsiFile(), getServicePrefix(inputData));
         for (ServiceSerializable service : servicesInFile) {
             index.put(service.getId(), service);
         }

@@ -1,6 +1,7 @@
 package com.jeremyworboys.expressionengine.stubs.indexes;
 
 import com.intellij.psi.PsiFile;
+import com.intellij.util.PathUtil;
 import com.intellij.util.indexing.DataIndexer;
 import com.intellij.util.indexing.FileBasedIndex;
 import com.intellij.util.indexing.FileBasedIndexExtension;
@@ -77,6 +78,14 @@ abstract public class SetupFileStubIndex<V extends Serializable> extends FileBas
         }
 
         return true;
+    }
+
+    @NotNull
+    protected String getServicePrefix(FileContent inputData) {
+        String filePath = inputData.getFile().getPath();
+        String parentDirectoryName = PathUtil.getFileName(PathUtil.getParentPath(filePath));
+
+        return filePath.contains("ee/EllisLab/ExpressionEngine") ? "ee" : parentDirectoryName;
     }
 
     private int getMaxFileByteSize() {

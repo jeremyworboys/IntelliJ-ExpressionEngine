@@ -61,7 +61,7 @@ public class ContainerHelper {
     }
 
     @NotNull
-    public static List<ServiceSerializable> getServicesInFile(PsiFile psiFile) {
+    public static List<ServiceSerializable> getServicesInFile(PsiFile psiFile, String servicePrefix) {
 
         ArrayCreationExpression setupArray = getSetupArray(psiFile);
         if (setupArray == null) {
@@ -72,7 +72,7 @@ public class ContainerHelper {
         Map<String, String> servicesEntries = findServicesWithKey(setupArray, "services");
 
         for (Map.Entry<String, String> entry : servicesEntries.entrySet()) {
-            SerializableService serializableService = new SerializableService(entry.getKey());
+            SerializableService serializableService = new SerializableService(entry.getKey(), servicePrefix);
             serializableService.setClassName(entry.getValue());
 
             services.add(serializableService);
@@ -84,7 +84,7 @@ public class ContainerHelper {
     // TODO: This doesn't belong here..
     // Most of this class should probably be somewhere else
     @NotNull
-    public static List<ModelSerializable> getModelsInFile(PsiFile psiFile) {
+    public static List<ModelSerializable> getModelsInFile(PsiFile psiFile, String servicePrefix) {
 
         ArrayCreationExpression setupArray = getSetupArray(psiFile);
         if (setupArray == null) {
@@ -95,7 +95,7 @@ public class ContainerHelper {
         Map<String, String> modelsEntries = findServicesWithKey(setupArray, "models");
 
         for (Map.Entry<String, String> entry : modelsEntries.entrySet()) {
-            SerializableModel serializableModel = new SerializableModel(entry.getKey());
+            SerializableModel serializableModel = new SerializableModel(entry.getKey(), servicePrefix);
             serializableModel.setClassName(entry.getValue());
 
             models.add(serializableModel);

@@ -8,6 +8,9 @@ public interface Model {
     @NotNull
     String getId();
 
+    @NotNull
+    String getPrefix();
+
     @Nullable
     String getClassName();
 }
