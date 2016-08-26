@@ -70,14 +70,7 @@ public class ContainerHelper {
         if (psiFile instanceof PhpFile) {
             ArrayCreationExpression phpArray = PhpElementsUtil.getReturnedArrayFromFile((PhpFile) psiFile);
             if (phpArray != null) {
-                String namespacePrefix = "";
-
-                // Loop through *.setup.php to find namespace
-                PhpPsiElement namespaceValue = PhpElementsUtil.getValueOfKeyInArray(phpArray, "namespace");
-                if (namespaceValue instanceof StringLiteralExpression) {
-                    String namespaceValueString = ((StringLiteralExpression) namespaceValue).getContents();
-                    namespacePrefix = namespaceValueString.replaceAll("^\\|\\$", "");
-                }
+                String namespacePrefix = getNamespacePrefix(phpArray);
 
                 // Loop through *.setup.php to find services
                 PhpPsiElement servicesValue = PhpElementsUtil.getValueOfKeyInArray(phpArray, "services");
@@ -126,5 +119,17 @@ public class ContainerHelper {
         // TODO: Implement getModelsInFile() method...
 
         return models;
+    }
+
+    @NotNull
+    private static String getNamespacePrefix(ArrayCreationExpression phpArray) {
+        PhpPsiElement namespaceValue = PhpElementsUtil.getValueOfKeyInArray(phpArray, "namespace");
+
+        if (namespaceValue instanceof StringLiteralExpression) {
+            String namespaceValueString = ((StringLiteralExpression) namespaceValue).getContents();
+            return namespaceValueString.replaceAll("^\\|\\$", "");
+        }
+
+        return "";
     }
 }
