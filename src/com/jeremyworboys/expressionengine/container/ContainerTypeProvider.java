@@ -92,6 +92,7 @@ public class ContainerTypeProvider implements PhpTypeProvider2 {
         }
 
         // Find services in index matching the parameter
+        // TODO: Determine if prefix is used and resolve with consideration
         FileBasedIndex fileBasedIndex = FileBasedIndex.getInstance();
         List<ServiceSerializable> services = fileBasedIndex.getValues(ServicesDefinitionStubIndex.KEY, parameter, GlobalSearchScope.projectScope(project));
 

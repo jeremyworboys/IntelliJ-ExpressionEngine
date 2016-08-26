@@ -80,6 +80,7 @@ public class ModelTypeProvider implements PhpTypeProvider2 {
         }
 
         // Find models in index matching the parameter
+        // TODO: Determine if prefix is used and resolve with consideration
         FileBasedIndex fileBasedIndex = FileBasedIndex.getInstance();
         List<ModelSerializable> models = fileBasedIndex.getValues(ModelsDefinitionStubIndex.KEY, parameter, GlobalSearchScope.projectScope(project));
 
