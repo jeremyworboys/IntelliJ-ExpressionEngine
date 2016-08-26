@@ -1,6 +1,7 @@
 package com.jeremyworboys.expressionengine.container;
 
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -14,7 +15,6 @@ import com.jeremyworboys.expressionengine.util.PhpElementsUtil;
 import com.jetbrains.php.lang.psi.PhpFile;
 import com.jetbrains.php.lang.psi.elements.*;
 import com.jetbrains.php.lang.psi.resolve.types.PhpType;
-import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -115,9 +115,9 @@ public class ContainerHelper {
     @NotNull
     private static String getNamespacePrefix(ArrayCreationExpression phpArray) {
         PhpPsiElement namespaceValue = PhpElementsUtil.getValueOfKeyInArray(phpArray, "namespace");
+        String namespaceValueString = PhpElementsUtil.getStringValue(namespaceValue);
 
-        if (namespaceValue instanceof StringLiteralExpression) {
-            String namespaceValueString = ((StringLiteralExpression) namespaceValue).getContents();
+        if (namespaceValueString != null) {
             return namespaceValueString.replaceAll("^\\|\\$", "");
         }
 
@@ -138,7 +138,7 @@ public class ContainerHelper {
                 PsiElement serviceKey = servicesArrayElement.getKey();
                 PsiElement serviceValue = servicesArrayElement.getValue();
                 if (serviceKey instanceof StringLiteralExpression && serviceValue != null) {
-                    String serviceName = ((StringLiteralExpression) serviceKey).getContents();
+                    String serviceName = PhpElementsUtil.getStringValue(serviceKey);
                     String serviceClassName = "";
 
                     // Is service a closure
@@ -150,11 +150,14 @@ public class ContainerHelper {
                     }
                     // Is service a string
                     else if (serviceValue instanceof StringLiteralExpression) {
-                        serviceClassName = namespacePrefix + "\\" + ((StringLiteralExpression) serviceValue).getContents();
+                        String serviceValueString = PhpElementsUtil.getStringValue(servicesValue);
+                        if (serviceValueString != null) {
+                            serviceClassName = namespacePrefix + "\\" + serviceValueString;
+                        }
                     }
 
                     // Create service entry
-                    if (StringUtils.isNotBlank(serviceName) && StringUtils.isNotBlank(serviceClassName)) {
+                    if (StringUtil.isNotEmpty(serviceName) && StringUtil.isNotEmpty(serviceClassName)) {
                         mappings.put(serviceName, serviceClassName);
                     }
                 }

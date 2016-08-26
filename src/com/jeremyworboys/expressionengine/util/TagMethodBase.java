@@ -5,7 +5,6 @@ import com.intellij.psi.PsiElement;
 import com.jetbrains.php.lang.psi.elements.Method;
 import com.jetbrains.php.lang.psi.elements.MethodReference;
 import com.jetbrains.php.lang.psi.elements.PhpClass;
-import com.jetbrains.php.lang.psi.elements.StringLiteralExpression;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -62,8 +61,10 @@ public abstract class TagMethodBase {
 
         for (MethodReference fetchParamMethodCall : fetchParamMethodCalls) {
             PsiElement[] parameters = fetchParamMethodCall.getParameters();
-            String paramName = ((StringLiteralExpression) parameters[0]).getContents();
-            parameterNames.putIfAbsent(paramName, fetchParamMethodCall);
+            String paramName = PhpElementsUtil.getStringValue(parameters[0]);
+            if (paramName != null) {
+                parameterNames.putIfAbsent(paramName, fetchParamMethodCall);
+            }
         }
 
         return parameterNames;

@@ -46,7 +46,7 @@ public class PhpTypeProviderUtil {
 
         // we already have a string value
         if (parameter instanceof StringLiteralExpression) {
-            String param = ((StringLiteralExpression) parameter).getContents();
+            String param = PhpElementsUtil.getStringValue(parameter);
             if (StringUtil.isNotEmpty(param)) {
                 return buildReferenceSignature(methodSignatures, trimKey, param);
             }

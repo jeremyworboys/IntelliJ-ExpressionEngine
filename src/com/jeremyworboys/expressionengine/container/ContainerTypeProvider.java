@@ -1,6 +1,7 @@
 package com.jeremyworboys.expressionengine.container;
 
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.indexing.FileBasedIndex;
@@ -11,7 +12,6 @@ import com.jeremyworboys.expressionengine.util.PhpTypeProviderUtil;
 import com.jetbrains.php.PhpIndex;
 import com.jetbrains.php.lang.psi.elements.*;
 import com.jetbrains.php.lang.psi.resolve.types.PhpTypeProvider2;
-import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -39,8 +39,8 @@ public class ContainerTypeProvider implements PhpTypeProvider2 {
         if (psiElement instanceof FunctionReference && "ee".equals(((FunctionReference) psiElement).getName())) {
             PsiElement[] parameters = ((FunctionReference) psiElement).getParameters();
             if (parameters.length > 0 && parameters[0] instanceof StringLiteralExpression) {
-                String contents = ((StringLiteralExpression) parameters[0]).getContents();
-                if (StringUtils.isNotBlank(contents)) {
+                String contents = PhpElementsUtil.getStringValue(parameters[0]);
+                if (StringUtil.isNotEmpty(contents)) {
                     return ((FunctionReference) psiElement).getSignature() + TRIM_KEY + contents;
                 }
             }
