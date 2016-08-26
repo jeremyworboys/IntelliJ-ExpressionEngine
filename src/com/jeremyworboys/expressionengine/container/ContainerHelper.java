@@ -18,10 +18,7 @@ import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ContainerHelper {
 
@@ -65,9 +62,13 @@ public class ContainerHelper {
 
     @NotNull
     public static List<ServiceSerializable> getServicesInFile(PsiFile psiFile) {
-        final List<ServiceSerializable> services = new ArrayList<>();
 
         ArrayCreationExpression setupArray = getSetupArray(psiFile);
+        if (setupArray == null) {
+            return Collections.emptyList();
+        }
+
+        final List<ServiceSerializable> services = new ArrayList<>();
         Map<String, String> servicesEntries = findServicesWithKey(setupArray, "services");
 
         for (Map.Entry<String, String> entry : servicesEntries.entrySet()) {
@@ -84,9 +85,13 @@ public class ContainerHelper {
     // Most of this class should probably be somewhere else
     @NotNull
     public static List<ModelSerializable> getModelsInFile(PsiFile psiFile) {
-        final List<ModelSerializable> models = new ArrayList<>();
 
         ArrayCreationExpression setupArray = getSetupArray(psiFile);
+        if (setupArray == null) {
+            return Collections.emptyList();
+        }
+
+        final List<ModelSerializable> models = new ArrayList<>();
         Map<String, String> modelsEntries = findServicesWithKey(setupArray, "models");
 
         for (Map.Entry<String, String> entry : modelsEntries.entrySet()) {
@@ -123,36 +128,34 @@ public class ContainerHelper {
     private static Map<String, String> findServicesWithKey(ArrayCreationExpression setupArray, String setupKey) {
         final Map<String, String> mappings = new HashMap<>();
 
-        if (setupArray != null) {
-            String namespacePrefix = getNamespacePrefix(setupArray);
-            PhpPsiElement servicesValue = PhpElementsUtil.getValueOfKeyInArray(setupArray, setupKey);
+        String namespacePrefix = getNamespacePrefix(setupArray);
+        PhpPsiElement servicesValue = PhpElementsUtil.getValueOfKeyInArray(setupArray, setupKey);
 
-            if (servicesValue instanceof ArrayCreationExpression) {
-                ArrayCreationExpression servicesArray = (ArrayCreationExpression) servicesValue;
-                // Loop through services array
-                for (ArrayHashElement servicesArrayElement : servicesArray.getHashElements()) {
-                    PsiElement serviceKey = servicesArrayElement.getKey();
-                    PsiElement serviceValue = servicesArrayElement.getValue();
-                    if (serviceKey instanceof StringLiteralExpression && serviceValue != null) {
-                        String serviceName = ((StringLiteralExpression) serviceKey).getContents();
-                        String serviceClassName = "";
+        if (servicesValue instanceof ArrayCreationExpression) {
+            ArrayCreationExpression servicesArray = (ArrayCreationExpression) servicesValue;
+            // Loop through services array
+            for (ArrayHashElement servicesArrayElement : servicesArray.getHashElements()) {
+                PsiElement serviceKey = servicesArrayElement.getKey();
+                PsiElement serviceValue = servicesArrayElement.getValue();
+                if (serviceKey instanceof StringLiteralExpression && serviceValue != null) {
+                    String serviceName = ((StringLiteralExpression) serviceKey).getContents();
+                    String serviceClassName = "";
 
-                        // Is service a closure
-                        if (serviceValue.getFirstChild() instanceof Function) {
-                            PhpType serviceReturnType = ((Function) serviceValue.getFirstChild()).getLocalType(true);
-                            if (!serviceReturnType.isEmpty()) {
-                                serviceClassName = serviceReturnType.toStringResolved();
-                            }
+                    // Is service a closure
+                    if (serviceValue.getFirstChild() instanceof Function) {
+                        PhpType serviceReturnType = ((Function) serviceValue.getFirstChild()).getLocalType(true);
+                        if (!serviceReturnType.isEmpty()) {
+                            serviceClassName = serviceReturnType.toStringResolved();
                         }
-                        // Is service a string
-                        else if (serviceValue instanceof StringLiteralExpression) {
-                            serviceClassName = namespacePrefix + "\\" + ((StringLiteralExpression) serviceValue).getContents();
-                        }
+                    }
+                    // Is service a string
+                    else if (serviceValue instanceof StringLiteralExpression) {
+                        serviceClassName = namespacePrefix + "\\" + ((StringLiteralExpression) serviceValue).getContents();
+                    }
 
-                        // Create service entry
-                        if (StringUtils.isNotBlank(serviceName) && StringUtils.isNotBlank(serviceClassName)) {
-                            mappings.put(serviceName, serviceClassName);
-                        }
+                    // Create service entry
+                    if (StringUtils.isNotBlank(serviceName) && StringUtils.isNotBlank(serviceClassName)) {
+                        mappings.put(serviceName, serviceClassName);
                     }
                 }
             }
