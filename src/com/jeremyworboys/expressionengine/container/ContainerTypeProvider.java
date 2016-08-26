@@ -4,7 +4,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.indexing.FileBasedIndex;
-import com.jeremyworboys.expressionengine.container.service.ServiceSerializable;
 import com.jeremyworboys.expressionengine.stubs.indexes.ServicesDefinitionStubIndex;
 import com.jeremyworboys.expressionengine.util.ExpressionEngine3InterfacesUtil;
 import com.jeremyworboys.expressionengine.util.PhpElementsUtil;

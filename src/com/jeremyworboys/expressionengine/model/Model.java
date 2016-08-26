@@ -1,4 +1,4 @@
-package com.jeremyworboys.expressionengine.container.model;
+package com.jeremyworboys.expressionengine.model;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

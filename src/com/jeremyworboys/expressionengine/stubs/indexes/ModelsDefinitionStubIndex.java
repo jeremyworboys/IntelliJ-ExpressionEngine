@@ -3,7 +3,7 @@ package com.jeremyworboys.expressionengine.stubs.indexes;
 import com.intellij.util.indexing.FileContent;
 import com.intellij.util.indexing.ID;
 import com.jeremyworboys.expressionengine.container.ContainerHelper;
-import com.jeremyworboys.expressionengine.container.model.ModelSerializable;
+import com.jeremyworboys.expressionengine.model.ModelSerializable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;

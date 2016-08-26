@@ -1,10 +1,9 @@
-package com.jeremyworboys.expressionengine.container;
+package com.jeremyworboys.expressionengine.model;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.indexing.FileBasedIndex;
-import com.jeremyworboys.expressionengine.container.model.ModelSerializable;
 import com.jeremyworboys.expressionengine.stubs.indexes.ModelsDefinitionStubIndex;
 import com.jeremyworboys.expressionengine.util.ExpressionEngine3InterfacesUtil;
 import com.jeremyworboys.expressionengine.util.PhpElementsUtil;

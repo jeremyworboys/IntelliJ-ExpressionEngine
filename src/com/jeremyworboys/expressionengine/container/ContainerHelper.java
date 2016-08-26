@@ -8,10 +8,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.jeremyworboys.expressionengine.ExpressionEngineProjectComponent;
 import com.jeremyworboys.expressionengine.ExpressionEngineSettings;
-import com.jeremyworboys.expressionengine.container.model.ModelSerializable;
-import com.jeremyworboys.expressionengine.container.model.SerializableModel;
-import com.jeremyworboys.expressionengine.container.service.SerializableService;
-import com.jeremyworboys.expressionengine.container.service.ServiceSerializable;
+import com.jeremyworboys.expressionengine.model.ModelSerializable;
+import com.jeremyworboys.expressionengine.model.SerializableModel;
 import com.jeremyworboys.expressionengine.util.PhpElementsUtil;
 import com.jetbrains.php.lang.psi.PhpFile;
 import com.jetbrains.php.lang.psi.elements.*;
@@ -82,6 +80,8 @@ public class ContainerHelper {
         return services;
     }
 
+    // TODO: This doesn't belong here..
+    // Most of this class should probably be somewhere else
     @NotNull
     public static List<ModelSerializable> getModelsInFile(PsiFile psiFile) {
         final List<ModelSerializable> models = new ArrayList<>();

@@ -1,13 +1,13 @@
-package com.jeremyworboys.expressionengine.container.service;
+package com.jeremyworboys.expressionengine.model;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class SerializableService implements ServiceSerializable {
+public class SerializableModel implements ModelSerializable {
     private String id;
     private String className;
 
-    public SerializableService(@NotNull String id) {
+    public SerializableModel(@NotNull String id) {
         this.id = id;
     }
 
