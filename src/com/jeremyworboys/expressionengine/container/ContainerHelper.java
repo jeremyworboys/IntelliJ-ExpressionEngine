@@ -17,6 +17,7 @@ import com.jetbrains.php.lang.psi.elements.*;
 import com.jetbrains.php.lang.psi.resolve.types.PhpType;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,45 +66,44 @@ public class ContainerHelper {
     public static List<ServiceSerializable> getServicesInFile(PsiFile psiFile) {
         final List<ServiceSerializable> services = new ArrayList<>();
 
+        ArrayCreationExpression setupArray = getSetupArray(psiFile);
+        if (setupArray == null) {
+            return services;
+        }
+
+        String namespacePrefix = getNamespacePrefix(setupArray);
+
         // TODO: This could be cleaned up and optimized
         // Use sf2 plugin ServiceContainerUtil::getServicesInFile() as a reference
-        if (psiFile instanceof PhpFile) {
-            ArrayCreationExpression phpArray = PhpElementsUtil.getReturnedArrayFromFile((PhpFile) psiFile);
-            if (phpArray != null) {
-                String namespacePrefix = getNamespacePrefix(phpArray);
+        PhpPsiElement servicesValue = PhpElementsUtil.getValueOfKeyInArray(setupArray, "services");
+        if (servicesValue instanceof ArrayCreationExpression) {
+            ArrayCreationExpression servicesArray = (ArrayCreationExpression) servicesValue;
+            // Loop through services array
+            for (ArrayHashElement servicesArrayElement : servicesArray.getHashElements()) {
+                PsiElement serviceKey = servicesArrayElement.getKey();
+                PsiElement serviceValue = servicesArrayElement.getValue();
+                if (serviceKey instanceof StringLiteralExpression && serviceValue != null) {
+                    String serviceName = ((StringLiteralExpression) serviceKey).getContents();
+                    String serviceClassName = "";
 
-                // Loop through *.setup.php to find services
-                PhpPsiElement servicesValue = PhpElementsUtil.getValueOfKeyInArray(phpArray, "services");
-                if (servicesValue instanceof ArrayCreationExpression) {
-                    ArrayCreationExpression servicesArray = (ArrayCreationExpression) servicesValue;
-                    // Loop through services array
-                    for (ArrayHashElement servicesArrayElement : servicesArray.getHashElements()) {
-                        PsiElement serviceKey = servicesArrayElement.getKey();
-                        PsiElement serviceValue = servicesArrayElement.getValue();
-                        if (serviceKey instanceof StringLiteralExpression && serviceValue != null) {
-                            String serviceName = ((StringLiteralExpression) serviceKey).getContents();
-                            String serviceClassName = "";
-
-                            // Is service a closure
-                            if (serviceValue.getFirstChild() instanceof Function) {
-                                PhpType serviceReturnType = ((Function) serviceValue.getFirstChild()).getLocalType(true);
-                                if (!serviceReturnType.isEmpty()) {
-                                    serviceClassName = serviceReturnType.toStringResolved();
-                                }
-                            }
-                            // Is service a string
-                            else if (serviceValue instanceof StringLiteralExpression) {
-                                serviceClassName = namespacePrefix + "\\" + ((StringLiteralExpression) serviceValue).getContents();
-                            }
-
-                            // Create service entry
-                            if (StringUtils.isNotBlank(serviceName) && StringUtils.isNotBlank(serviceClassName)) {
-                                SerializableService serializableService = new SerializableService(serviceName);
-                                serializableService.setClassName(serviceClassName);
-
-                                services.add(serializableService);
-                            }
+                    // Is service a closure
+                    if (serviceValue.getFirstChild() instanceof Function) {
+                        PhpType serviceReturnType = ((Function) serviceValue.getFirstChild()).getLocalType(true);
+                        if (!serviceReturnType.isEmpty()) {
+                            serviceClassName = serviceReturnType.toStringResolved();
                         }
+                    }
+                    // Is service a string
+                    else if (serviceValue instanceof StringLiteralExpression) {
+                        serviceClassName = namespacePrefix + "\\" + ((StringLiteralExpression) serviceValue).getContents();
+                    }
+
+                    // Create service entry
+                    if (StringUtils.isNotBlank(serviceName) && StringUtils.isNotBlank(serviceClassName)) {
+                        SerializableService serializableService = new SerializableService(serviceName);
+                        serializableService.setClassName(serviceClassName);
+
+                        services.add(serializableService);
                     }
                 }
             }
@@ -119,6 +119,14 @@ public class ContainerHelper {
         // TODO: Implement getModelsInFile() method...
 
         return models;
+    }
+
+    @Nullable
+    private static ArrayCreationExpression getSetupArray(PsiFile psiFile) {
+        if (psiFile instanceof PhpFile) {
+            return PhpElementsUtil.getReturnedArrayFromFile((PhpFile) psiFile);
+        }
+        return null;
     }
 
     @NotNull
