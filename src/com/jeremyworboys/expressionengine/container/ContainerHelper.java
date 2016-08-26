@@ -9,6 +9,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.jeremyworboys.expressionengine.ExpressionEngineProjectComponent;
 import com.jeremyworboys.expressionengine.ExpressionEngineSettings;
+import com.jeremyworboys.expressionengine.container.model.ModelSerializable;
 import com.jeremyworboys.expressionengine.container.service.SerializableService;
 import com.jeremyworboys.expressionengine.container.service.ServiceSerializable;
 import com.jeremyworboys.expressionengine.util.PhpElementsUtil;
@@ -26,6 +27,7 @@ import java.util.List;
 
 public class ContainerHelper {
 
+    @NotNull
     public static List<ContainerFile> getContainerFiles(@NotNull Project project) {
         List<ContainerFile> containerFiles = new ArrayList<>();
 
@@ -63,6 +65,7 @@ public class ContainerHelper {
         return containerFiles;
     }
 
+    @NotNull
     public static List<ServiceSerializable> getServicesInFile(PsiFile psiFile) {
         final List<ServiceSerializable> services = new ArrayList<>();
 
@@ -137,5 +140,14 @@ public class ContainerHelper {
         }
 
         return services;
+    }
+
+    @NotNull
+    public static List<ModelSerializable> getModelsInFile(PsiFile psiFile) {
+        final List<ModelSerializable> models = new ArrayList<>();
+
+        // TODO: Implement getModelsInFile() method...
+
+        return models;
     }
 }
