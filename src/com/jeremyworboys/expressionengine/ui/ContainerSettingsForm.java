@@ -5,15 +5,17 @@ import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.ToolbarDecorator;
 import com.intellij.ui.table.TableView;
-import com.intellij.util.ui.ElementProducer;
 import com.intellij.util.ui.ListTableModel;
 import com.jeremyworboys.expressionengine.container.ContainerFile;
+import com.jeremyworboys.expressionengine.container.ContainerHelper;
 import com.jeremyworboys.expressionengine.ui.util.ListTableUtil;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ContainerSettingsForm implements Configurable {
 
@@ -73,7 +75,6 @@ public class ContainerSettingsForm implements Configurable {
     @Override
     public void apply() throws ConfigurationException {
         // TODO: Implement apply() method...
-
     }
 
     @Override
@@ -87,6 +88,11 @@ public class ContainerSettingsForm implements Configurable {
     }
 
     private void attachItems() {
-        // TODO: Implement attachItems() method...
+        List<ContainerFile> lookupItems = new ArrayList<>();
+        lookupItems.addAll(ContainerHelper.getContainerFiles(this.project));
+
+        for (ContainerFile containerFile : lookupItems) {
+            this.tableViewModel.addRow(containerFile);
+        }
     }
 }
