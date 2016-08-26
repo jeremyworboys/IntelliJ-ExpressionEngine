@@ -29,10 +29,10 @@ public class ContainerTypeProvider implements PhpTypeProvider2 {
         }
 
         if (psiElement instanceof FunctionReference){
-            FunctionReference functionElement = (FunctionReference) psiElement;
-            if ("ee".equals(functionElement.getName())) {
-                PsiElement[] functionParameters = functionElement.getParameters();
-                if (functionParameters.length > 1 && functionParameters[0] instanceof StringLiteralExpression) {
+            FunctionReference functionReference = (FunctionReference) psiElement;
+            if ("ee".equals(functionReference.getName())) {
+                PsiElement[] functionParameters = functionReference.getParameters();
+                if (functionParameters.length > 0 && functionParameters[0] instanceof StringLiteralExpression) {
                     String serviceParameter = ((StringLiteralExpression) functionParameters[0]).getContents();
                     if (StringUtils.isNotBlank(serviceParameter)) {
                         return serviceParameter;
