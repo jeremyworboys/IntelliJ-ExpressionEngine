@@ -7,6 +7,7 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.containers.HashSet;
 import com.intellij.util.indexing.FileBasedIndex;
 import com.jeremyworboys.expressionengine.ExpressionEngineProjectComponent;
+import com.jeremyworboys.expressionengine.container.service.ServiceSerializable;
 import com.jeremyworboys.expressionengine.stubs.indexes.ServicesDefinitionStubIndex;
 import com.jetbrains.php.PhpIndex;
 import com.jetbrains.php.lang.psi.elements.FunctionReference;

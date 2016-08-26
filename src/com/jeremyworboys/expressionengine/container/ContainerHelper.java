@@ -9,6 +9,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.jeremyworboys.expressionengine.ExpressionEngineProjectComponent;
 import com.jeremyworboys.expressionengine.ExpressionEngineSettings;
+import com.jeremyworboys.expressionengine.container.service.SerializableService;
+import com.jeremyworboys.expressionengine.container.service.ServiceSerializable;
 import com.jeremyworboys.expressionengine.util.PhpElementsUtil;
 import com.jetbrains.php.lang.psi.PhpFile;
 import com.jetbrains.php.lang.psi.elements.ArrayCreationExpression;
