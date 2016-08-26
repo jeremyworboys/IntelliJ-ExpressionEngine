@@ -1,4 +1,4 @@
-package com.jeremyworboys.expressionengine.type;
+package com.jeremyworboys.expressionengine.container;
 
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 
-public class ExpressionEngine3TypeProvider implements PhpTypeProvider2 {
+public class ContainerTypeProvider implements PhpTypeProvider2 {
     @Override
     public char getKey() {
         return '\u0208';
