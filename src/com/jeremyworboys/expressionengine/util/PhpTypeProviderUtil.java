@@ -1,7 +1,9 @@
 package com.jeremyworboys.expressionengine.util;
 
+import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
+import com.jeremyworboys.expressionengine.ExpressionEngineProjectComponent;
 import com.jetbrains.php.PhpIndex;
 import com.jetbrains.php.lang.psi.elements.*;
 import org.jetbrains.annotations.NotNull;
@@ -12,6 +14,16 @@ import java.util.Collection;
 import java.util.List;
 
 public class PhpTypeProviderUtil {
+
+    public static boolean shouldProvideTypeCompletion(PsiElement psiElement) {
+        return !DumbService.getInstance(psiElement.getProject()).isDumb();
+    }
+
+    public static boolean shouldProvideTypeCompletion3(PsiElement psiElement) {
+        return shouldProvideTypeCompletion(psiElement)
+            && ExpressionEngineProjectComponent.isEnabledVersion3(psiElement);
+    }
+
     @Nullable
     public static String getReferenceSignature(MethodReference methodReference, char trimKey) {
         return getReferenceSignature(methodReference, trimKey, 1);

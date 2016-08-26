@@ -1,11 +1,9 @@
 package com.jeremyworboys.expressionengine.container;
 
-import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.indexing.FileBasedIndex;
-import com.jeremyworboys.expressionengine.ExpressionEngineProjectComponent;
 import com.jeremyworboys.expressionengine.container.model.ModelSerializable;
 import com.jeremyworboys.expressionengine.stubs.indexes.ModelsDefinitionStubIndex;
 import com.jeremyworboys.expressionengine.util.ExpressionEngine3InterfacesUtil;
@@ -36,9 +34,7 @@ public class ModelTypeProvider implements PhpTypeProvider2 {
     @Nullable
     @Override
     public String getType(PsiElement psiElement) {
-        // Don't lookup if in low-power mode or isn't a configured ee3 project
-        if (DumbService.getInstance(psiElement.getProject()).isDumb()
-            || !ExpressionEngineProjectComponent.isEnabledVersion3(psiElement)) {
+        if (!PhpTypeProviderUtil.shouldProvideTypeCompletion3(psiElement)) {
             return null;
         }
 

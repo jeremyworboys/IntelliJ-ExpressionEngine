@@ -1,15 +1,14 @@
 package com.jeremyworboys.expressionengine.container;
 
-import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.containers.HashSet;
 import com.intellij.util.indexing.FileBasedIndex;
-import com.jeremyworboys.expressionengine.ExpressionEngineProjectComponent;
 import com.jeremyworboys.expressionengine.container.service.ServiceSerializable;
 import com.jeremyworboys.expressionengine.stubs.indexes.ServicesDefinitionStubIndex;
+import com.jeremyworboys.expressionengine.util.PhpTypeProviderUtil;
 import com.jetbrains.php.PhpIndex;
 import com.jetbrains.php.lang.psi.elements.FunctionReference;
 import com.jetbrains.php.lang.psi.elements.PhpClass;
@@ -30,9 +29,7 @@ public class ContainerTypeProvider implements PhpTypeProvider2 {
     @Nullable
     @Override
     public String getType(PsiElement psiElement) {
-        // Don't lookup if in low-power mode or isn't a configured ee3 project
-        if (DumbService.getInstance(psiElement.getProject()).isDumb()
-            || !ExpressionEngineProjectComponent.isEnabledVersion3(psiElement)) {
+        if (!PhpTypeProviderUtil.shouldProvideTypeCompletion3(psiElement)) {
             return null;
         }
 
