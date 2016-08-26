@@ -109,7 +109,7 @@ public class PhpElementsUtil {
     }
 
     @Nullable
-    public static PsiElement getValueOfKeyInArray(ArrayCreationExpression phpArray, String key) {
+    public static PhpPsiElement getValueOfKeyInArray(ArrayCreationExpression phpArray, String key) {
         for (ArrayHashElement phpArrayElement : phpArray.getHashElements()) {
             if (phpArrayElement.getKey() instanceof StringLiteralExpression) {
                 StringLiteralExpression phpArrayElementKey = (StringLiteralExpression) phpArrayElement.getKey();

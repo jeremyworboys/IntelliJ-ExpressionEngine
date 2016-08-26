@@ -13,10 +13,7 @@ import com.jeremyworboys.expressionengine.container.service.SerializableService;
 import com.jeremyworboys.expressionengine.container.service.ServiceSerializable;
 import com.jeremyworboys.expressionengine.util.PhpElementsUtil;
 import com.jetbrains.php.lang.psi.PhpFile;
-import com.jetbrains.php.lang.psi.elements.ArrayCreationExpression;
-import com.jetbrains.php.lang.psi.elements.ArrayHashElement;
-import com.jetbrains.php.lang.psi.elements.Function;
-import com.jetbrains.php.lang.psi.elements.StringLiteralExpression;
+import com.jetbrains.php.lang.psi.elements.*;
 import com.jetbrains.php.lang.psi.resolve.types.PhpType;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -76,14 +73,14 @@ public class ContainerHelper {
                 String namespacePrefix = "";
 
                 // Loop through *.setup.php to find namespace
-                PsiElement namespaceValue = PhpElementsUtil.getValueOfKeyInArray(phpArray, "namespace");
+                PhpPsiElement namespaceValue = PhpElementsUtil.getValueOfKeyInArray(phpArray, "namespace");
                 if (namespaceValue instanceof StringLiteralExpression) {
                     String namespaceValueString = ((StringLiteralExpression) namespaceValue).getContents();
                     namespacePrefix = namespaceValueString.replaceAll("^\\|\\$", "");
                 }
 
                 // Loop through *.setup.php to find services
-                PsiElement servicesValue = PhpElementsUtil.getValueOfKeyInArray(phpArray, "services");
+                PhpPsiElement servicesValue = PhpElementsUtil.getValueOfKeyInArray(phpArray, "services");
                 if (servicesValue instanceof ArrayCreationExpression) {
                     ArrayCreationExpression servicesArray = (ArrayCreationExpression) servicesValue;
                     // Loop through services array
@@ -101,7 +98,6 @@ public class ContainerHelper {
                                     serviceClassName = serviceReturnType.toStringResolved();
                                 }
                             }
-
                             // Is service a string
                             else if (serviceValue instanceof StringLiteralExpression) {
                                 serviceClassName = namespacePrefix + "\\" + ((StringLiteralExpression) serviceValue).getContents();
