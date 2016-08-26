@@ -20,7 +20,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ContainerHelper {
 
@@ -67,46 +69,13 @@ public class ContainerHelper {
         final List<ServiceSerializable> services = new ArrayList<>();
 
         ArrayCreationExpression setupArray = getSetupArray(psiFile);
-        if (setupArray == null) {
-            return services;
-        }
+        Map<String, String> servicesEntries = findServicesWithKey(setupArray, "services");
 
-        String namespacePrefix = getNamespacePrefix(setupArray);
+        for (Map.Entry<String, String> entry : servicesEntries.entrySet()) {
+            SerializableService serializableService = new SerializableService(entry.getKey());
+            serializableService.setClassName(entry.getValue());
 
-        // TODO: This could be cleaned up and optimized
-        // Use sf2 plugin ServiceContainerUtil::getServicesInFile() as a reference
-        PhpPsiElement servicesValue = PhpElementsUtil.getValueOfKeyInArray(setupArray, "services");
-        if (servicesValue instanceof ArrayCreationExpression) {
-            ArrayCreationExpression servicesArray = (ArrayCreationExpression) servicesValue;
-            // Loop through services array
-            for (ArrayHashElement servicesArrayElement : servicesArray.getHashElements()) {
-                PsiElement serviceKey = servicesArrayElement.getKey();
-                PsiElement serviceValue = servicesArrayElement.getValue();
-                if (serviceKey instanceof StringLiteralExpression && serviceValue != null) {
-                    String serviceName = ((StringLiteralExpression) serviceKey).getContents();
-                    String serviceClassName = "";
-
-                    // Is service a closure
-                    if (serviceValue.getFirstChild() instanceof Function) {
-                        PhpType serviceReturnType = ((Function) serviceValue.getFirstChild()).getLocalType(true);
-                        if (!serviceReturnType.isEmpty()) {
-                            serviceClassName = serviceReturnType.toStringResolved();
-                        }
-                    }
-                    // Is service a string
-                    else if (serviceValue instanceof StringLiteralExpression) {
-                        serviceClassName = namespacePrefix + "\\" + ((StringLiteralExpression) serviceValue).getContents();
-                    }
-
-                    // Create service entry
-                    if (StringUtils.isNotBlank(serviceName) && StringUtils.isNotBlank(serviceClassName)) {
-                        SerializableService serializableService = new SerializableService(serviceName);
-                        serializableService.setClassName(serviceClassName);
-
-                        services.add(serializableService);
-                    }
-                }
-            }
+            services.add(serializableService);
         }
 
         return services;
@@ -139,5 +108,47 @@ public class ContainerHelper {
         }
 
         return "";
+    }
+
+    @NotNull
+    private static Map<String, String> findServicesWithKey(ArrayCreationExpression setupArray, String setupKey) {
+        final Map<String, String> mappings = new HashMap<>();
+
+        if (setupArray != null) {
+            String namespacePrefix = getNamespacePrefix(setupArray);
+            PhpPsiElement servicesValue = PhpElementsUtil.getValueOfKeyInArray(setupArray, setupKey);
+
+            if (servicesValue instanceof ArrayCreationExpression) {
+                ArrayCreationExpression servicesArray = (ArrayCreationExpression) servicesValue;
+                // Loop through services array
+                for (ArrayHashElement servicesArrayElement : servicesArray.getHashElements()) {
+                    PsiElement serviceKey = servicesArrayElement.getKey();
+                    PsiElement serviceValue = servicesArrayElement.getValue();
+                    if (serviceKey instanceof StringLiteralExpression && serviceValue != null) {
+                        String serviceName = ((StringLiteralExpression) serviceKey).getContents();
+                        String serviceClassName = "";
+
+                        // Is service a closure
+                        if (serviceValue.getFirstChild() instanceof Function) {
+                            PhpType serviceReturnType = ((Function) serviceValue.getFirstChild()).getLocalType(true);
+                            if (!serviceReturnType.isEmpty()) {
+                                serviceClassName = serviceReturnType.toStringResolved();
+                            }
+                        }
+                        // Is service a string
+                        else if (serviceValue instanceof StringLiteralExpression) {
+                            serviceClassName = namespacePrefix + "\\" + ((StringLiteralExpression) serviceValue).getContents();
+                        }
+
+                        // Create service entry
+                        if (StringUtils.isNotBlank(serviceName) && StringUtils.isNotBlank(serviceClassName)) {
+                            mappings.put(serviceName, serviceClassName);
+                        }
+                    }
+                }
+            }
+        }
+
+        return mappings;
     }
 }
