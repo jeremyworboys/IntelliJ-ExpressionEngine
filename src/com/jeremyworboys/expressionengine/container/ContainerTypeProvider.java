@@ -3,8 +3,14 @@ package com.jeremyworboys.expressionengine.container;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.util.containers.HashSet;
+import com.intellij.util.indexing.FileBasedIndex;
 import com.jeremyworboys.expressionengine.ExpressionEngineProjectComponent;
+import com.jeremyworboys.expressionengine.stubs.indexes.ServicesDefinitionStubIndex;
+import com.jetbrains.php.PhpIndex;
 import com.jetbrains.php.lang.psi.elements.FunctionReference;
+import com.jetbrains.php.lang.psi.elements.PhpClass;
 import com.jetbrains.php.lang.psi.elements.PhpNamedElement;
 import com.jetbrains.php.lang.psi.elements.StringLiteralExpression;
 import com.jetbrains.php.lang.psi.resolve.types.PhpTypeProvider2;
@@ -12,6 +18,7 @@ import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
+import java.util.List;
 
 public class ContainerTypeProvider implements PhpTypeProvider2 {
     @Override
@@ -46,9 +53,19 @@ public class ContainerTypeProvider implements PhpTypeProvider2 {
 
     @Override
     public Collection<? extends PhpNamedElement> getBySignature(String signature, Project project) {
-        // TODO: Build index of services and lookup class name
-        // Look at how sf2 plugin locates service.xml files?
-        // Match app.setup.php and addon.setup.php within system path
+
+        PhpIndex phpIndex = PhpIndex.getInstance(project);
+        FileBasedIndex fileBasedIndex = FileBasedIndex.getInstance();
+        List<ServiceSerializable> services = fileBasedIndex.getValues(ServicesDefinitionStubIndex.KEY, signature, GlobalSearchScope.projectScope(project));
+
+        if (services.size() > 0) {
+            Collection<PhpClass> phpClasses = new HashSet<>();
+            for (ServiceSerializable service : services) {
+                phpClasses.addAll(phpIndex.getClassesByFQN(service.getClassName()));
+            }
+            return phpClasses;
+        }
+
         return null;
     }
 }
