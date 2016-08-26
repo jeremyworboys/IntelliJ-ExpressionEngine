@@ -16,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -26,29 +27,41 @@ public class PhpElementsUtil {
     }
 
     @NotNull
-    public static PsiElementPattern.Capture<PsiElement> isMethodReferenceNamed(String name) {
+    public static PsiElementPattern.Capture<PsiElement> isMethodReferenceNamed(String... methodName) {
         return PhpElementsUtil
             .isMethodReference()
             //.withName(name) <- This doesn't work, so it is handled below
             .with(new PatternCondition<PsiElement>("withName") {
                 @Override
                 public boolean accepts(@NotNull PsiElement psiElement, ProcessingContext context) {
-                    String elementName = ((MethodReference) psiElement).getName();
-                    assert elementName != null;
-                    return elementName.equals(name);
+                    String methodRefName = ((MethodReference) psiElement).getName();
+                    return methodRefName != null && Arrays.asList(methodName).contains(methodRefName);
                 }
             });
     }
 
     @NotNull
-    public static PsiElementPattern.Capture<PsiElement> isMethodReferenceWithFirstStringNamed(String name) {
+    public static PsiElementPattern.Capture<PsiElement> isMethodReferenceWithFirstStringNamed(String... methodName) {
         return PhpElementsUtil
-            .isMethodReferenceNamed(name)
+            .isMethodReferenceNamed(methodName)
             .withChild(PlatformPatterns
                 .psiElement(PhpElementTypes.PARAMETER_LIST)
                 .withFirstChild(PlatformPatterns
                     .psiElement(PhpElementTypes.STRING)
                 )
+            );
+    }
+
+    public static PsiElementPattern.Capture<PsiElement> isMethodWithFirstStringOrFieldReference(String... methodName) {
+        return PhpElementsUtil
+            .isMethodReferenceNamed(methodName)
+            .withChild(PlatformPatterns
+                .psiElement(PhpElementTypes.PARAMETER_LIST)
+                .withFirstChild(PlatformPatterns.or(
+                    PlatformPatterns.psiElement(PhpElementTypes.STRING),
+                    PlatformPatterns.psiElement(PhpElementTypes.FIELD_REFERENCE),
+                    PlatformPatterns.psiElement(PhpElementTypes.CLASS_CONSTANT_REFERENCE)
+                ))
             );
     }
 
@@ -113,7 +126,7 @@ public class PhpElementsUtil {
         for (ArrayHashElement phpArrayElement : phpArray.getHashElements()) {
             if (phpArrayElement.getKey() instanceof StringLiteralExpression) {
                 StringLiteralExpression phpArrayElementKey = (StringLiteralExpression) phpArrayElement.getKey();
-                if (phpArrayElementKey != null && StringUtil.equals(key ,phpArrayElementKey.getContents())) {
+                if (phpArrayElementKey != null && StringUtil.equals(key, phpArrayElementKey.getContents())) {
                     return phpArrayElement.getValue();
                 }
             }
