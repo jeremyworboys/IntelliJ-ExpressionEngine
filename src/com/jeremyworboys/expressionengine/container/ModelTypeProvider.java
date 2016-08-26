@@ -12,15 +12,11 @@ import com.jeremyworboys.expressionengine.util.PhpTypeProviderUtil;
 import com.jetbrains.php.PhpIndex;
 import com.jetbrains.php.lang.psi.elements.Method;
 import com.jetbrains.php.lang.psi.elements.MethodReference;
-import com.jetbrains.php.lang.psi.elements.PhpClass;
 import com.jetbrains.php.lang.psi.elements.PhpNamedElement;
 import com.jetbrains.php.lang.psi.resolve.types.PhpTypeProvider2;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 public class ModelTypeProvider implements PhpTypeProvider2 {
 
@@ -90,7 +86,7 @@ public class ModelTypeProvider implements PhpTypeProvider2 {
         }
 
         // Map found model definitions to their FQN
-        Collection<PhpClass> phpClasses = new HashSet<>();
+        Collection<PhpNamedElement> phpClasses = new ArrayList<>();
         for (ModelSerializable model : models) {
             phpClasses.addAll(phpIndex.getClassesByFQN(model.getClassName()));
         }
