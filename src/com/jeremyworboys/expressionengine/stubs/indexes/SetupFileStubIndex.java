@@ -20,6 +20,8 @@ import java.util.Map;
 
 abstract public class SetupFileStubIndex<V extends Serializable> extends FileBasedIndexExtension<String, V> {
 
+    private static final int MAX_FILE_SIZE_BYTES = 5242880;
+
     protected final DataExternalizer<V> externalizer = new ObjectStreamDataExternalizer<>();
     protected final KeyDescriptor<String> keyDescriptor = new EnumeratorStringDescriptor();
 
@@ -73,7 +75,7 @@ abstract public class SetupFileStubIndex<V extends Serializable> extends FileBas
         }
 
         // Don't index files larger then files; use 5 MB here
-        if (inputData.getFile().getLength() > getMaxFileByteSize()) {
+        if (inputData.getFile().getLength() > MAX_FILE_SIZE_BYTES) {
             return false;
         }
 
@@ -86,9 +88,5 @@ abstract public class SetupFileStubIndex<V extends Serializable> extends FileBas
         String parentDirectoryName = PathUtil.getFileName(PathUtil.getParentPath(filePath));
 
         return filePath.contains("ee/EllisLab/ExpressionEngine") ? "ee" : parentDirectoryName;
-    }
-
-    private int getMaxFileByteSize() {
-        return 5242880;
     }
 }
