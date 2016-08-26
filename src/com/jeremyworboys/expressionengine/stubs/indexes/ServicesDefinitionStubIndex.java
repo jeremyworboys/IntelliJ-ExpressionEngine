@@ -3,7 +3,7 @@ package com.jeremyworboys.expressionengine.stubs.indexes;
 import com.intellij.util.indexing.FileContent;
 import com.intellij.util.indexing.ID;
 import com.jeremyworboys.expressionengine.container.ContainerHelper;
-import com.jeremyworboys.expressionengine.container.service.ServiceSerializable;
+import com.jeremyworboys.expressionengine.container.ServiceSerializable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -15,7 +15,7 @@ public class ServicesDefinitionStubIndex extends SetupFileStubIndex<ServiceSeria
 
     @Override
     protected void buildIndex(FileContent inputData, Map<String, ServiceSerializable> index) {
-        List<ServiceSerializable> servicesInFile = ContainerHelper.getServicesInFile(inputData.getPsiFile());
+        List<ServiceSerializable> servicesInFile = ContainerHelper.getServicesInFile(inputData.getPsiFile(), getServicePrefix(inputData));
         for (ServiceSerializable service : servicesInFile) {
             index.put(service.getId(), service);
         }

@@ -14,7 +14,4 @@ public class ExpressionEngineHighlighter {
     public static final TextAttributesKey TAG = createTextAttributesKey("EE_TAG", DefaultLanguageHighlighterColors.IDENTIFIER);
     public static final TextAttributesKey TAG_PARAM = createTextAttributesKey("EE_TAG_PARAM", DefaultLanguageHighlighterColors.IDENTIFIER);
     public static final TextAttributesKey PARENTHESES = createTextAttributesKey("EE_PARENTHESES", DefaultLanguageHighlighterColors.PARENTHESES);
-
-    public ExpressionEngineHighlighter() {
-    }
 }

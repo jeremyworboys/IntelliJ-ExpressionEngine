@@ -1,4 +1,4 @@
-package com.jeremyworboys.expressionengine.container.service;
+package com.jeremyworboys.expressionengine.container;
 
 import java.io.Serializable;
 

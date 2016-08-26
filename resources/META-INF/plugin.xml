@@ -34,12 +34,6 @@
                              parentId="reference.webide.settings.project.settings.php"
                              groupWeight="10"/>
 
-        <projectConfigurable instance="com.jeremyworboys.expressionengine.ui.ContainerSettingsForm"
-                             id="ExpressionEngine.ContainerSettingsForm"
-                             displayName="Container"
-                             nonDefaultProject="true"
-                             parentId="ExpressionEngine.SettingsForm"/>
-
         <!-- Project services -->
         <projectService serviceImplementation="com.jeremyworboys.expressionengine.ExpressionEngineSettings"/>
 
@@ -73,7 +67,7 @@
         <lang.psiStructureViewFactory language="ExpressionEngine" implementationClass="com.jeremyworboys.expressionengine.structureView.ExpressionEngineStructureViewFactory"/>
 
         <!-- PHP Type providers -->
-        <php.typeProvider2 implementation="com.jeremyworboys.expressionengine.container.ModelTypeProvider"/>
+        <php.typeProvider2 implementation="com.jeremyworboys.expressionengine.model.ModelTypeProvider"/>
         <php.typeProvider2 implementation="com.jeremyworboys.expressionengine.container.ContainerTypeProvider"/>
         <php.typeProvider2 implementation="com.jeremyworboys.expressionengine.type.SingletonTypeProvider"/>
         <php.typeProvider2 implementation="com.jeremyworboys.expressionengine.type.LoadClassTypeProvider"/>

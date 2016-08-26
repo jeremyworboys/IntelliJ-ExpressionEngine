@@ -1,12 +1,9 @@
-package com.jeremyworboys.expressionengine.container;
+package com.jeremyworboys.expressionengine.model;
 
-import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.indexing.FileBasedIndex;
-import com.jeremyworboys.expressionengine.ExpressionEngineProjectComponent;
-import com.jeremyworboys.expressionengine.container.model.ModelSerializable;
 import com.jeremyworboys.expressionengine.stubs.indexes.ModelsDefinitionStubIndex;
 import com.jeremyworboys.expressionengine.util.ExpressionEngine3InterfacesUtil;
 import com.jeremyworboys.expressionengine.util.PhpElementsUtil;
@@ -14,14 +11,13 @@ import com.jeremyworboys.expressionengine.util.PhpTypeProviderUtil;
 import com.jetbrains.php.PhpIndex;
 import com.jetbrains.php.lang.psi.elements.Method;
 import com.jetbrains.php.lang.psi.elements.MethodReference;
-import com.jetbrains.php.lang.psi.elements.PhpClass;
 import com.jetbrains.php.lang.psi.elements.PhpNamedElement;
 import com.jetbrains.php.lang.psi.resolve.types.PhpTypeProvider2;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 
 public class ModelTypeProvider implements PhpTypeProvider2 {
@@ -36,9 +32,7 @@ public class ModelTypeProvider implements PhpTypeProvider2 {
     @Nullable
     @Override
     public String getType(PsiElement psiElement) {
-        // Don't lookup if in low-power mode or isn't a configured ee3 project
-        if (DumbService.getInstance(psiElement.getProject()).isDumb()
-            || !ExpressionEngineProjectComponent.isEnabledVersion3(psiElement)) {
+        if (!PhpTypeProviderUtil.shouldProvideTypeCompletion3(psiElement)) {
             return null;
         }
 
@@ -86,6 +80,7 @@ public class ModelTypeProvider implements PhpTypeProvider2 {
         }
 
         // Find models in index matching the parameter
+        // TODO: Determine if prefix is used and resolve with consideration
         FileBasedIndex fileBasedIndex = FileBasedIndex.getInstance();
         List<ModelSerializable> models = fileBasedIndex.getValues(ModelsDefinitionStubIndex.KEY, parameter, GlobalSearchScope.projectScope(project));
 
@@ -94,9 +89,11 @@ public class ModelTypeProvider implements PhpTypeProvider2 {
         }
 
         // Map found model definitions to their FQN
-        Collection<PhpClass> phpClasses = new HashSet<>();
+        Collection<PhpNamedElement> phpClasses = new ArrayList<>();
         for (ModelSerializable model : models) {
-            phpClasses.addAll(phpIndex.getClassesByFQN(model.getClassName()));
+            if (model != null) {
+                phpClasses.addAll(phpIndex.getClassesByFQN(model.getClassName()));
+            }
         }
 
         return phpClasses;

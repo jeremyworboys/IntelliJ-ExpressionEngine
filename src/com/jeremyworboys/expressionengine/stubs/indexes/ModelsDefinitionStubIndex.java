@@ -3,7 +3,7 @@ package com.jeremyworboys.expressionengine.stubs.indexes;
 import com.intellij.util.indexing.FileContent;
 import com.intellij.util.indexing.ID;
 import com.jeremyworboys.expressionengine.container.ContainerHelper;
-import com.jeremyworboys.expressionengine.container.model.ModelSerializable;
+import com.jeremyworboys.expressionengine.model.ModelSerializable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -15,7 +15,7 @@ public class ModelsDefinitionStubIndex extends SetupFileStubIndex<ModelSerializa
 
     @Override
     protected void buildIndex(FileContent inputData, Map<String, ModelSerializable> index) {
-        List<ModelSerializable> modelsInFile = ContainerHelper.getModelsInFile(inputData.getPsiFile());
+        List<ModelSerializable> modelsInFile = ContainerHelper.getModelsInFile(inputData.getPsiFile(), getServicePrefix(inputData));
         for (ModelSerializable model : modelsInFile) {
             index.put(model.getId(), model);
         }

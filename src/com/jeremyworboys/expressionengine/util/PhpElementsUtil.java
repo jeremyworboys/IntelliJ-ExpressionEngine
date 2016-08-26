@@ -13,7 +13,6 @@ import com.intellij.util.containers.OrderedSet;
 import com.jetbrains.php.lang.parser.PhpElementTypes;
 import com.jetbrains.php.lang.psi.PhpFile;
 import com.jetbrains.php.lang.psi.elements.*;
-import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -127,8 +126,8 @@ public class PhpElementsUtil {
     public static PhpPsiElement getValueOfKeyInArray(ArrayCreationExpression phpArray, String key) {
         for (ArrayHashElement phpArrayElement : phpArray.getHashElements()) {
             if (phpArrayElement.getKey() instanceof StringLiteralExpression) {
-                StringLiteralExpression phpArrayElementKey = (StringLiteralExpression) phpArrayElement.getKey();
-                if (phpArrayElementKey != null && StringUtil.equals(key, phpArrayElementKey.getContents())) {
+                String phpArrayElementKey = getStringValue(phpArrayElement);
+                if (phpArrayElementKey != null && StringUtil.equals(key, phpArrayElementKey)) {
                     return phpArrayElement.getValue();
                 }
             }
@@ -144,14 +143,13 @@ public class PhpElementsUtil {
 
     @Nullable
     private static String getStringValue(@Nullable PsiElement psiElement, int depth) {
-
         if (psiElement == null || ++depth > 5) {
             return null;
         }
 
         if (psiElement instanceof StringLiteralExpression) {
             String resolvedString = ((StringLiteralExpression) psiElement).getContents();
-            if (StringUtils.isEmpty(resolvedString)) {
+            if (StringUtil.isEmpty(resolvedString)) {
                 return null;
             }
 
@@ -163,7 +161,6 @@ public class PhpElementsUtil {
         }
 
         if (psiElement instanceof PhpReference) {
-
             PsiReference psiReference = psiElement.getReference();
             if (psiReference == null) {
                 return null;
