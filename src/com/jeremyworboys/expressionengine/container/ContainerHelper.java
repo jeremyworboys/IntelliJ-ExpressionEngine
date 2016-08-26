@@ -1,11 +1,22 @@
 package com.jeremyworboys.expressionengine.container;
 
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
 import com.jeremyworboys.expressionengine.ExpressionEngineProjectComponent;
 import com.jeremyworboys.expressionengine.ExpressionEngineSettings;
+import com.jeremyworboys.expressionengine.util.PhpElementsUtil;
+import com.jetbrains.php.lang.psi.PhpFile;
+import com.jetbrains.php.lang.psi.elements.ArrayCreationExpression;
+import com.jetbrains.php.lang.psi.elements.ArrayHashElement;
+import com.jetbrains.php.lang.psi.elements.Function;
+import com.jetbrains.php.lang.psi.elements.StringLiteralExpression;
+import com.jetbrains.php.lang.psi.resolve.types.PhpType;
+import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -48,5 +59,79 @@ public class ContainerHelper {
         }
 
         return containerFiles;
+    }
+
+    public static List<ServiceSerializable> getServicesInFile(PsiFile psiFile) {
+        final List<ServiceSerializable> services = new ArrayList<>();
+
+        if (psiFile instanceof PhpFile) {
+            ArrayCreationExpression phpArray = PhpElementsUtil.getReturnedArrayFromFile((PhpFile) psiFile);
+            if (phpArray != null) {
+                String namespacePrefix = "";
+
+                // Loop through *.setup.php to find namespace
+                for (ArrayHashElement phpArrayElement : phpArray.getHashElements()) {
+                    StringLiteralExpression phpArrayElementKey = (StringLiteralExpression) phpArrayElement.getKey();
+                    PsiElement phpArrayElementValue = phpArrayElement.getValue();
+                    // Find an entry with key "services" and an array value
+                    if (phpArrayElementKey != null
+                        && "namespace".equals(phpArrayElementKey.getContents())
+                        && phpArrayElementValue instanceof StringLiteralExpression) {
+                        StringLiteralExpression namespaceElement = (StringLiteralExpression) phpArrayElementValue;
+                        namespacePrefix = StringUtil.trimStart(StringUtil.trimEnd(namespaceElement.getContents(), "\\"), "\\");
+                    }
+                }
+
+                // Loop through *.setup.php to find services
+                for (ArrayHashElement phpArrayElement : phpArray.getHashElements()) {
+                    StringLiteralExpression phpArrayElementKey = (StringLiteralExpression) phpArrayElement.getKey();
+                    PsiElement phpArrayElementValue = phpArrayElement.getValue();
+                    // TODO: Locate "namespace" key and prepend to string services
+                    // Find an entry with key "services" and an array value
+                    if (phpArrayElementKey != null
+                        && "services".equals(phpArrayElementKey.getContents())
+                        && phpArrayElementValue instanceof ArrayCreationExpression) {
+                        ArrayCreationExpression servicesArray = (ArrayCreationExpression) phpArrayElementValue;
+                        // Loop through services array
+                        for (ArrayHashElement servicesArrayElement : servicesArray.getHashElements()) {
+                            PsiElement serviceKey = servicesArrayElement.getKey();
+                            PsiElement serviceValue = servicesArrayElement.getValue();
+                            if (serviceKey instanceof StringLiteralExpression && serviceValue != null) {
+                                String serviceName = ((StringLiteralExpression) serviceKey).getContents();
+                                String serviceClassName = "";
+
+                                // Is service a closure
+                                if (serviceValue.getFirstChild() instanceof Function) {
+                                    PhpType serviceReturnType = ((Function) serviceValue.getFirstChild()).getLocalType(true);
+                                    if (!serviceReturnType.isEmpty()) {
+                                        serviceClassName = serviceReturnType.toStringResolved();
+                                    }
+                                }
+
+                                // Is service a string
+                                else if (serviceValue instanceof StringLiteralExpression) {
+                                    String rawServiceClassName = ((StringLiteralExpression) serviceValue).getContents();
+                                    if (rawServiceClassName.startsWith("\\")) {
+                                        serviceClassName = rawServiceClassName;
+                                    } else {
+                                        serviceClassName = namespacePrefix + "\\" + rawServiceClassName;
+                                    }
+                                }
+
+                                // Create service entry
+                                if (StringUtils.isNotBlank(serviceName) && StringUtils.isNotBlank(serviceClassName)) {
+                                    SerializableService serializableService = new SerializableService(serviceName);
+                                    serializableService.setClassName(serviceClassName);
+
+                                    services.add(serializableService);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return services;
     }
 }

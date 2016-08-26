@@ -43,6 +43,9 @@
         <!-- Project services -->
         <projectService serviceImplementation="com.jeremyworboys.expressionengine.ExpressionEngineSettings"/>
 
+        <!-- File indices -->
+        <fileBasedIndex implementation="com.jeremyworboys.expressionengine.stubs.indexes.ServicesDefinitionStubIndex"/>
+
         <!-- Language factories -->
         <fileTypeFactory implementation="com.jeremyworboys.expressionengine.ExpressionEngineFileTypeFactory"/>
         <lang.fileViewProviderFactory language="ExpressionEngine" implementationClass="com.jeremyworboys.expressionengine.ExpressionEngineFileViewProviderFactory"/>
