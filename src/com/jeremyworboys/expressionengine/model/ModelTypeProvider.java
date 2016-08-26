@@ -15,7 +15,10 @@ import com.jetbrains.php.lang.psi.elements.PhpNamedElement;
 import com.jetbrains.php.lang.psi.resolve.types.PhpTypeProvider2;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 public class ModelTypeProvider implements PhpTypeProvider2 {
 
@@ -87,7 +90,9 @@ public class ModelTypeProvider implements PhpTypeProvider2 {
         // Map found model definitions to their FQN
         Collection<PhpNamedElement> phpClasses = new ArrayList<>();
         for (ModelSerializable model : models) {
-            phpClasses.addAll(phpIndex.getClassesByFQN(model.getClassName()));
+            if (model != null) {
+                phpClasses.addAll(phpIndex.getClassesByFQN(model.getClassName()));
+            }
         }
 
         return phpClasses;

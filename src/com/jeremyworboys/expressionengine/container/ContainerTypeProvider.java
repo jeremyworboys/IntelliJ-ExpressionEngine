@@ -102,7 +102,9 @@ public class ContainerTypeProvider implements PhpTypeProvider2 {
         // Map found model definitions to their FQN
         Collection<PhpNamedElement> phpClasses = new ArrayList<>();
         for (ServiceSerializable service : services) {
-            phpClasses.addAll(phpIndex.getClassesByFQN(service.getClassName()));
+            if (service != null) {
+                phpClasses.addAll(phpIndex.getClassesByFQN(service.getClassName()));
+            }
         }
 
         return phpClasses;
