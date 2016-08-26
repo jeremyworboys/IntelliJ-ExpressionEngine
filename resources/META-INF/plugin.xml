@@ -44,6 +44,7 @@
         <projectService serviceImplementation="com.jeremyworboys.expressionengine.ExpressionEngineSettings"/>
 
         <!-- File indices -->
+        <fileBasedIndex implementation="com.jeremyworboys.expressionengine.stubs.indexes.ModelsDefinitionStubIndex"/>
         <fileBasedIndex implementation="com.jeremyworboys.expressionengine.stubs.indexes.ServicesDefinitionStubIndex"/>
 
         <!-- Language factories -->
