@@ -4,17 +4,26 @@ import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.Annotator;
 import com.intellij.psi.PsiElement;
 import com.jeremyworboys.expressionengine.annotator.annotations.TemplateReferenceAnnotator;
-import com.jeremyworboys.expressionengine.annotator.annotations.UndefinedModuleAnnotator;
 import org.jetbrains.annotations.NotNull;
 
 public class ExpressionEngineAnnotator implements Annotator {
     @Override
     public void annotate(@NotNull PsiElement element, @NotNull AnnotationHolder holder) {
         new TemplateReferenceAnnotator().annotate(element, holder);
-        new UndefinedModuleAnnotator().annotate(element, holder);
+
+        // TODO: Move to an inspection - also, not working reliably
+        // new UndefinedModuleAnnotator().annotate(element, holder);
 
         // TODO: Move to an inspection
         // new UndefinedModuleParametersAnnotator().annotate(element, holder);
+
+        // TODO: Add autocomplete for channels
+        // TODO: Add autocomplete for built-in module/plugin params
+        // TODO: Add autocomplete + references for hooks
+        // TODO: Add autocomplete for global variables + snippets
+        // TODO: Add autocomplete for embed params used in child
+        // TODO: Add autocomplete for layout params used in parents
+        // TODO: Add codeigniter constants (e.g. FILE_WRITE_MODE)
 
         // TODO: constant expression in conditional (e.g. {if TRUE} ... {endif})
         // TODO: in conditional expression the string "0" is considered TRUE since it is a non-empty string

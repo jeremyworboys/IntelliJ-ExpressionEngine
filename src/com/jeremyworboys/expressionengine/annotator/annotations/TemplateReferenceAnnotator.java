@@ -21,11 +21,13 @@ public class TemplateReferenceAnnotator implements Annotator {
         }
 
         // Ignore special {path=} values
+        // TODO: Add autocomplete for these
         if (TemplateReferencePatterns.getPathTemplateReferencePattern().accepts(element) && isSpecialPathValue(element.getText())) {
             return;
         }
 
         // Ignore special {redirect=} values
+        // TODO: Add autocomplete for these
         if (TemplateReferencePatterns.getRedirectTemplateReferencePattern().accepts(element) && isSpecialRedirectValue(element.getText())) {
             return;
         }
